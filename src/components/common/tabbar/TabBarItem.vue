@@ -17,13 +17,13 @@ export default {
   font-size: 14px;
 }
 
-.tab-bar-item img {
+/* .tab-bar-item img {
   width: 30px;
   margin-top: 3px;
   vertical-align: middle;
   margin-bottom: 2px;
   border-radius: 50%;
-}
+} */
 
 .text {
   width: 120px;

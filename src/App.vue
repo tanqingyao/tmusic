@@ -12,6 +12,7 @@
       <component :is="Component" />
     </keep-alive>
   </router-view>
+  <Player />
 </template>
 
 <script>
@@ -31,11 +32,11 @@ export default {
   color: var(--color-theme);
   font-size: var(--font-size-large-x);
   position: relative;
-  z-index: 9;
+  z-index: 1;
   background-color: var(--color-background);
 }
 .tab-controler {
   position: relative;
-  z-index: 9;
+  z-index: 1;
 }
 </style>
