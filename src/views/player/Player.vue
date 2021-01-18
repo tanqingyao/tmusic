@@ -1,6 +1,6 @@
 <template>
   <div class="player-view">
-    <!-- <Audio ref="audio" :src="song.url" :isPlay.sync="playerControl.isPlay" /> -->
+    <Audio ref="audio" :src="song.url" v-model:isPlay="playerControl.isPlay" />
 
     <div class="full-screen" v-show="isFull">
       <PlayerNavBar :song="song" @changeScreen="changeScreen" />
@@ -59,7 +59,10 @@ export default {
         isPlay: false,
         isLike: false
       },
-      progress: 0
+      audioInfo: {
+        progress: 0,
+        duration: 0
+      }
     };
   },
   computed: {
@@ -72,11 +75,10 @@ export default {
       }
     }
   },
-  /* 控制器监听相关方法 */
+  /* 控制器监听相关 */
   watch: {
     "playerControl.isPlay": function(val, oldVal) {
-      // this.$refs.audio.setPlayState(val);
-      console.log(val, oldVal);
+      this.$refs.audio.setPlayState(val);
     }
   },
 

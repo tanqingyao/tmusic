@@ -19,40 +19,49 @@
 import { mapState } from "vuex";
 export default {
   name: "Audio",
+  emits: {
+    "update:isPlay": null
+  },
   props: {
     src: String,
     isPlay: Boolean
   },
   computed: {
-    ...mapState(["autoPlay"])
+    ...mapState(["autoPlay"]),
+    duration() {
+      return this.$refs.audio.duration;
+    }
   },
   methods: {
     setPlayState(isPlayState) {
+      console.log(isPlayState);
       if (isPlayState) {
         this.$refs.audio.play();
       } else {
         this.$refs.audio.pause();
       }
     },
+    emit(state) {
+      this.$emit("update:isPlay", state);
+    },
     /* audio eventListener */
     playListener(e) {
       console.log("play after pause");
-      this.$emit("update:isPlay", true);
+      this.emit(true);
     },
     playingListener() {
       console.log("play whatever reason");
-      this.$emit("update:isPlay", true);
+      this.emit(true);
     },
     pauseListener(e) {
       console.log("pause");
-      this.$emit("update:isPlay", false);
+      this.emit(false);
     },
     endListener() {
       console.log("end paly");
-      this.$emit("update:isPlay", false);
+      this.emit(false);
     },
     loadedmetadataListener(e) {
-      // console.log("loadedmetadataListener");
       if (this.autoPlay) {
         this.$refs.audio.play();
       }
@@ -61,12 +70,12 @@ export default {
       console.log("load");
     },
     abortListener() {
-      // console.log("abort");
-      this.$emit("update:isPlay", false);
+      console.log("abort");
+      this.emit(false);
     },
     timeupdateListener(e) {
-      console.log(Math.floor(e.timeStamp / 1000));
-      console.log(this.$refs.audio.duration / 60);
+      // console.log(Math.floor(e.timeStamp / 1000));
+      console.log(this.$refs.audio.duration);
     }
   }
 };

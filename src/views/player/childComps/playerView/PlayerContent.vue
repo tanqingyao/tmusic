@@ -1,6 +1,6 @@
 <template>
   <div class="player-content">
-    <span>当前进度:{{ progress }}</span>
+    <p>当前进度:{{ progress }}</p>
     <div>
       <label for="progressSet">
         <input type="text" v-model="progress" id="progressSet" />
