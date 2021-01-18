@@ -34,11 +34,11 @@ export default {
   methods: {
     songClick(item) {
       this.$store.dispatch("addToPlayList", item).then(song => {
-        // if (song) {
-        //   this.$toast.show("成功添加歌曲~", 1500);
-        // } else {
-        //   this.$toast.show("添加失败", 1500);
-        // }
+        if (song) {
+          this.$toast.show("成功添加歌曲~", 1500);
+        } else {
+          this.$toast.show("添加失败", 1500);
+        }
         if (this.$store.state.autoPlay) {
           this.$store.commit(SET_CURRENT_SONG, song);
         }
