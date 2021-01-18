@@ -1,16 +1,26 @@
 <template>
   <div class="player-view">
-    <Audio ref="audio" :src="song.url" v-model:isPlay="playerControl.isPlay" />
+    <Audio
+      ref="audio"
+      :src="song.url"
+      v-model:isPlay="playerControl.isPlay"
+      v-model:currentTime="audioInfo.currentTime"
+      v-model:duration="audioInfo.duration"
+    />
 
     <div class="full-screen" v-show="isFull">
       <PlayerNavBar :song="song" @changeScreen="changeScreen" />
-      <PlayerContent />
+      <PlayerProgress
+        :currentTime="audioInfo.currentTime"
+        :duration="audioInfo.duration"
+      />
       <FullTabBar
         :song="song"
         v-model:playOrder="playerControl.playOrder"
         v-model:isPlay="playerControl.isPlay"
         v-model:isLike="playerControl.isLike"
         @switch="switchSong"
+        @update:isLike="likeClick"
       />
     </div>
     <div class="mini-screen" v-show="!isFull">
@@ -31,7 +41,7 @@
 <script>
 import Audio from "./childComps/Audio";
 import PlayerNavBar from "./childComps/playerView/PlayerNavBar";
-import PlayerContent from "./childComps/playerView/PlayerContent";
+import PlayerProgress from "./childComps/playerView/PlayerProgress";
 import FullTabBar from "./childComps/playerView/FullTabBar";
 
 import MiniTabBar from "./childComps/miniPlayer/MiniTabBar";
@@ -45,7 +55,7 @@ export default {
   components: {
     Audio,
     PlayerNavBar,
-    PlayerContent,
+    PlayerProgress,
     FullTabBar,
     MiniTabBar,
     PlayerList
@@ -60,7 +70,7 @@ export default {
         isLike: false
       },
       audioInfo: {
-        progress: 0,
+        currentTime: 0,
         duration: 0
       }
     };
@@ -113,6 +123,9 @@ export default {
       } else {
         this.switchByOrder(payload);
       }
+    },
+    likeClick() {
+      console.log("like", this.playerControl.isLike);
     }
   }
 };

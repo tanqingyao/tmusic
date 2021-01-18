@@ -111,4 +111,7 @@ export default {
 .play img {
   width: 50px;
 }
+.active {
+  background-color: red;
+}
 </style>
