@@ -41,3 +41,10 @@ cd tmusic
 npm install
 npm run serve
 ```
+## 开发记录
+
+TODO:
+>播放器切换添加动画
+
+>DONE:
+1.17迁移基本项目结构，recommend和detail页面

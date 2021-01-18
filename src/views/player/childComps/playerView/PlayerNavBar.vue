@@ -17,8 +17,7 @@
   </NavBar>
 </template>
 <script>
-const NavBar = () => import("components/common/navbar/NavBar");
-
+import NavBar from "components/common/navbar/NavBar";
 export default {
   name: "PlayerNavBar",
   components: {
@@ -43,6 +42,7 @@ export default {
 .player-nav-bar {
   background-color: #666;
   height: 55px;
+  width: 100vw;
 }
 .down-icon {
   background-color: #666;
