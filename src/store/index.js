@@ -1,17 +1,16 @@
-import Vuex from "vuex";
-import Vue from "vue";
+import { createStore } from "vuex";
 import mutations from "./mutations";
 import getters from "./getters.js";
 import actions from "./actions";
-Vue.use(Vuex);
 
-const state = {
-  autoPlay: false,
-  playList: [],
-  currentSong: {}
-};
-const store = new Vuex.Store({
-  state,
+const store = createStore({
+  state() {
+    return {
+      autoPlay: false,
+      playList: [],
+      currentSong: {}
+    };
+  },
   getters,
   actions,
   mutations
