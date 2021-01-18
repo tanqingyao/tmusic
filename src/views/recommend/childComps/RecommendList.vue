@@ -1,6 +1,6 @@
 <template>
   <div class="recommend-list">
-    <MusicListItem v-for="item in album" @click.native="itemClick(item.id)">
+    <MusicListItem v-for="item in album" @click="songClick(item.id)">
       <template #img>
         <img :src="item.cover" @load="imgload" alt="" />
       </template>
@@ -37,7 +37,8 @@ export default {
     imgload() {
       this.$emit("RecommedImgLoad");
     },
-    itemClick(id) {
+    songClick(id) {
+      console.log(id);
       this.$router.push("/detail/songlist/" + id);
     }
   }

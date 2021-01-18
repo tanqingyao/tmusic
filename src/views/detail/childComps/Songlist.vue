@@ -1,6 +1,6 @@
 <template>
   <div class="song-list">
-    <MusicListItem v-for="item in songlist" @click.native="songClick(item)">
+    <MusicListItem v-for="item in songlist" @click="songClick(item)">
       <template #title>
         <span>{{ item.songname }}</span>
       </template>
