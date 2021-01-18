@@ -1,6 +1,7 @@
 <template>
   <router-view name="one" class="nav-bar" />
   <router-view
+    class="tab-controler"
     name="two"
     :titles="['推荐', '歌手', '排行', '搜索']"
     :path="['/recommend', '/singer', '/rank', 'search']"
@@ -29,5 +30,12 @@ export default {
 .nav-bar {
   color: var(--color-theme);
   font-size: var(--font-size-large-x);
+  position: relative;
+  z-index: 9;
+  background-color: var(--color-background);
+}
+.tab-controler {
+  position: relative;
+  z-index: 9;
 }
 </style>

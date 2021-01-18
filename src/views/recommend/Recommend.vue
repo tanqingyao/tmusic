@@ -83,7 +83,5 @@ export default {
 }
 .wrapper {
   height: calc(100% - 44px - 40px - 60px);
-  overflow: hidden;
-  position: relative;
 }
 </style>
