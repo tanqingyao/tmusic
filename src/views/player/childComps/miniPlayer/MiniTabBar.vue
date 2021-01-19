@@ -2,50 +2,42 @@
   <TabBar class="mini-tab-bar" @click="tabClick">
     <TabBarItem class="tab-cover">
       <template #itemIcon>
-        <img :src="song.albumImg" alt="歌曲封面" />
+        <img :src="currentSong.albumImg" alt="歌曲封面" />
       </template>
     </TabBarItem>
     <TabBarItem class="tab-text">
       <template #itemIcon>
         <span class="name">
-          {{ song.name }}
+          {{ currentSong.name }}
         </span>
         <span class="singer">
-          {{ song.singer }}
+          {{ currentSong.singer }}
         </span>
       </template>
     </TabBarItem>
-    <TabBarItem class="tab-img">
+    <TabBarItem class="tab-img" @click.stop @click="playClick">
       <template #itemIcon>
         <img
-          @click.stop
-          @click="playClick"
           v-show="isPlay"
-          src="~assets/img/player/021_pause.svg"
+          src="~assets/img/player/mini_pause.svg"
           alt="暂停"
         />
         <img
-          @click.stop
-          @click="playClick"
           v-show="!isPlay"
-          src="~assets/img/player/013_play.svg"
+          src="~assets/img/player/mini_play.svg"
           alt="播放"
         />
       </template>
     </TabBarItem>
-    <TabBarItem class="tab-img">
+    <TabBarItem class="tab-img" @click.stop @click="menuClick">
       <template #itemIcon>
-        <img
-          @click.stop
-          @click="menuClick"
-          src="~assets/img/player/020_menu.svg"
-          alt="歌曲列表"
-        />
+        <img src="~assets/img/player/mini_list.svg" alt="歌曲列表" />
       </template>
     </TabBarItem>
   </TabBar>
 </template>
 <script>
+import { mapState } from "vuex";
 import TabBar from "components/common/tabbar/TabBar";
 import TabBarItem from "components/common/tabbar/TabBarItem";
 export default {
@@ -55,18 +47,15 @@ export default {
     TabBarItem
   },
   props: {
-    song: {
-      type: Object,
-      default() {
-        return {};
-      }
-    },
     isPlay: {
       type: Boolean,
       default() {
         return false;
       }
     }
+  },
+  computed: {
+    ...mapState(["currentSong"])
   },
   methods: {
     tabClick() {
@@ -82,11 +71,14 @@ export default {
 };
 </script>
 <style scoped>
+.mini-tab-bar {
+  background-color: var(--color-background);
+}
 .mini-tab-bar img {
-  width: 30px;
+  width: 20px;
   vertical-align: middle;
   margin: 3px 0;
-  border-radius: 50%;
+  /* border-radius: 50%; */
 }
 .tab-cover img {
   width: 40px;

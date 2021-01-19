@@ -10,13 +10,11 @@
         <template #title>
           <span>{{ item.name }}</span>
         </template>
-
         <template #desc>
-          {{ item.singer }}
+          <span> - {{ item.singer }}</span>
         </template>
       </MusicListItem>
     </Scroll>
-    <div class="list-close">关闭</div>
   </div>
 </template>
 <script>
@@ -73,33 +71,35 @@ export default {
   background-color: rgba(0, 0, 0, 0.3);
 }
 .wrapper {
-  /* height: calc(100% - 44px - 60px); */
-
   position: fixed;
   top: 20%;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
+  left: 5%;
+  right: 5%;
+  bottom: 5%;
+  width: 90%;
   z-index: 9;
   overflow: hidden;
-  background-color: var(--color-highlight-background);
+  background-color: var(--color-background);
+  border-radius: 5%;
 }
 .list-item {
-  height: 55px;
+  height: 60px;
+  line-height: 60px;
   width: 80%;
   margin: 0 auto;
 }
-.list-close {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  z-index: 9;
-  text-align: center;
-  line-height: 50px;
-  background: #222;
-  font-size: 16px;
-  color: hsla(0, 0%, 100%, 0.5);
+.v-enter-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.v-leave-active {
+  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.v-enter-from,
+.v-leave-to {
+  /* transform: translateY(20px); */
+
+  opacity: 0;
 }
 </style>

@@ -4,32 +4,28 @@
       <img
         @click="backIconClick"
         class="down-icon"
-        src="~assets/img/common/down_chevron_4.svg"
+        src="~assets/img/common/down.svg"
         alt="向下关闭"
       />
     </template>
     <template #center>
       <div class="text">
-        <span>{{ song.name }}</span>
-        <span>{{ song.singer }}</span>
+        <span>{{ currentSong.name }}</span>
+        <span>{{ currentSong.singer }}</span>
       </div>
     </template>
   </NavBar>
 </template>
 <script>
+import { mapState } from "vuex";
 import NavBar from "components/common/navbar/NavBar";
 export default {
   name: "PlayerNavBar",
   components: {
     NavBar
   },
-  props: {
-    song: {
-      type: Object,
-      default() {
-        return {};
-      }
-    }
+  computed: {
+    ...mapState(["currentSong"])
   },
   methods: {
     backIconClick() {
@@ -40,13 +36,11 @@ export default {
 </script>
 <style scoped>
 .player-nav-bar {
-  background-color: #666;
+  background-color: var(--color-highlight-background);
   height: 55px;
   width: 100vw;
 }
 .down-icon {
-  background-color: #666;
-
   margin-top: 7px;
   width: 30px;
 }

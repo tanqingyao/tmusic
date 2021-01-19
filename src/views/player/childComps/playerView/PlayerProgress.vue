@@ -1,20 +1,18 @@
 <template>
-  <div class="player-content">
-    <div class="progress-bar">
-      <input
-        type="range"
-        ref="progress"
-        :class="{ active: isTouch }"
-        min="0"
-        :max="duration"
-        step="0.05"
-        @touchstart="touchStart"
-        @touchend="touchEnd"
-      />
-      <div class="progerss-time">
-        <span class="left">{{ parseTimeString(currentTime) }}</span>
-        <span class="right">{{ parseTimeString(duration) }}</span>
-      </div>
+  <div class="progress-bar">
+    <input
+      type="range"
+      ref="progress"
+      :class="{ active: isTouch }"
+      min="0"
+      :max="duration"
+      step="0.05"
+      @touchstart="touchStart"
+      @touchend="touchEnd"
+    />
+    <div class="progerss-time">
+      <span class="left">{{ parseTimeString(currentTime) }}</span>
+      <span class="right">{{ parseTimeString(duration) }}</span>
     </div>
   </div>
 </template>
@@ -79,6 +77,9 @@ export default {
   left: 0;
   right: 0;
   bottom: 60px;
+  height: 40px;
+  color: var(--color-background);
+  background-color: var(--color-highlight-background);
 }
 .progerss-time {
   height: 20px;

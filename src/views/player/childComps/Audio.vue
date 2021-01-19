@@ -2,7 +2,7 @@
   <audio
     ref="audio"
     class="audio-player"
-    :src="src"
+    :src="currentSong.url"
     @loadedmetadata="loadedmetadataListener"
     @play="playListener"
     @playing="playingListener"
@@ -35,7 +35,6 @@ export default {
     }
   },
   props: {
-    src: String,
     isPlay: Boolean,
     //持续时间（总长度），以秒为单位
     duration: Number
@@ -51,7 +50,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["autoPlay"])
+    ...mapState(["autoPlay", "currentSong"])
   },
   methods: {
     setPlayState(isPlayState) {
@@ -91,7 +90,7 @@ export default {
       this.emit(false);
     },
     loadedmetadataListener(e) {
-      console.log("loadedmetadata");
+      // console.log("loadedmetadata");
       if (this.autoPlay) {
         this.$refs.audio.play();
       }
@@ -112,7 +111,6 @@ export default {
     },
     durationchangeListener() {
       //元信息已载入或已改变，表明媒体的长度发生了改变
-      console.log(this.$refs.audio.duration);
       this.$emit("update:duration", this.$refs.audio.duration);
     },
     emptiedListener() {

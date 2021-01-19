@@ -4,12 +4,13 @@
       <slot name="img" />
     </div>
     <div class="item-info">
-      <div class="item-title">
+      <span class="item-title">
         <slot name="title" />
-      </div>
-      <div class="item-desc">
+      </span>
+
+      <span class="item-desc">
         <slot name="desc" />
-      </div>
+      </span>
       <div class="info-bottom">
         <span class="bottom-left left">
           <slot name="btm-left" />
@@ -62,7 +63,7 @@ export default {
 
 .item-info .item-desc {
   font-size: var(--font-size-small-s);
-  color: var(--color-text-d);
+  color: var(--color-text);
   margin-top: 5px;
 }
 .info-bottom {
@@ -80,10 +81,6 @@ export default {
   overflow: hidden;
 }
 .info-bottom .bottom-left {
-  color: var(--color-text-d);
   margin-right: 20px;
-}
-.info-bottom .bottom-right {
-  color: var(--color-text-d);
 }
 </style>

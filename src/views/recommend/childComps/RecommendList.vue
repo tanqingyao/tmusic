@@ -38,7 +38,7 @@ export default {
       this.$emit("RecommedImgLoad");
     },
     songClick(id) {
-      console.log(id);
+      // console.log(id);
       this.$router.push("/detail/songlist/" + id);
     }
   }

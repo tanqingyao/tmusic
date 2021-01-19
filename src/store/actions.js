@@ -19,7 +19,7 @@ export default {
       let album = albumResponse.data.data;
 
       song = new Song(info, url, album);
-      console.log(song);
+      // console.log(song);
       commit(ADD_TO_PLAYLIST, song);
     }
     // TODO 若没有选择自动播放,直接添加至播放列表.否则改变当前歌曲
