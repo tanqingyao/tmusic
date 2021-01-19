@@ -3,11 +3,13 @@
     <div class="progress-bar">
       <input
         type="range"
-        id="progress-bar"
+        ref="progress"
+        :class="{ active: isTouch }"
         min="0"
         :max="duration"
-        :value="currentTime"
         step="0.05"
+        @touchstart="touchStart"
+        @touchend="touchEnd"
       />
       <div class="progerss-time">
         <span class="left">{{ parseTimeString(currentTime) }}</span>
@@ -19,7 +21,9 @@
 <script>
 export default {
   name: "PlayerContent",
-  components: {},
+  emits: {
+    "set-currentTime": null
+  },
   props: {
     currentTime: {
       type: Number,
@@ -31,13 +35,39 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      isTouch: false
+    };
+  },
+  created() {
+    this.unwatch = this.progressWatcher();
   },
   methods: {
+    progressWatcher() {
+      return this.$watch("currentTime", (newVal, oldVal) => {
+        this.$refs.progress.value = newVal;
+      });
+    },
     parseTimeString(num) {
       let min = Math.floor(num / 60);
       let sec = Math.floor(num - min * 60);
       return `${min}:${sec}`;
+    },
+    touchStart(e) {
+      // 暂停监听value
+      this.unwatch();
+      this.isTouch = true;
+      // console.log("touch start");
+    },
+    touchEnd(e) {
+      // console.log("touch end", e.target.value);
+      // 跳转至对应时间
+      this.$emit("set-currentTime", Number.parseFloat(e.target.value));
+
+      // 开始监听
+      this.unwatch = this.progressWatcher();
+      // 改变样式
+      this.isTouch = false;
     }
   }
 };
@@ -72,5 +102,9 @@ input[type="range"]::-webkit-slider-thumb {
   background: #ddd;
   border-radius: 50%;
   border: solid 1px #eee;
+}
+input[type="range"].active::-webkit-slider-thumb {
+  height: 20px;
+  width: 20px;
 }
 </style>

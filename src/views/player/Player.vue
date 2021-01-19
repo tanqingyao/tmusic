@@ -4,8 +4,8 @@
       ref="audio"
       :src="song.url"
       v-model:isPlay="playerControl.isPlay"
-      v-model:currentTime="audioInfo.currentTime"
-      v-model:duration="audioInfo.duration"
+      @update-currentTime="audioInfo.currentTime = $event"
+      @update:duration="audioInfo.duration = $event"
     />
 
     <div class="full-screen" v-show="isFull">
@@ -13,6 +13,7 @@
       <PlayerProgress
         :currentTime="audioInfo.currentTime"
         :duration="audioInfo.duration"
+        @set-currentTime="setTimeTo($event)"
       />
       <FullTabBar
         :song="song"
@@ -71,7 +72,8 @@ export default {
       },
       audioInfo: {
         currentTime: 0,
-        duration: 0
+        duration: 0,
+        expectTime: 0
       }
     };
   },
@@ -95,7 +97,7 @@ export default {
   created() {
     // 自动添加歌曲
     if (Object.keys(this.song).length === 0) {
-      this.initPlayerData({ songmid: "003JXAaE3lSpoC" }).then(song => {
+      this.initPlayerData({ songmid: "002dK7hR4DlIa3" }).then(song => {
         this.$toast.show("已自动添加歌曲~", 1500);
         this.setCurrentSong(song);
       });
@@ -110,6 +112,9 @@ export default {
       switchByOrder: "switchByOrder",
       switchByShuffle: "switchByShuffle"
     }),
+    setTimeTo(time) {
+      this.$refs.audio.setPlayTime(time);
+    },
     changeScreen() {
       this.isFull = !this.isFull;
     },

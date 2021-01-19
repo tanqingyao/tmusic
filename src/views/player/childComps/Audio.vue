@@ -25,7 +25,7 @@ export default {
   name: "Audio",
   emits: {
     "update:isPlay": null,
-    "update:currentTime": null,
+    "update-currentTime": null,
     "update:duration": payload => {
       if (payload !== 0) {
         return true;
@@ -37,8 +37,6 @@ export default {
   props: {
     src: String,
     isPlay: Boolean,
-    //以秒为单位的当前音频的播放位置
-    currentTime: Number,
     //持续时间（总长度），以秒为单位
     duration: Number
   },
@@ -47,8 +45,9 @@ export default {
       // 枚举属性，让开发者自行思考来示意浏览器使用何种加载方式以达到最好的用户体验。可以是以下属性之一：none,metadata,auto
       preload: "auto",
       //表示是否静音的布尔值。默认值为 false，表示有声音。
-      muted: false
-      // currentTime: undefined
+      muted: false,
+      //以秒为单位的当前音频的播放位置
+      currentTime: undefined
     };
   },
   computed: {
@@ -61,6 +60,11 @@ export default {
       } else {
         this.$refs.audio.pause();
       }
+    },
+    setPlayTime(time) {
+      this.$refs.audio.currentTime = Number.parseFloat(time);
+      console.log("set time to:", this.$refs.audio.currentTime);
+      this.$refs.audio.play();
     },
     emit(state) {
       this.$emit("update:isPlay", state);
@@ -75,7 +79,7 @@ export default {
       this.emit(true);
     },
     playingListener() {
-      console.log("play whatever reason");
+      // console.log("play whatever reason");
       this.emit(true);
     },
     pauseListener(e) {
@@ -102,7 +106,8 @@ export default {
     },
     timeupdateListener(e) {
       //元素的currentTime属性表示的时间已经改变。
-      this.$emit("update:currentTime", this.$refs.audio.currentTime);
+      this.$emit("update-currentTime", this.$refs.audio.currentTime);
+      // console.log(this.expectTime);
       // console.log(Math.floor(e.timeStamp / 1000));
     },
     durationchangeListener() {
