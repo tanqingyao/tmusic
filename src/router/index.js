@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 const MainNavBar = () => import("components/content/mainNavBar/MainNavBar");
-const TabControl = () => import("components/content/tabControl/TabControl");
 
 const Recommend = () => import("views/recommend/Recommend");
 const Singer = () => import("views/singer/Singer");
@@ -19,32 +18,28 @@ const routes = [
     path: "/recommend",
     components: {
       default: Recommend,
-      one: MainNavBar,
-      two: TabControl
+      one: MainNavBar
     }
   },
   {
     path: "/singer",
     components: {
       default: Singer,
-      one: MainNavBar,
-      two: TabControl
+      one: MainNavBar
     }
   },
   {
     path: "/rank",
     components: {
       default: Rank,
-      one: MainNavBar,
-      two: TabControl
+      one: MainNavBar
     }
   },
   {
     path: "/search",
     components: {
       default: Search,
-      one: MainNavBar,
-      two: TabControl
+      one: MainNavBar
     }
   },
   {

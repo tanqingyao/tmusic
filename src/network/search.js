@@ -6,8 +6,12 @@ export function getSearchData(params) {
     params: {
       key,
       pageNo,
-      pageSize,
-      t
+      pageSize
     }
+  });
+}
+export function getHotSearch(params) {
+  return request({
+    url: "/search/hot"
   });
 }

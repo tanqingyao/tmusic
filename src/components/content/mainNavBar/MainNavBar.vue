@@ -1,7 +1,10 @@
 <template>
   <NavBar>
     <template #center>
-      <div>Music Player</div>
+      <TabControl
+        :titles="['推荐', '歌手', '排行', '搜索']"
+        :path="['/recommend', '/singer', '/rank', 'search']"
+      />
     </template>
     <template #right>
       <div @click="settingClick" class="navbar-right">
@@ -12,10 +15,12 @@
 </template>
 <script>
 import NavBar from "components/common/navbar/NavBar";
+import TabControl from "components/content/tabControl/TabControl";
 export default {
   name: "MainNavBar",
   components: {
-    NavBar
+    NavBar,
+    TabControl
   },
   methods: {
     settingClick() {

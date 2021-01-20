@@ -78,10 +78,11 @@ export default {
   width: 20px;
   vertical-align: middle;
   margin: 3px 0;
-  /* border-radius: 50%; */
 }
 .tab-cover img {
   width: 40px;
+  border: 1px solid #999;
+  border-radius: 50%;
 }
 
 .tab-cover,

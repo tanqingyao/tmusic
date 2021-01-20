@@ -1,11 +1,5 @@
 <template>
   <router-view name="one" class="nav-bar" />
-  <router-view
-    class="tab-controler"
-    name="two"
-    :titles="['推荐', '歌手', '排行', '搜索']"
-    :path="['/recommend', '/singer', '/rank', 'search']"
-  ></router-view>
   <!-- keep-alive里面嵌套router-view已经不能用 -->
   <router-view v-slot="{ Component }">
     <keep-alive include="Recommend">
@@ -34,9 +28,5 @@ export default {
   position: relative;
   z-index: 1;
   background-color: var(--color-background);
-}
-.tab-controler {
-  position: relative;
-  z-index: 1;
 }
 </style>

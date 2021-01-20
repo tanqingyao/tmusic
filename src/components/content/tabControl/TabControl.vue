@@ -69,6 +69,6 @@ export default {
 
 /* 活跃状态下的小横条 */
 .active span {
-  border-bottom: 3px solid var(--color-theme-d);
+  border-bottom: 3px solid var(--color-theme);
 }
 </style>
