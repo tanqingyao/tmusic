@@ -40,13 +40,13 @@ export default {
 </script>
 <style scoped>
 .player-nav-bar {
-  background-color: var(--color-highlight-background);
   height: 55px;
   width: 100vw;
 }
 .down-icon {
   margin-top: 7px;
   width: 30px;
+  z-index: 9;
 }
 .text {
   font-size: 5px;

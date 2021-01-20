@@ -93,7 +93,6 @@ export default {
 </script>
 <style scoped>
 .full-tab-bar {
-  background-color: var(--color-highlight-background);
   padding: 0 15px;
 }
 .full-tab-bar img {

@@ -26,7 +26,6 @@ export default {
   height: calc(100% - 55px - 40px - 60px);
   /* 居中对齐 */
   text-align: center;
-  background-color: var(--color-highlight-background);
 }
 .player-content img {
   width: 250px;

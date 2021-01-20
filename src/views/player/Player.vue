@@ -9,6 +9,7 @@
     <transition name="fade">
       <FullPlayer
         v-show="isFull"
+        :currentSong="currentSong"
         :currentTime="audioInfo.currentTime"
         :duration="audioInfo.duration"
         v-model:playOrder="playerControl.playOrder"
@@ -71,7 +72,6 @@ export default {
   /* 控制器监听相关 */
   watch: {
     "playerControl.isPlay": function(val, oldVal) {
-      console.log(val, oldVal);
       this.$refs.audio.setPlayState(val);
     }
   },

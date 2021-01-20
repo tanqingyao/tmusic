@@ -76,7 +76,6 @@ export default {
   bottom: 60px;
   height: 40px;
   color: var(--color-background);
-  background-color: var(--color-highlight-background);
 }
 .progerss-time {
   height: 20px;
