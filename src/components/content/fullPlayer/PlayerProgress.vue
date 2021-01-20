@@ -18,9 +18,9 @@
 </template>
 <script>
 export default {
-  name: "PlayerContent",
+  name: "PlayerProgress",
   emits: {
-    "set-currentTime": null
+    "set-current-time": null
   },
   props: {
     currentTime: {
@@ -55,13 +55,10 @@ export default {
       // 暂停监听value
       this.unwatch();
       this.isTouch = true;
-      // console.log("touch start");
     },
     touchEnd(e) {
-      // console.log("touch end", e.target.value);
       // 跳转至对应时间
-      this.$emit("set-currentTime", Number.parseFloat(e.target.value));
-
+      this.$emit("set-current-time", Number.parseFloat(e.target.value));
       // 开始监听
       this.unwatch = this.progressWatcher();
       // 改变样式

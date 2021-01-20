@@ -1,5 +1,5 @@
 <template>
-  <div id="tab-bar">
+  <div class="tab-bar">
     <slot />
   </div>
 </template>
@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style scoped>
-#tab-bar {
+.tab-bar {
   /* flex进行布局 */
   display: flex;
   justify-content: space-around;

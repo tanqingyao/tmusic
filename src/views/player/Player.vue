@@ -7,77 +7,52 @@
       @update:duration="audioInfo.duration = $event"
     />
     <transition name="fade">
-      <div class="full-screen" v-show="isFull">
-        <PlayerNavBar @changeScreen="changeScreen" />
-        <PlayerContent />
-        <PlayerProgress
-          :currentTime="audioInfo.currentTime"
-          :duration="audioInfo.duration"
-          @set-currentTime="setTimeTo($event)"
-        />
-        <FullTabBar
-          v-model:playOrder="playerControl.playOrder"
-          v-model:isPlay="playerControl.isPlay"
-          v-model:isLike="playerControl.isLike"
-          @switch="switchSong"
-          @update:isLike="likeClick"
-        />
-      </div>
+      <FullPlayer
+        v-show="isFull"
+        :currentTime="audioInfo.currentTime"
+        :duration="audioInfo.duration"
+        v-model:playOrder="playerControl.playOrder"
+        v-model:isPlay="playerControl.isPlay"
+        v-model:isLike="playerControl.isLike"
+        @change-screen="changeScreen"
+        @set-current-time="setTimeTo($event)"
+        @switch="switchSong"
+      />
     </transition>
     <transition name="fade">
-      <div class="mini-screen" v-show="!isFull">
-        <MiniTabBar
-          v-model:isPlay="playerControl.isPlay"
-          @changeScreen="changeScreen"
-          @menuBtnClick="showPlayMenu"
-        />
-        <transition name="fade">
-          <PlayerList
-            v-show="showPlayList"
-            v-model:isShow="showPlayList"
-            :playList="playList"
-          />
-        </transition>
-      </div>
+      <MiniPlayer
+        v-show="!isFull"
+        v-model:isPlay="playerControl.isPlay"
+        @change-screen="changeScreen"
+      />
     </transition>
   </div>
 </template>
 <script>
 import Audio from "./childComps/Audio";
-import PlayerNavBar from "./childComps/playerView/PlayerNavBar";
-import PlayerProgress from "./childComps/playerView/PlayerProgress";
-import FullTabBar from "./childComps/playerView/FullTabBar";
-import PlayerContent from "./childComps/playerView/PlayerContent";
-
-import MiniTabBar from "./childComps/miniPlayer/MiniTabBar";
-import PlayerList from "./childComps/miniPlayer/PlayerList";
+import FullPlayer from "./childComps/FullPlayer";
+import MiniPlayer from "./childComps/MiniPlayer";
 
 import { _getSongById, Song } from "network/song";
 import { mapState, mapMutations, mapActions } from "vuex";
 import { SET_CURRENT_SONG } from "store/mutations-types";
-import { computed } from "vue";
+import { provide, computed, getCurrentInstance } from "vue";
 export default {
   name: "Player",
   components: {
     Audio,
-    PlayerNavBar,
-    PlayerContent,
-    PlayerProgress,
-    FullTabBar,
-    MiniTabBar,
-    PlayerList
+    FullPlayer,
+    MiniPlayer
   },
   provide() {
     return {
-      song: computed(() => this.currentSong),
-      currentTime: computed(() => this.audioInfo.currentTime),
-      duration: computed(() => this.audioInfo.duration)
+      currentTimeFunc: () => this.audioInfo.currentTime,
+      durationFunc: () => this.audioInfo.duration
     };
   },
   data() {
     return {
       isFull: false,
-      showPlayList: false,
       playerControl: {
         playOrder: 0,
         isPlay: false,
@@ -91,17 +66,20 @@ export default {
     };
   },
   computed: {
-    ...mapState(["playList", "currentSong"])
+    ...mapState(["currentSong"])
   },
   /* 控制器监听相关 */
   watch: {
     "playerControl.isPlay": function(val, oldVal) {
+      console.log(val, oldVal);
       this.$refs.audio.setPlayState(val);
     }
   },
   created() {
+    // let autoAdd = true;
+    let autoAdd = false;
     // 自动添加歌曲
-    if (Object.keys(this.currentSong).length === 0) {
+    if (autoAdd && Object.keys(this.currentSong).length === 0) {
       this.initPlayerData({ songmid: "002dK7hR4DlIa3" }).then(song => {
         this.$toast.show("已自动添加歌曲~", 1500);
         this.setCurrentSong(song);
@@ -123,9 +101,6 @@ export default {
     changeScreen() {
       this.isFull = !this.isFull;
     },
-    showPlayMenu() {
-      this.showPlayList = true;
-    },
     switchSong(payload) {
       // paylaod 为last或next
       if (this.playerControl.playOrder === 0) {
@@ -133,9 +108,6 @@ export default {
       } else {
         this.switchByOrder(payload);
       }
-    },
-    likeClick() {
-      console.log("like", this.playerControl.isLike);
     }
   }
 };
@@ -151,18 +123,13 @@ export default {
   height: 0;
   display: none;
 }
-.full-screen {
-  height: 100vh;
-  background-color: var(--color-background);
-}
+
 .fade-enter-active {
   transition: all 0.4s ease-in-out;
 }
-
 .fade-leave-active {
   transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
 }
-
 .fade-enter-from,
 .fade-leave-to {
   transform: translateY(20px);

@@ -2,7 +2,7 @@
   <NavBar class="nav-bar">
     <template #left>
       <div class="back-icon" @click="backClick">
-        <img src="~assets/img/common/left_chevron_4.svg" alt="" />
+        <img src="~assets/img/common/arrow_left.svg" alt="" />
       </div>
     </template>
     <template #center>

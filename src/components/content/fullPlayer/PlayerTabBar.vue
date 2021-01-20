@@ -53,7 +53,7 @@ import TabBarItem from "components/common/tabbar/TabBarItem";
 
 import { mapMutations } from "vuex";
 export default {
-  name: "FullTabBar",
+  name: "PlayerTabBar",
   components: {
     TabBar,
     TabBarItem

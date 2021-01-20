@@ -1,5 +1,5 @@
 <template>
-  <div class="play-list" @click="closeClick">
+  <div class="play-list" @click="$emit('update:isShow', false)">
     <Scroll ref="scroll" class="wrapper" @click.stop>
       <MusicListItem
         class="list-item"
@@ -29,6 +29,9 @@ export default {
     MusicListItem,
     Scroll
   },
+  emits: {
+    "update:isShow": null
+  },
   props: {
     isShow: {
       type: Boolean,
@@ -48,9 +51,6 @@ export default {
     ...mapMutations({
       setCurrentSong: SET_CURRENT_SONG
     }),
-    closeClick() {
-      this.$emit("update:isShow", false);
-    },
     songClick(item) {
       // 在播放列表中选歌,直接自动播放
       this.setCurrentSong(item);

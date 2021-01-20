@@ -1,5 +1,5 @@
 <template>
-  <TabBar class="mini-tab-bar" @click="tabClick">
+  <TabBar class="mini-tab-bar" @click="$emit('changeScreen')">
     <TabBarItem class="tab-cover">
       <template #itemIcon>
         <img :src="currentSong.albumImg" alt="歌曲封面" />
@@ -15,7 +15,11 @@
         </span>
       </template>
     </TabBarItem>
-    <TabBarItem class="tab-img" @click.stop @click="playClick">
+    <TabBarItem
+      class="tab-img"
+      @click.stop
+      @click="$emit('update:isPlay', !isPlay)"
+    >
       <template #itemIcon>
         <img
           v-show="isPlay"
@@ -29,7 +33,7 @@
         />
       </template>
     </TabBarItem>
-    <TabBarItem class="tab-img" @click.stop @click="menuClick">
+    <TabBarItem class="tab-img" @click.stop @click="$emit('menuBtnClick')">
       <template #itemIcon>
         <img src="~assets/img/player/mini_list.svg" alt="歌曲列表" />
       </template>
@@ -46,6 +50,11 @@ export default {
     TabBar,
     TabBarItem
   },
+  emits: {
+    changeScreen: null,
+    menuBtnClick: null,
+    "update:isPlay": null
+  },
   props: {
     isPlay: {
       type: Boolean,
@@ -56,17 +65,6 @@ export default {
   },
   computed: {
     ...mapState(["currentSong"])
-  },
-  methods: {
-    tabClick() {
-      this.$emit("changeScreen");
-    },
-    playClick() {
-      this.$emit("update:isPlay", !this.isPlay);
-    },
-    menuClick() {
-      this.$emit("menuBtnClick");
-    }
   }
 };
 </script>

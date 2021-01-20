@@ -106,8 +106,6 @@ export default {
     timeupdateListener(e) {
       //元素的currentTime属性表示的时间已经改变。
       this.$emit("update-currentTime", this.$refs.audio.currentTime);
-      // console.log(this.expectTime);
-      // console.log(Math.floor(e.timeStamp / 1000));
     },
     durationchangeListener() {
       //元信息已载入或已改变，表明媒体的长度发生了改变

@@ -11,6 +11,7 @@
     <template #center>
       <div class="text">
         <span>{{ currentSong.name }}</span>
+        <span> - </span>
         <span>{{ currentSong.singer }}</span>
       </div>
     </template>
@@ -21,6 +22,9 @@ import { mapState } from "vuex";
 import NavBar from "components/common/navbar/NavBar";
 export default {
   name: "PlayerNavBar",
+  emits: {
+    "change-screen": null
+  },
   components: {
     NavBar
   },
@@ -29,7 +33,7 @@ export default {
   },
   methods: {
     backIconClick() {
-      this.$emit("changeScreen");
+      this.$emit("change-screen");
     }
   }
 };
