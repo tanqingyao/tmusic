@@ -19,7 +19,7 @@ import MusicListItem from "components/content/musicList/MusicListItem";
 
 import { _getSonglistById } from "network/detail";
 
-import { SET_CURRENT_SONG } from "store/mutations-types";
+import { SET_CURRENT_SONG, SET_FULL_PLAYER } from "store/mutations-types";
 export default {
   name: "Songlist",
   components: { MusicListItem },
@@ -38,6 +38,8 @@ export default {
         .then(song => {
           if (song) {
             this.$toast.show("成功添加歌曲~", 1500);
+            // 自动跳转到player页面
+            this.$store.commit(SET_FULL_PLAYER, true);
           } else {
             this.$toast.show("添加失败", 1500);
           }

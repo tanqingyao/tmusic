@@ -62,7 +62,6 @@ export default {
     },
     setPlayTime(time) {
       this.$refs.audio.currentTime = Number.parseFloat(time);
-      console.log("set time to:", this.$refs.audio.currentTime);
       this.$refs.audio.play();
     },
     emit(state) {

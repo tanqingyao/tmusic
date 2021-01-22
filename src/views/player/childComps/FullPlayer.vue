@@ -3,7 +3,7 @@
     <div class="player-bg" :style="styleObject"></div>
     <div class="player-view">
       <PlayerNavBar @change-screen="changeScreen" />
-      <PlayerContent />
+      <PlayerContent :currentTime="currentTime" />
       <PlayerProgress
         :currentTime="currentTime"
         :duration="duration"
@@ -44,10 +44,6 @@ export default {
     "update:isLike": null
   },
   props: {
-    currentSong: {
-      type: Object,
-      default: {}
-    },
     playOrder: {
       type: Number,
       default: 0
@@ -74,6 +70,9 @@ export default {
       styleObject: null
     };
   },
+  computed: {
+    ...mapState(["currentSong"])
+  },
   watch: {
     playOrder: function(val, oldVal) {
       this.$emit("update:playOrder", val);
@@ -81,15 +80,19 @@ export default {
     isPlay: function(val, oldVal) {
       this.$emit("update:isPlay", val);
     },
-
     isLike: function(val, oldVal) {
       this.$emit("update:isLike", val);
+    },
+    currentSong(newVal, oldVal) {
+      this.styleObject = {
+        "background-image": "url(" + newVal.albumImg + ")"
+      };
     }
   },
-  mounted() {
-    this.styleObject = {
-      "background-image": "url(" + this.currentSong.albumImg + ")"
-    };
+  created() {
+    // setInterval(() => {
+    //   console.log(this.isPlay);
+    // }, 5000);
   },
   methods: {
     changeScreen() {
@@ -113,13 +116,12 @@ export default {
   height: 100vh;
 }
 .player-bg {
-  position: absolute;
+  position: fixed;
   top: 40px;
   bottom: 0;
-  width: 100%;
-  height: 100%;
+  left: 0;
+  right: 0;
   background-size: cover;
   filter: blur(90px);
-  transform: translateY(-40px);
 }
 </style>

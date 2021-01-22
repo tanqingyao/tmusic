@@ -1,25 +1,20 @@
 import { ADD_TO_PLAYLIST, SET_CURRENT_SONG } from "./mutations-types";
 
-import { _getSongUrlById, _getSongInfoById, Song } from "network/song";
+import {
+  _getSongUrlById,
+  _getSongInfoById,
+  _getLyricById,
+  Song
+} from "network/song";
 import { _getAlbumById } from "network/album";
 export default {
-  async addToPlayList({ state, getters, commit }, payload) {
+  async addToPlayList({ state, getters, dispatch, commit }, payload) {
     // 获取单个id信息:payload为专辑内歌曲信息
     let id = payload.songmid;
     let song = getters.getSongById(id);
     // 若当前播放列表已经有,则不获取歌曲信息,直接设置当前歌曲
     if (!song) {
-      let urlResponse = await _getSongUrlById(id);
-      let infoResponse = await _getSongInfoById(id);
-      let url = urlResponse.data.data[id];
-      let info = infoResponse.data.data[id];
-
-      let albumID = info.track_info.album.mid;
-      let albumResponse = await _getAlbumById(albumID);
-      let album = albumResponse.data.data;
-
-      song = new Song(info, url, album);
-      // console.log(song);
+      song = await dispatch("_fetchSongData", id);
       commit(ADD_TO_PLAYLIST, song);
     }
     // TODO 若没有选择自动播放,直接添加至播放列表.否则改变当前歌曲
@@ -59,5 +54,27 @@ export default {
       index = Math.floor(Math.random() * length);
     }
     commit(SET_CURRENT_SONG, state.playList[index]);
+  },
+
+  async _fetchSongData(context, id) {
+    // 歌曲播放url
+    let urlResponse = await _getSongUrlById(id);
+    let url = urlResponse.data.data[id];
+    // 歌曲信息
+    let infoResponse = await _getSongInfoById(id);
+    let info = infoResponse.data.data[id];
+    // 歌曲对应专辑
+    let albumID = info.track_info.album.mid;
+    let albumResponse = await _getAlbumById(albumID);
+    let album = albumResponse.data.data;
+    // 歌曲对应歌词
+    // let lyricResponse = await _getLyricById(id);
+    let {
+      data: { data: lyrics }
+    } = await _getLyricById(id);
+
+    return new Promise((resolve, reject) => {
+      resolve(new Song(info, url, album, lyrics));
+    });
   }
 };

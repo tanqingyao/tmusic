@@ -6,7 +6,8 @@ import actions from "./actions";
 const store = createStore({
   state() {
     return {
-      autoPlay: false,
+      isPlayerFull: false,
+      autoPlay: true,
       playList: [],
       currentSong: {}
     };

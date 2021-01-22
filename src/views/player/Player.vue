@@ -8,8 +8,7 @@
     />
     <transition name="fade">
       <FullPlayer
-        v-show="isFull"
-        :currentSong="currentSong"
+        v-show="isPlayerFull"
         :currentTime="audioInfo.currentTime"
         :duration="audioInfo.duration"
         v-model:playOrder="playerControl.playOrder"
@@ -22,7 +21,7 @@
     </transition>
     <transition name="fade">
       <MiniPlayer
-        v-show="!isFull"
+        v-show="!isPlayerFull"
         v-model:isPlay="playerControl.isPlay"
         @change-screen="changeScreen"
       />
@@ -36,7 +35,7 @@ import MiniPlayer from "./childComps/MiniPlayer";
 
 import { _getSongById, Song } from "network/song";
 import { mapState, mapMutations, mapActions } from "vuex";
-import { SET_CURRENT_SONG } from "store/mutations-types";
+import { SET_CURRENT_SONG, SET_FULL_PLAYER } from "store/mutations-types";
 import { provide, computed, getCurrentInstance } from "vue";
 export default {
   name: "Player",
@@ -53,7 +52,7 @@ export default {
   },
   data() {
     return {
-      isFull: false,
+      // isPlayerFull: false,
       playerControl: {
         playOrder: 0,
         isPlay: false,
@@ -67,7 +66,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["currentSong"])
+    ...mapState(["currentSong", "isPlayerFull"])
   },
   /* 控制器监听相关 */
   watch: {
@@ -88,7 +87,8 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setCurrentSong: SET_CURRENT_SONG
+      setCurrentSong: SET_CURRENT_SONG,
+      setFullPlayer: SET_FULL_PLAYER
     }),
     ...mapActions({
       initPlayerData: "addToPlayList",
@@ -99,7 +99,8 @@ export default {
       this.$refs.audio.setPlayTime(time);
     },
     changeScreen() {
-      this.isFull = !this.isFull;
+      // this.isPlayerFull = !this.isPlayerFull;
+      this.setFullPlayer(!this.isPlayerFull);
     },
     switchSong(payload) {
       // paylaod 为last或next
