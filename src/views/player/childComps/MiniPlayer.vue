@@ -1,7 +1,6 @@
 <template>
   <div>
     <MiniTabBar
-      v-model:isPlay="isPlay"
       @changeScreen="$emit('changeScreen')"
       @menuBtnClick="isShow = true"
     />
@@ -26,14 +25,9 @@ export default {
     MiniTabBar
   },
   emits: {
-    changeScreen: null,
-    "update:isPlay": null
+    changeScreen: null
   },
   props: {
-    isPlay: {
-      type: Boolean,
-      default: false
-    },
     currentTime: {
       type: Number,
       default: 0
@@ -50,11 +44,6 @@ export default {
   },
   computed: {
     ...mapState(["playList"])
-  },
-  watch: {
-    isPlay: function(val, oldVal) {
-      this.$emit("update:isPlay", val);
-    }
   },
   methods: {}
 };

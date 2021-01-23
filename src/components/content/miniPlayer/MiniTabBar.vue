@@ -15,19 +15,15 @@
         </span>
       </template>
     </TabBarItem>
-    <TabBarItem
-      class="tab-img"
-      @click.stop
-      @click="$emit('update:isPlay', !isPlay)"
-    >
+    <TabBarItem class="tab-img" @click.stop @click="handlePlayClick">
       <template #itemIcon>
         <img
-          v-show="isPlay"
+          v-show="isPlaying"
           src="~assets/img/player/mini_pause.svg"
           alt="暂停"
         />
         <img
-          v-show="!isPlay"
+          v-show="!isPlaying"
           src="~assets/img/player/mini_play.svg"
           alt="播放"
         />
@@ -42,6 +38,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
+import { SET_PLAYING } from "store/mutations-types";
 import TabBar from "components/common/tabbar/TabBar";
 import TabBarItem from "components/common/tabbar/TabBarItem";
 export default {
@@ -52,19 +49,16 @@ export default {
   },
   emits: {
     changeScreen: null,
-    menuBtnClick: null,
-    "update:isPlay": null
+    menuBtnClick: null
   },
-  props: {
-    isPlay: {
-      type: Boolean,
-      default() {
-        return false;
-      }
-    }
-  },
+  props: {},
   computed: {
-    ...mapState(["currentSong"])
+    ...mapState(["currentSong", "isPlaying"])
+  },
+  methods: {
+    handlePlayClick() {
+      this.$store.commit(SET_PLAYING, !this.isPlaying);
+    }
   }
 };
 </script>

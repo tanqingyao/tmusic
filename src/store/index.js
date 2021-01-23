@@ -6,10 +6,15 @@ import actions from "./actions";
 const store = createStore({
   state() {
     return {
+      playList: [],
+      /* 播放器相关 */
       isPlayerFull: false,
       autoPlay: true,
-      playList: [],
-      currentSong: {}
+      currentSong: {},
+      isPlaying: false,
+      expectTime: 0,
+      duration: -1,
+      currentTime: 0
     };
   },
   getters,

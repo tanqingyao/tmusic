@@ -24,10 +24,10 @@
         <img src="~assets/img/player/back.svg" alt="上一首" />
       </template>
     </TabBarItem>
-    <TabBarItem class="play" @click="$emit('update:isPlay', !isPlay)">
+    <TabBarItem class="play" @click="handlePlayClick">
       <template #itemIcon>
-        <img v-show="isPlay" src="~assets/img/player/pause.svg" alt="暂停" />
-        <img v-show="!isPlay" src="~assets/img/player/play.svg" alt="播放" />
+        <img v-show="isPlaying" src="~assets/img/player/pause.svg" alt="暂停" />
+        <img v-show="!isPlaying" src="~assets/img/player/play.svg" alt="播放" />
       </template>
     </TabBarItem>
     <TabBarItem class="next" @click="$emit('switch', 'next')">
@@ -51,7 +51,8 @@
 import TabBar from "components/common/tabbar/TabBar";
 import TabBarItem from "components/common/tabbar/TabBarItem";
 
-import { mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
+import { SET_PLAYING } from "store/mutations-types";
 export default {
   name: "PlayerTabBar",
   components: {
@@ -60,7 +61,6 @@ export default {
   },
   emits: {
     "update:playOrder": null,
-    "update:isPlay": null,
     "update:isLike": null,
     switch: payload => {
       if (payload === "last" || payload === "next") {
@@ -75,18 +75,20 @@ export default {
       type: Number,
       default: 0
     },
-    isPlay: {
-      type: Boolean,
-      default: false
-    },
     isLike: {
       type: Boolean,
       default: false
     }
   },
+  computed: {
+    ...mapState(["isPlaying"])
+  },
   methods: {
     orderClick() {
       this.$emit("update:playOrder", (this.playOrder + 1) % 3);
+    },
+    handlePlayClick() {
+      this.$store.commit(SET_PLAYING, !this.isPlaying);
     }
   }
 };

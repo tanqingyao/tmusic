@@ -1,30 +1,17 @@
 <template>
   <div class="player-view">
-    <Audio
-      ref="audio"
-      v-model:isPlay="playerControl.isPlay"
-      @update-currentTime="audioInfo.currentTime = $event"
-      @update:duration="audioInfo.duration = $event"
-    />
+    <Audio ref="audio" />
     <transition name="fade">
       <FullPlayer
-        v-show="isPlayerFull"
-        :currentTime="audioInfo.currentTime"
-        :duration="audioInfo.duration"
+        v-if="isPlayerFull"
         v-model:playOrder="playerControl.playOrder"
-        v-model:isPlay="playerControl.isPlay"
         v-model:isLike="playerControl.isLike"
         @change-screen="changeScreen"
-        @set-current-time="setTimeTo($event)"
         @switch="switchSong"
       />
     </transition>
     <transition name="fade">
-      <MiniPlayer
-        v-show="!isPlayerFull"
-        v-model:isPlay="playerControl.isPlay"
-        @change-screen="changeScreen"
-      />
+      <MiniPlayer v-if="!isPlayerFull" @change-screen="changeScreen" />
     </transition>
   </div>
 </template>
@@ -34,8 +21,12 @@ import FullPlayer from "./childComps/FullPlayer";
 import MiniPlayer from "./childComps/MiniPlayer";
 
 import { _getSongById, Song } from "network/song";
-import { mapState, mapMutations, mapActions } from "vuex";
-import { SET_CURRENT_SONG, SET_FULL_PLAYER } from "store/mutations-types";
+import { mapState, mapActions } from "vuex";
+import {
+  SET_CURRENT_SONG,
+  SET_FULL_PLAYER,
+  SET_PLAYING
+} from "store/mutations-types";
 import { provide, computed, getCurrentInstance } from "vue";
 export default {
   name: "Player",
@@ -44,63 +35,36 @@ export default {
     FullPlayer,
     MiniPlayer
   },
-  provide() {
-    return {
-      currentTimeFunc: () => this.audioInfo.currentTime,
-      durationFunc: () => this.audioInfo.duration
-    };
-  },
   data() {
     return {
-      // isPlayerFull: false,
       playerControl: {
         playOrder: 0,
-        isPlay: false,
         isLike: false
-      },
-      audioInfo: {
-        currentTime: 0,
-        duration: 1,
-        expectTime: 0
       }
     };
   },
   computed: {
     ...mapState(["currentSong", "isPlayerFull"])
   },
-  /* 控制器监听相关 */
-  watch: {
-    "playerControl.isPlay": function(val, oldVal) {
-      this.$refs.audio.setPlayState(val);
-    }
-  },
   created() {
-    // let autoAdd = true;
-    let autoAdd = false;
     // 自动添加歌曲
+    let autoAdd = true;
+    // let autoAdd = false;
     if (autoAdd && Object.keys(this.currentSong).length === 0) {
       this.initPlayerData({ songmid: "002dK7hR4DlIa3" }).then(song => {
         this.$toast.show("已自动添加歌曲~", 1500);
-        this.setCurrentSong(song);
+        this.$store.commit(SET_CURRENT_SONG, song);
       });
     }
   },
   methods: {
-    ...mapMutations({
-      setCurrentSong: SET_CURRENT_SONG,
-      setFullPlayer: SET_FULL_PLAYER
-    }),
     ...mapActions({
       initPlayerData: "addToPlayList",
       switchByOrder: "switchByOrder",
       switchByShuffle: "switchByShuffle"
     }),
-    setTimeTo(time) {
-      this.$refs.audio.setPlayTime(time);
-    },
     changeScreen() {
-      // this.isPlayerFull = !this.isPlayerFull;
-      this.setFullPlayer(!this.isPlayerFull);
+      this.$store.commit(SET_FULL_PLAYER, !this.isPlayerFull);
     },
     switchSong(payload) {
       // paylaod 为last或next

@@ -1,13 +1,19 @@
 <template>
-  <div>
-    Singer
+  <div class="singer">
+    <ul>
+      <li v-for="(item, index) in list" :ref="setLyricRefs">
+        {{ item }}
+      </li>
+    </ul>
+    <div class="scroll-line">
+      <div class="line-left">
+        <img src="~assets/img/player/mini_play.svg" alt="播放" />
+      </div>
+      <div class="line-center"></div>
+      <div class="line-right">时间</div>
+    </div>
+    <button @click="btnClick">点击</button>
   </div>
-  <ul>
-    <li v-for="(item, index) in list" :ref="setLyricRefs">
-      {{ item }}
-    </li>
-  </ul>
-  <button @click="btnClick">点击</button>
 </template>
 <script>
 export default {
@@ -40,4 +46,32 @@ export default {
   }
 };
 </script>
-<style scoped></style>
+<style scoped>
+.singer {
+  height: 100vh;
+  background-color: var(--color-background-d);
+}
+.scroll-line {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 50%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.line-left,
+.line-right {
+  width: 10%;
+}
+.line-left img {
+  width: 40%;
+  margin-left: 15px;
+  margin-top: 5px;
+}
+.line-center {
+  height: 1px;
+  width: 70%;
+  background-color: var(--color-text-l);
+}
+</style>

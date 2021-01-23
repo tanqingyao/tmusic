@@ -3,15 +3,10 @@
     <div class="player-bg" :style="styleObject"></div>
     <div class="player-view">
       <PlayerNavBar @change-screen="changeScreen" />
-      <PlayerContent :currentTime="currentTime" />
-      <PlayerProgress
-        :currentTime="currentTime"
-        :duration="duration"
-        @set-current-time="$emit('set-current-time', $event)"
-      />
+      <PlayerContent />
+      <PlayerProgress />
       <PlayerTabBar
         v-model:playOrder="playOrder"
-        v-model:isPlay="isPlay"
         v-model:isLike="isLike"
         @switch="$emit('switch', $event)"
         @update:isLike="likeClick($event)"
@@ -37,10 +32,8 @@ export default {
   },
   emits: {
     "change-screen": null,
-    "set-current-time": null,
     switch: null,
     "update:playOrder": null,
-    "update:isPlay": null,
     "update:isLike": null
   },
   props: {
@@ -48,21 +41,9 @@ export default {
       type: Number,
       default: 0
     },
-    isPlay: {
-      type: Boolean,
-      default: false
-    },
     isLike: {
       type: Boolean,
       default: false
-    },
-    currentTime: {
-      type: Number,
-      default: 0
-    },
-    duration: {
-      type: Number,
-      default: 1
     }
   },
   data() {
@@ -77,9 +58,6 @@ export default {
     playOrder: function(val, oldVal) {
       this.$emit("update:playOrder", val);
     },
-    isPlay: function(val, oldVal) {
-      this.$emit("update:isPlay", val);
-    },
     isLike: function(val, oldVal) {
       this.$emit("update:isLike", val);
     },
@@ -88,11 +66,6 @@ export default {
         "background-image": "url(" + newVal.albumImg + ")"
       };
     }
-  },
-  created() {
-    // setInterval(() => {
-    //   console.log(this.isPlay);
-    // }, 5000);
   },
   methods: {
     changeScreen() {

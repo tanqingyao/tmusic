@@ -1,14 +1,22 @@
 /* 防抖函数,调用非常频繁的时候,在延迟时间内的下一次执行会被取消 */
 export function debounce(func, delay = 50) {
-  let timer = null;
-  return function(...args) {
-    if (timer) {
-      clearTimeout(timer);
+  let timerId = undefined;
+  function cancel() {
+    if (timerId !== undefined) {
+      clearTimeout(timerId);
     }
-    timer = setTimeout(() => {
+    timerId = undefined;
+  }
+  function debounced(...args) {
+    if (timerId) {
+      clearTimeout(timerId);
+    }
+    timerId = setTimeout(() => {
       func.apply(this, args);
     }, delay);
-  };
+  }
+  debounced.cancel = cancel;
+  return debounced;
 }
 /* 节流函数,调用非常频繁的时候,指定时间内执行一次 */
 export function throttle(func, duration = 50, options) {

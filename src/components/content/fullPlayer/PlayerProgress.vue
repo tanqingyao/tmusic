@@ -17,25 +17,17 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
+import { SET_PLAY_TIME } from "store/mutations-types";
 export default {
   name: "PlayerProgress",
-  emits: {
-    "set-current-time": null
-  },
-  props: {
-    currentTime: {
-      type: Number,
-      default: 0
-    },
-    duration: {
-      type: Number,
-      default: 1
-    }
-  },
   data() {
     return {
       isTouch: false
     };
+  },
+  computed: {
+    ...mapState(["duration", "currentTime"])
   },
   created() {
     this.unwatch = this.progressWatcher();
@@ -49,6 +41,7 @@ export default {
     parseTimeString(num) {
       let min = Math.floor(num / 60);
       let sec = Math.floor(num - min * 60);
+      sec = ("00" + sec).slice(-2);
       return `${min}:${sec}`;
     },
     touchStart(e) {
@@ -58,7 +51,7 @@ export default {
     },
     touchEnd(e) {
       // 跳转至对应时间
-      this.$emit("set-current-time", Number.parseFloat(e.target.value));
+      this.$store.commit(SET_PLAY_TIME, Number.parseFloat(e.target.value));
       // 开始监听
       this.unwatch = this.progressWatcher();
       // 改变样式

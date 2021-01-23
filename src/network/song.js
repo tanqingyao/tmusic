@@ -41,7 +41,6 @@ export class Song {
 
     this.albumImg = album.picUrl;
 
-    this.lyric = lyrics.lyric;
-    this.trans = lyrics.trans;
+    this.lyrics = lyrics;
   }
 }

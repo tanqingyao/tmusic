@@ -20,22 +20,15 @@
   </audio>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
+import {
+  SET_PLAYING,
+  SET_CURRENT_TIME,
+  SET_DURATION
+} from "store/mutations-types";
 export default {
   name: "Audio",
-  emits: {
-    "update:isPlay": null,
-    "update-currentTime": null,
-    "update:duration": payload => {
-      if (payload !== 0) {
-        return true;
-      }
-      console.warn("获取歌曲长度失败，值为", payload);
-      return false;
-    }
-  },
   props: {
-    isPlay: Boolean,
     //持续时间（总长度），以秒为单位
     duration: Number
   },
@@ -44,54 +37,69 @@ export default {
       // 枚举属性，让开发者自行思考来示意浏览器使用何种加载方式以达到最好的用户体验。可以是以下属性之一：none,metadata,auto
       preload: "auto",
       //表示是否静音的布尔值。默认值为 false，表示有声音。
-      muted: false,
+      muted: false
       //以秒为单位的当前音频的播放位置
-      currentTime: undefined
+      // currentTime: undefined
     };
   },
   computed: {
-    ...mapState(["autoPlay", "currentSong"])
+    ...mapState(["autoPlay", "currentSong", "isPlaying", "expectTime"])
+  },
+
+  /* 监听控制器 */
+  watch: {
+    isPlaying: function(val, oldVal) {
+      // console.log(val);
+      this._setPlaying(val);
+    },
+    expectTime: function(val, oldVal) {
+      this._setPlayTime(val);
+    }
   },
   methods: {
-    setPlayState(isPlayState) {
-      if (isPlayState) {
+    _setPlaying(state) {
+      // console.log(state);
+      if (state) {
         this.$refs.audio.play();
       } else {
         this.$refs.audio.pause();
       }
     },
-    setPlayTime(time) {
+    _setPlayTime(time) {
       this.$refs.audio.currentTime = Number.parseFloat(time);
-      this.$refs.audio.play();
+      this.$store.commit(SET_PLAYING, true);
     },
-    emit(state) {
-      this.$emit("update:isPlay", state);
+    setStorePlaying(state) {
+      this.$store.commit(SET_PLAYING, state);
     },
+    /*  
     getStartPostiong() {
       //方法能够用于确定媒体时间轴的开始位置。
       return this.$refs.audio.getStartDate();
     },
+    */
     /* audio eventListener */
     playListener(e) {
       // console.log("play after pause");
-      this.emit(true);
+      // this.emit(true);
     },
     playingListener() {
       // console.log("play whatever reason");
-      this.emit(true);
+      // this.emit(true);
     },
     pauseListener(e) {
       // console.log("pause");
-      this.emit(false);
+      // this.emit(false);
     },
     endListener() {
       console.log("end paly");
-      this.emit(false);
+      this.setStorePlaying(false);
+      // this.$store.commit(SET_PLAYING, false);
     },
     loadedmetadataListener(e) {
       // console.log("loadedmetadata");
       if (this.autoPlay) {
-        this.$refs.audio.play();
+        this.setStorePlaying(false);
       }
     },
     loadListener() {
@@ -100,15 +108,20 @@ export default {
     abortListener() {
       //在播放被终止时触发,例如, 当播放中的视频重新开始播放时会触发这个事件
       console.log("abort");
-      this.emit(false);
+      this.setStorePlaying(false);
     },
     timeupdateListener(e) {
       //元素的currentTime属性表示的时间已经改变。
-      this.$emit("update-currentTime", this.$refs.audio.currentTime);
+      this.$store.commit(SET_CURRENT_TIME, this.$refs.audio.currentTime);
     },
     durationchangeListener() {
       //元信息已载入或已改变，表明媒体的长度发生了改变
-      this.$emit("update:duration", this.$refs.audio.duration);
+      let payload = this.$refs.audio.duration;
+      if (payload !== 0) {
+        this.$store.commit(SET_DURATION, payload);
+      } else {
+        console.warn("获取歌曲长度失败，值为", payload);
+      }
     },
     emptiedListener() {
       //媒体被清空（初始化）时触发。
