@@ -4,8 +4,9 @@
     class="content-lyric"
     @touchstart="handleTouchStart"
     @touchend="debouncedTouchEnd"
+    @scroll="handleScroll"
   >
-    <div class="lyric-placeholder"></div>
+    <div :style="{ height: VerticalOffset + 'px' }"></div>
 
     <div
       class="lyric-line"
@@ -19,7 +20,7 @@
         <!-- text -->
       </div>
     </div>
-    <div class="lyric-placeholder"></div>
+    <div :style="{ height: VerticalOffset + 'px' }"></div>
   </Scroll>
 </template>
 <script>
@@ -33,7 +34,8 @@ export default defineComponent({
     Scroll
   },
   emits: {
-    scrolling: null
+    scrolling: null,
+    scrollTime: null
   },
   data() {
     return {
@@ -42,17 +44,31 @@ export default defineComponent({
         trans: [], //{time: , text: }
         el: []
       },
-      oldLyricRef: undefined, //记录当前歌词位置
-      currentLyricRef: undefined, //记录当前歌词位置
+      //播放歌词位置
+      currentLyricRef: undefined,
+      oldLyricRef: undefined,
+      //滚动歌词位置
+      currentScrollRef: undefined,
+      oldScrollRef: undefined,
       posYs: [],
-      isScrolling: false
+      isScrolling: false,
+      VerticalOffset: 255 //垂直偏移量
     };
   },
   computed: {
-    ...mapState(["currentSong", "currentTime"])
+    ...mapState(["currentSong", "currentTime"]),
+    lyricTrim() {
+      return this.lyricsArr.lyric.filter(el => el.time !== 0);
+    },
+    lyricLength() {
+      return this.lyricsArr.lyric.length;
+    },
+    lyricTrimLength() {
+      return this.lyricTrim.length;
+    }
   },
   created() {
-    console.log("create");
+    // 歌词滚动监听
     this.unwatchLyric = this.lyricWatcher();
     this.unwatchJump = this.jumpWatcher();
 
@@ -64,9 +80,10 @@ export default defineComponent({
       this.unwatchJump = this.jumpWatcher();
       this.$emit("scrolling", false);
     }, 5000);
-    console.log(this.debouncedTouchEnd);
   },
   activated() {
+    console.log(this.lyricsArr);
+    this.lyricsArr.el.forEach(el => console.log(el.offsetHeight));
     // 每次进入刷新滚动高度
     this.$refs.scroll.refresh();
     // 滚动到当前歌词位置
@@ -124,17 +141,9 @@ export default defineComponent({
       const [min, sec] = rawStringTime.substring(1, 9).split(":");
       return Number.parseFloat(min) * 60 + Number.parseFloat(sec);
     },
-    parseTimeString(num) {
-      let min = Math.floor(num / 60);
-      let sec = Math.floor(num - min * 60);
-      sec = ("00" + sec).slice(-2);
-      return `${min}:${sec}`;
-    },
     showLyricText({ time, text }) {
       if (time && text !== "") {
         return text;
-      } else {
-        return;
       }
     },
     findLyricRef(currentTime) {
@@ -165,13 +174,31 @@ export default defineComponent({
       // 频繁滑动情况，防抖处理
       this.debouncedTouchEnd();
     },
+    handleScroll(pos) {
+      //40px一个el
+      const counter = Math.floor((Math.abs(pos.y) + 20) / 40);
+      if (counter < this.lyricTrimLength) {
+        this.$emit("scrollTime", this.lyricTrim[counter].time);
+      }
+      const index = counter + this.lyricLength - this.lyricTrimLength;
+
+      //滚动时歌词样式
+      this.oldScrollRef = this.currentScrollRef;
+      this.currentScrollRef = this.lyricsArr.el[index];
+      if (this.oldScrollRef) {
+        this.oldScrollRef.style.color = "";
+      }
+      if (this.currentScrollRef) {
+        this.currentScrollRef.style.color = "#999";
+      }
+    },
     _jumpToCurrent() {
       if (this.currentLyricRef) {
         this.$refs.scroll.scrollToElement(
           this.currentLyricRef,
           undefined,
           undefined,
-          -256
+          -this.VerticalOffset
         );
       }
     }
@@ -186,14 +213,13 @@ export default defineComponent({
   position: relative;
 }
 .lyric-line {
-  line-height: 40px;
-  margin: 15px 0;
+  margin-bottom: var(--lyric-margin-bottom);
   color: var(--color-text-d);
 }
-.lyric-placeholder {
-  height: 256px;
-}
+/* .lyric-placeholder {
+  height: var(--vertical-height-offset);
+} */
 .lyric-text {
-  line-height: 20px;
+  line-height: var(--lyric-line-height);
 }
 </style>

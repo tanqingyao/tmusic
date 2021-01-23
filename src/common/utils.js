@@ -46,3 +46,10 @@ export function throttle(func, duration = 50, options) {
     }, duration);
   };
 }
+
+export function parseTime(num) {
+  let min = Math.floor(num / 60);
+  let sec = Math.floor(num - min * 60);
+  sec = ("00" + sec).slice(-2);
+  return `${min}:${sec}`;
+}

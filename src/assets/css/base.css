@@ -6,8 +6,12 @@
   --color-high-text: #ff5777;
   --color-tint: #ff8198;
   --color-background: #eee;
-  /* --font-size: 14px; */
-  --line-height: 1.5;
+
+  /* 用于歌词显示相关 */
+  --lyric-line-height: 20px;
+  --lyric-margin-bottom: 20px;
+  --vertical-height-offset: 255px;
+  --scroll-line-top: 330px;
 
   /*  颜色定义规范 */
   /* --color-background: #222; */
@@ -22,7 +26,7 @@
   --color-text-l: rgba(255, 255, 255, 0.5);
   --color-text-ll: rgba(255, 255, 255, 0.8);
 
-  /* //字体定义规范 */
+  /* 字体定义规范 */
   --font-size-small-s: 10px;
   --font-size-small: 12px;
   --font-size-medium: 14px;

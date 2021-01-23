@@ -7,24 +7,30 @@
     >
       <keep-alive>
         <ContentCover v-if="isCover" />
-        <ContentLyric v-else @scrolling="isScrolling = $event" />
+        <ContentLyric
+          v-else
+          @scrolling="isScrolling = $event"
+          @scrollTime="scrollTime = $event"
+        />
       </keep-alive>
     </transition>
   </div>
-  <div class="scroll-line" v-show="isScrolling">
-    <div class="line-left">
+  <div class="scroll-line" v-show="isScrolling && !isCover">
+    <div class="line-left" @click="jumpLyric">
       <img src="~assets/img/player/play_icon.svg" alt="播放" />
     </div>
     <div class="line-center"></div>
     <div class="line-right">
-      DOM元素对应时间戳
+      {{ showTime }}
     </div>
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
+import { SET_PLAY_TIME } from "store/mutations-types";
 import ContentCover from "./childComps/ContentCover";
 import ContentLyric from "./childComps/ContentLyric";
+import { parseTime } from "common/utils";
 export default {
   name: "PlayerContent",
   components: {
@@ -34,8 +40,14 @@ export default {
   data() {
     return {
       isCover: true,
-      isScrolling: false
+      isScrolling: false,
+      scrollTime: 0
     };
+  },
+  computed: {
+    showTime() {
+      return parseTime(this.scrollTime);
+    }
   },
   methods: {
     switchContent() {
@@ -43,6 +55,10 @@ export default {
       if (this.isCover) {
         // TODO 去除播放器虚化背景
       }
+    },
+    jumpLyric() {
+      console.log("跳转至选择歌词");
+      this.$store.commit(SET_PLAY_TIME, Number.parseFloat(this.scrollTime));
     }
   }
 };
@@ -59,7 +75,7 @@ export default {
   position: fixed;
   left: 0;
   right: 0;
-  top: 310px;
+  top: var(--scroll-line-top);
   display: flex;
   justify-content: space-evenly;
   align-items: center;
