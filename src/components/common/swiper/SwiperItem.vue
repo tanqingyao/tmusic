@@ -23,7 +23,7 @@ export default {
 }
 .slider img {
   width: 95%;
-  border-radius: 5%;
+  border-radius: 10px;
   justify-content: center;
 }
 </style>

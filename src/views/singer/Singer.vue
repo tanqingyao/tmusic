@@ -26,10 +26,10 @@ export default {
     };
   },
   created() {
-    console.log("Singer created");
+    // console.log("Singer created");
   },
   beforeUpdate() {
-    console.log("beforeUpdate");
+    // console.log("beforeUpdate");
     // this.lyricRefs = [];
   },
   methods: {

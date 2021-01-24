@@ -38,8 +38,7 @@ const routes = [
   {
     path: "/search",
     components: {
-      default: Search,
-      one: MainNavBar
+      default: Search
     }
   },
   {

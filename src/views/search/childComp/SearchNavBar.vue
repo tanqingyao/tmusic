@@ -1,44 +1,36 @@
 <template>
-  <NavBar class="nav-bar">
+  <NavBar>
     <template #left>
       <div class="back-icon" @click="$router.back">
         <img src="~assets/img/common/arrow_left.svg" alt="" />
       </div>
     </template>
     <template #center>
-      <div class="text">{{ title }}</div>
+      <SearchBar />
     </template>
   </NavBar>
 </template>
 <script>
+import SearchBar from "components/common/searchbar/SearchBar";
 import NavBar from "components/common/navbar/NavBar";
 export default {
-  name: "DetailNavBar",
+  name: "SearchNavBar",
   components: {
-    NavBar
+    NavBar,
+    SearchBar
   },
-  props: {
-    title: {
-      type: String,
-      default: ""
-    }
+  setup() {
+    // const backClick = () => {};
+    // return {
+    //   backClick
+    // };
   }
 };
 </script>
 <style scoped>
-.nav-bar {
-  color: var(--color-text);
-  font-size: var(--font-size-small-s);
-}
 .back-icon {
   margin-top: 5px;
   margin-left: 15px;
   width: 30px;
-}
-.text {
-  width: 250px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
 }
 </style>

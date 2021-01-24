@@ -2,8 +2,8 @@
   <NavBar>
     <template #center>
       <TabControl
-        :titles="['推荐', '歌手', '排行', '搜索']"
-        :path="['/recommend', '/singer', '/rank', 'search']"
+        :titles="['推荐', '歌手', '排行']"
+        :path="['/recommend', '/singer', '/rank']"
       />
     </template>
     <template #right>

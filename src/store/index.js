@@ -6,6 +6,8 @@ import actions from "./actions";
 const store = createStore({
   state() {
     return {
+      /* 歌曲信息相关 */
+      searchDefault: { real: "", show: "" },
       playList: [],
       /* 播放器相关 */
       isPlayerFull: false,

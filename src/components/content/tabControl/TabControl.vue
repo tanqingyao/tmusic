@@ -4,7 +4,7 @@
       class="tab-control-item"
       v-for="(item, index) in titles"
       @click="itemClick(index)"
-      :class="{ active: index === currentIndex }"
+      :class="{ active: $route.path === path[index] }"
     >
       <span> {{ item }} </span>
     </div>
@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import { toRefs } from "vue";
+import { useRouter, useRoute } from "vue-router";
 export default {
   name: "TabControl",
   props: {
@@ -28,19 +30,18 @@ export default {
       }
     }
   },
-  data() {
-    return {
-      currentIndex: 0
-    };
-  },
-  methods: {
-    itemClick(index) {
-      this.currentIndex = index;
-      // this.$emit("tabClick", index);
-      if (this.$route.path !== this.path[index]) {
-        this.$router.push(this.path[index]);
+  setup(props) {
+    const { path } = toRefs(props);
+    const $router = useRouter();
+    const $route = useRoute();
+    const itemClick = index => {
+      if ($route.path !== path.value[index]) {
+        $router.push(path.value[index]);
       }
-    }
+    };
+    return {
+      itemClick
+    };
   }
 };
 </script>

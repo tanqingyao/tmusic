@@ -1,12 +1,19 @@
 <template>
   <div id="recommend">
+    <SearchBar
+      class="search-bar"
+      :Default="{ real: '默认搜索' }"
+      v-show="isPullDown"
+      @click="handleSearch"
+    />
     <Scroll
       ref="scroll"
       class="wrapper"
       :data="imgCouter"
       :requestData="fetchData"
+      @scroll="handleScroll"
     >
-      <RecommendSwiper :banners="banners" />
+      <RecommendSwiper class="swiper" :banners="banners" />
       <RecommendView
         @RecommedImgLoad="imgload"
         :album="songlists[currentType].list"
@@ -15,22 +22,48 @@
   </div>
 </template>
 <script>
+import SearchBar from "components/common/searchbar/SearchBar";
+
 import RecommendSwiper from "./childComps/RecommendSwiper";
 import RecommendView from "./childComps/RecommendView";
 
 import Scroll from "components/common/scroll/Scroll";
 
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import {
   _getBanners,
   _getSonglistsByCatergory,
   Album
 } from "network/recommend";
+
 export default {
   name: "Recommend",
   components: {
+    SearchBar,
     RecommendSwiper,
     RecommendView,
     Scroll
+  },
+  setup() {
+    const $router = useRouter();
+    const handleSearch = () => {
+      $router.push("/search");
+    };
+
+    let oldPos = ref(0);
+    let isPullDown = ref(false);
+    const handleScroll = pos => {
+      isPullDown.value = pos.y > oldPos.value;
+      oldPos.value = pos.y;
+    };
+
+    return {
+      handleSearch,
+
+      isPullDown,
+      handleScroll
+    };
   },
   data() {
     return {
@@ -81,7 +114,17 @@ export default {
   height: 100vh;
   position: relative;
 }
+.search-bar {
+  height: 35px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 9;
+}
 .wrapper {
   height: calc(100% - 44px - 40px - 60px);
+}
+.swiper {
+  padding-top: 10px;
 }
 </style>

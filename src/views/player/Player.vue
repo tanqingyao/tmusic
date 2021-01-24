@@ -48,8 +48,8 @@ export default {
   },
   created() {
     // 自动添加歌曲
-    let autoAdd = true;
-    // let autoAdd = false;
+    // let autoAdd = true;
+    let autoAdd = false;
     if (autoAdd && Object.keys(this.currentSong).length === 0) {
       this.initPlayerData({ songmid: "002dK7hR4DlIa3" }).then(song => {
         this.$toast.show("已自动添加歌曲~", 1500);

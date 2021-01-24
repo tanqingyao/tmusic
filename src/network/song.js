@@ -1,4 +1,4 @@
-import request from "./request";
+import { request } from "./request";
 
 /* 批量获取:用数组接收多个id,最终以逗号连接 */
 export function _getSongUrlById(ids) {
