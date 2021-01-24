@@ -57,7 +57,6 @@ export default {
       }
     },
     jumpLyric() {
-      console.log("跳转至选择歌词");
       this.$store.commit(SET_PLAY_TIME, Number.parseFloat(this.scrollTime));
     }
   }

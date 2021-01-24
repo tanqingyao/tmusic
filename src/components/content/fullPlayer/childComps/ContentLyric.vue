@@ -82,8 +82,6 @@ export default defineComponent({
     }, 5000);
   },
   activated() {
-    console.log(this.lyricsArr);
-    this.lyricsArr.el.forEach(el => console.log(el.offsetHeight));
     // 每次进入刷新滚动高度
     this.$refs.scroll.refresh();
     // 滚动到当前歌词位置

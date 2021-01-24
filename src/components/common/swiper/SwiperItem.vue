@@ -18,8 +18,12 @@ export default {
 .slider {
   width: 100%;
   flex-shrink: 0;
+  justify-content: center;
+  display: flex;
 }
 .slider img {
-  width: 100%;
+  width: 95%;
+  border-radius: 5%;
+  justify-content: center;
 }
 </style>

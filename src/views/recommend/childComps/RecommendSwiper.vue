@@ -1,7 +1,7 @@
 <template>
   <Swiper ref="swiper">
     <SwiperItem v-for="item in banners">
-      <img :src="item.picUrl" @load="imgLoad" alt="" />
+      <img :src="item.picUrl" @load="imgLoad" alt="轮播图片" />
     </SwiperItem>
   </Swiper>
 </template>
@@ -35,4 +35,3 @@ export default {
   }
 };
 </script>
-<style scoped></style>
