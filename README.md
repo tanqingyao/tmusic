@@ -11,7 +11,7 @@
 
 ## 运行项目
 
-1. 本地后端接口
+1. ~~本地后端接口~~(已更改为[网易云api](https://github.com/Binaryify/NeteaseCloudMusicApi),更容易运行)
    参考[API接口转发文档](https://jsososo.github.io/QQMusicApi)，具体过程文档中有介绍，这里修改的配置有
    - 跨域设置。在`app.js`中加入如下设置
 
@@ -54,9 +54,13 @@ npm run serve
 - [x] 2021年1月22日：播放器相关变量存入vuex管理
 - [x] 2021年1月23日：歌词显示优化，歌词跳转功能
 
+### 正在进行
+
+- [ ] 搜索页面显示
+- [ ] player组件利用vue3组件api改造
+
 ### 待完成
 
 - [ ] 播放器切换添加动画
 - [ ] 播放器自动切换下一曲
 - [ ] 随机获取歌曲
-- [ ] player组件利用vue3组件api改造
