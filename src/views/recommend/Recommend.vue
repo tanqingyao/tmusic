@@ -14,10 +14,11 @@
       @scroll="handleScroll"
     >
       <RecommendSwiper class="swiper" :banners="banners" />
-      <RecommendView
+      <RecommendSonglist :songlist="songlist" />
+      <!-- <RecommendView
         @RecommedImgLoad="imgload"
         :album="songlists[currentType].list"
-      />
+      /> -->
     </Scroll>
   </div>
 </template>
@@ -25,49 +26,62 @@
 import SearchBar from "components/common/searchbar/SearchBar";
 
 import RecommendSwiper from "./childComps/RecommendSwiper";
+import RecommendSonglist from "./childComps/RecommendSonglist";
 import RecommendView from "./childComps/RecommendView";
 
 import Scroll from "components/common/scroll/Scroll";
 
-import { ref } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import {
   _getBanners,
   _getSonglistsByCatergory,
   Album
 } from "network/recommend";
+import { getBanner, getRecommendSongList } from "network/recommend/index";
 
 export default {
   name: "Recommend",
   components: {
     SearchBar,
     RecommendSwiper,
+    RecommendSonglist,
     RecommendView,
     Scroll
   },
   setup() {
+    /* 路由相关 */
     const $router = useRouter();
     const handleSearch = () => {
       $router.push("/search");
     };
-
+    /* 滑动相关 */
     let oldPos = ref(0);
     let isPullDown = ref(false);
     const handleScroll = pos => {
       isPullDown.value = pos.y > oldPos.value;
       oldPos.value = pos.y;
     };
-
+    /* 获取属性相关 */
+    const banners = ref([]);
+    const songlist = ref([]);
+    onMounted(async () => {
+      banners.value = await getBanner();
+      songlist.value = await getRecommendSongList();
+    });
     return {
       handleSearch,
 
       isPullDown,
-      handleScroll
+      handleScroll,
+
+      banners,
+      songlist
     };
   },
   data() {
     return {
-      banners: [],
+      // banners: [],
       // 3317: 官方歌单，59：经典，71：情歌，3056：网络歌曲，64：KTV热歌
       songlists: {
         official: { id: 3317, page: 1, list: [] },
@@ -81,8 +95,8 @@ export default {
     };
   },
   created() {
-    this.getBanners();
-    this.getSonglist(this.currentType);
+    // this.getBanners();
+    // this.getSonglist(this.currentType);
   },
   methods: {
     imgload() {
