@@ -2,9 +2,9 @@
 
 /*:root -> 获取根元素html*/
 :root {
-  --color-text: #333;
-  --color-high-text: #ff5777;
-  --color-tint: #111;
+  --color-text: #666;
+  --color-tint: #333;
+  --color-high-text: #000;
   --color-background: #eee;
 
   /* 用于歌词显示相关 */

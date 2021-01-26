@@ -9,11 +9,36 @@ import {
   faSearch,
   faTimes,
   faPlay,
-  faChevronRight
+  faChevronRight,
+  faChevronLeft,
+  faEllipsisV,
+  faPlus,
+  faShareAlt,
+  faCommentDots,
+  faFolderPlus,
+  faVideo,
+  faCheckCircle,
+  faArrowAltCircleDown,
+  faPlayCircle
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(faSearch, faTimes, faPlay, faChevronRight);
+library.add(
+  faSearch,
+  faTimes,
+  faPlay,
+  faChevronRight,
+  faChevronLeft,
+  faEllipsisV,
+  faPlus,
+  faShareAlt,
+  faCommentDots,
+  faFolderPlus,
+  faVideo,
+  faCheckCircle,
+  faArrowAltCircleDown,
+  faPlayCircle
+);
 
 const app = createApp(App);
 app.use(router);

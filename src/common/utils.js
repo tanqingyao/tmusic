@@ -53,7 +53,10 @@ export function parseTime(num) {
   return `${min}:${sec}`;
 }
 /* 转化数字单位 */
-export const changeUnit = (value, base = 10000, point = 2) => {
+export const changeUnit = (value, base = 10000, point = 0) => {
+  if (!value) {
+    return;
+  }
   /* 通过判断转化两次单位 */
   let unit = "";
   if (value > base) {

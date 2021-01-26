@@ -14,24 +14,7 @@
       @touchmove="handleTouchMove"
       @touchend="handleTouchEnd"
     >
-      <div
-        class="list-item"
-        v-for="item in songlist"
-        :key="item.id"
-        @click="handleDetail(item.id)"
-      >
-        <div class="cover">
-          <div class="play-count right">
-            <font-awesome-icon :icon="['fas', 'play']" size="sm" />
-            {{ changeUnit(item.playCount, 10000, 0) }}
-          </div>
-          <img :src="item.cover" alt="封面图片" />
-        </div>
-
-        <div class="title">
-          {{ item.title }}
-        </div>
-      </div>
+      <slot name="cover" />
     </div>
   </div>
 </template>
@@ -42,14 +25,7 @@ import { changeUnit } from "common/utils";
 export default defineComponent({
   name: "RecommendSonglist",
   components: {},
-  props: {
-    songlist: {
-      type: Array,
-      default() {
-        return [];
-      }
-    }
-  },
+  props: {},
   setup() {
     /* 滑动相关 */
     let startX = 0;
@@ -87,9 +63,6 @@ export default defineComponent({
       console.log("进入歌单广场");
     };
 
-    const handleDetail = id => {
-      console.log("进入详情页", id);
-    };
     return {
       changeUnit,
       swiper,
@@ -98,8 +71,7 @@ export default defineComponent({
       handleTouchMove,
       handleTouchEnd,
 
-      handleMore,
-      handleDetail
+      handleMore
     };
   }
 });
@@ -128,35 +100,5 @@ export default defineComponent({
 }
 .swiper {
   display: flex;
-}
-.list-item {
-  flex: 1;
-}
-.play-count {
-  color: #fff;
-  font-size: 12px;
-  border-radius: 10px;
-  background-color: var(--color-background-d);
-
-  position: relative;
-  top: 25px;
-  margin-right: 10px;
-  padding: 3px 7px;
-}
-.list-item img {
-  width: 100px;
-  border-radius: 10px;
-  margin: 0 5px;
-  box-shadow: 0px -10px 2px -5px rgba(0, 0, 0, 0.1);
-}
-.list-item .title {
-  font-size: 12px;
-  padding: 0 10px;
-  /* 显示两行,多余省略 */
-  text-overflow: ellipsis;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
 }
 </style>

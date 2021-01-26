@@ -1,24 +1,24 @@
 <template>
   <div class="list-item">
-    <div class="item-img">
-      <slot name="img" />
+    <div class="item-left">
+      <slot name="left" />
     </div>
-    <div class="item-info">
-      <span class="item-title">
-        <slot name="title" />
+    <div class="item-center">
+      <span class="top">
+        <slot name="top" />
       </span>
-
-      <span class="item-desc">
-        <slot name="desc" />
-      </span>
-      <div class="info-bottom">
-        <span class="bottom-left left">
-          <slot name="btm-left" />
+      <div class="bottom">
+        <span class="bottom-left">
+          <slot name="bottom-left" />
         </span>
-        <span class="bottom-right left">
-          <slot name="btm-right" />
+        <span class="bottom-right">
+          <slot name="bottom-right" />
         </span>
       </div>
+    </div>
+
+    <div class="item-right">
+      <slot name="right" />
     </div>
   </div>
 </template>
@@ -30,57 +30,44 @@ export default {
 <style scoped>
 .list-item {
   width: 100%;
-  height: 80px;
+  height: 50px;
+  line-height: 50px;
+  margin: 10px 0;
   display: flex;
-  font-size: 0;
-  padding: 5px;
-  border-bottom: 1px solid #ccc;
 }
 
-.item-img {
-  padding: 5px;
+.item-left {
+  flex: 1;
+  text-align: center;
+  margin: 0 5px;
 }
-.item-img img {
-  width: 60px;
-  display: block;
-  border-radius: 5px;
+.item-right {
+  flex: 2;
 }
-
-.item-info {
-  width: 100%;
+.item-center {
+  flex: 8;
   font-size: var(--font-size-medium);
   color: var(--color-text);
-  padding: 5px 10px;
-  position: relative;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
-.item-title,
-.item-desc {
+.top,
+.bottom {
+  flex: 1;
+  height: 25px;
+  line-height: 25px;
+
+  /* 多余文字省略 */
+  width: 250px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-
-.item-info .item-desc {
-  font-size: var(--font-size-small-s);
+.top {
+  font-size: var(--font-size-medium-x);
+  color: var(--color-high-text);
+}
+.bottom {
   color: var(--color-text);
-  margin-top: 5px;
-}
-.info-bottom {
-  margin-top: 10px;
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  right: 10px;
-}
-
-.info-bottom span {
-  width: 110px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-.info-bottom .bottom-left {
-  margin-right: 20px;
 }
 </style>
