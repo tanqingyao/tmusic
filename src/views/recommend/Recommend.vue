@@ -115,7 +115,7 @@ export default {
       this.imgCouter++;
     },
     fetchData() {
-      this.getSonglist(this.currentType);
+      // this.getSonglist(this.currentType);
     },
     /* 网络相关方法 */
     getBanners() {

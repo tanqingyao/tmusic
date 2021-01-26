@@ -57,7 +57,7 @@ export default defineComponent({
   padding: 3px 7px;
 }
 .cover img {
-  width: 120px;
+  width: 110px;
   border-radius: 10px;
   margin: 0 5px;
   box-shadow: 0px -10px 2px -5px rgba(0, 0, 0, 0.1);
