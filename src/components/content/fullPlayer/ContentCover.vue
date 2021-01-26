@@ -1,6 +1,6 @@
 <template>
   <div class="content-cover">
-    <img :src="currentSong.albumImg" alt="歌曲封面" />
+    <img v-if="currentSong.album" :src="currentSong.album.url" alt="歌曲封面" />
   </div>
 </template>
 <script>

@@ -2,16 +2,19 @@
   <TabBar class="mini-tab-bar" @click="$emit('changeScreen')">
     <TabBarItem class="tab-cover">
       <template #itemIcon>
-        <img :src="currentSong.albumImg" alt="歌曲封面" />
+        <img
+          v-if="currentSong.album"
+          :src="currentSong.album.url"
+          alt="歌曲封面"
+        />
       </template>
     </TabBarItem>
     <TabBarItem class="tab-text">
       <template #itemIcon>
-        <span class="name">
-          {{ currentSong.name }}
-        </span>
+        <span class="name"> {{ currentSong.name }}</span>
+        <span class="padding"> - </span>
         <span class="singer">
-          {{ currentSong.singer }}
+          {{ singer }}
         </span>
       </template>
     </TabBarItem>
@@ -53,10 +56,16 @@ export default {
   },
   props: {},
   computed: {
-    ...mapState(["currentSong", "isPlaying"])
+    ...mapState(["currentSong", "isPlaying"]),
+    singer() {
+      return this.currentSong.singers
+        ? Array.from(this.currentSong.singers, ({ id, name }) => name).join("/")
+        : "";
+    }
   },
   methods: {
     handlePlayClick() {
+      // console.log(this.currentSong);
       this.$store.commit(SET_PLAYING, !this.isPlaying);
     }
   }
@@ -86,29 +95,25 @@ export default {
   width: 120px;
   height: 60px;
   font-size: 12px;
-  /* 文字采用flex布局 */
-  display: flex;
-  flex-direction: column;
-}
-.tab-text span {
-  /* 布局 */
-  flex: 1;
   text-align: left;
-  height: 30px;
-  line-height: 30px;
-
   /* 多余文字省略号 */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-
-.name {
-  color: var(--color-text);
-  padding-top: 9px;
+.tab-text span {
+  height: 60px;
+  line-height: 60px;
 }
-.singer {
-  color: var(--color-text-d);
-  padding-bottom: 9px;
+
+.tab-text .name {
+  font-size: var(--font-size-medium-x);
+  color: var(--color-high-text);
+}
+.tab-text .padding {
+  margin: 0 5px;
+}
+.tab-text .singer {
+  color: var(--color-text);
 }
 </style>

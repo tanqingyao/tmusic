@@ -4,7 +4,7 @@
     class="content-lyric"
     @touchstart="handleTouchStart"
     @touchend="debouncedTouchEnd"
-    @scroll="handleScroll"
+    @scroll="handleTouch"
   >
     <div :style="{ height: VerticalOffset + 'px' }"></div>
 
@@ -25,7 +25,7 @@
 </template>
 <script>
 import { debounce } from "common/utils";
-import { defineComponent } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import { mapState } from "vuex";
 import Scroll from "components/common/scroll/Scroll";
 export default defineComponent({
@@ -34,8 +34,41 @@ export default defineComponent({
     Scroll
   },
   emits: {
-    scrolling: null,
+    touching: null,
     scrollTime: null
+  },
+  setup() {
+    const scroll = ref(null);
+    let content = ref({});
+    const setTransfrom = (el, position) => {
+      // 设置el移动位置
+      el.style.transform = `translate(0, ${position}px)`;
+    };
+    const setTransition = (el, duration) => {
+      // 设置el滚动动画
+      el.style.transition = `transform ${duration}ms`;
+    };
+    const scrollToElement = (content, target, duration, offsetY) => {
+      /* offsetY沿Y轴方向偏移 */
+      setTransition(content, duration);
+      setTransfrom(content, -target.offsetTop + offsetY);
+    };
+
+    const jumpTo = el => {
+      if (el && content) {
+        scrollToElement(content, el, 1000, 255);
+      }
+    };
+    onMounted(() => {
+      content = scroll.value.$el.children.item(0);
+    });
+    return {
+      scroll,
+      setTransfrom,
+      setTransition,
+      scrollToElement,
+      jumpTo
+    };
   },
   data() {
     return {
@@ -48,8 +81,9 @@ export default defineComponent({
       currentLyricRef: undefined,
       oldLyricRef: undefined,
       //滚动歌词位置
-      currentScrollRef: undefined,
-      oldScrollRef: undefined,
+      isTouch: false,
+      currentTouchRef: undefined,
+      oldTouchRef: undefined,
       posYs: [],
       isScrolling: false,
       VerticalOffset: 255 //垂直偏移量
@@ -70,22 +104,32 @@ export default defineComponent({
   created() {
     // 歌词滚动监听
     this.unwatchLyric = this.lyricWatcher();
-    this.unwatchJump = this.jumpWatcher();
 
     this.parseLyrics(this.currentSong.lyrics);
 
     // 防抖监听touchend
     this.debouncedTouchEnd = debounce(() => {
-      this._jumpToCurrent();
-      this.unwatchJump = this.jumpWatcher();
-      this.$emit("scrolling", false);
+      this.isTouch = false;
+      this.jumpTo(this.currentLyricRef);
+      this.unwatchJump = this.jumpWatcher("create");
+      this.$emit("touching", false);
     }, 5000);
   },
   activated() {
+    // console.log(this.lyricsArr);
     // 每次进入刷新滚动高度
     this.$refs.scroll.refresh();
-    // 滚动到当前歌词位置
-    this._jumpToCurrent();
+    // jump immediately
+    this.jumpTo(this.currentLyricRef);
+    // 歌词滚动监听
+    this.unwatchJump = this.jumpWatcher("activated");
+  },
+  deactivated() {
+    // set no touching before leave
+    this.isTouch = false;
+    if (this.debouncedTouchEnd) {
+      this.debouncedTouchEnd.cancel();
+    }
   },
   methods: {
     lyricWatcher() {
@@ -101,18 +145,18 @@ export default defineComponent({
         }
       });
     },
-    jumpWatcher() {
+    jumpWatcher(args) {
       return this.$watch("currentTime", (newVal, oldVal) => {
         // 每个索引对应原词和翻译两行
         if (this.oldLyricRef !== this.currentLyricRef) {
           //跳转
-          this._jumpToCurrent();
+          this.jumpTo(this.currentLyricRef);
         }
       });
     },
     parseLyrics(lyrics) {
       // 正则匹配解析lyc文本，返回数组：{time,text}
-      const regexp = /\[\d{2}:\d{2}.\d{2}\]/g;
+      const regexp = /\[\d{2}:\d{2}.\d{3}\]/g;
       lyrics.lyric.split("\n").forEach(element => {
         // 1.原歌词中提取time, lyric
         const times = element.match(regexp);
@@ -160,7 +204,8 @@ export default defineComponent({
       this.lyricsArr.el.push(el);
     },
     handleTouchStart() {
-      this.$emit("scrolling", true);
+      this.isTouch = true;
+      this.$emit("touching", true);
 
       // 长按情况，取消歌词跳动
       if (this.debouncedTouchEnd) {
@@ -169,10 +214,15 @@ export default defineComponent({
       this.unwatchJump();
     },
     handleTouchEnd() {
+      this.isTouch = false;
       // 频繁滑动情况，防抖处理
       this.debouncedTouchEnd();
     },
-    handleScroll(pos) {
+    handleTouch(pos) {
+      if (!this.isTouch) {
+        // console.log(pos);
+        return;
+      }
       //40px一个el
       const counter = Math.floor((Math.abs(pos.y) + 20) / 40);
       if (counter < this.lyricTrimLength) {
@@ -181,23 +231,13 @@ export default defineComponent({
       const index = counter + this.lyricLength - this.lyricTrimLength;
 
       //滚动时歌词样式
-      this.oldScrollRef = this.currentScrollRef;
-      this.currentScrollRef = this.lyricsArr.el[index];
-      if (this.oldScrollRef) {
-        this.oldScrollRef.style.color = "";
+      this.oldTouchRef = this.currentTouchRef;
+      this.currentTouchRef = this.lyricsArr.el[index];
+      if (this.oldTouchRef) {
+        this.oldTouchRef.style.color = "";
       }
-      if (this.currentScrollRef) {
-        this.currentScrollRef.style.color = "#999";
-      }
-    },
-    _jumpToCurrent() {
-      if (this.currentLyricRef) {
-        this.$refs.scroll.scrollToElement(
-          this.currentLyricRef,
-          undefined,
-          undefined,
-          -this.VerticalOffset
-        );
+      if (this.currentTouchRef) {
+        this.currentTouchRef.style.color = "#999";
       }
     }
   }

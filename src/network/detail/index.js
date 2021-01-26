@@ -15,7 +15,7 @@ export const getSonglistDetail = async id => {
   return collectSonglistDetail(res);
 };
 
-export const getSongs = async idArr => {
+export const getSongsDetail = async idArr => {
   let ids = Array.isArray(idArr) ? idArr.join(",") : idArr;
   const res = await getNeteaseRequest({
     url: URL_detail.songs,

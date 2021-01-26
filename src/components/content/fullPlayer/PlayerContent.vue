@@ -9,13 +9,13 @@
         <ContentCover v-if="isCover" />
         <ContentLyric
           v-else
-          @scrolling="isScrolling = $event"
+          @touching="isTouch = $event"
           @scrollTime="scrollTime = $event"
         />
       </keep-alive>
     </transition>
   </div>
-  <div class="scroll-line" v-show="isScrolling && !isCover">
+  <div class="scroll-line" v-show="isTouch && !isCover">
     <div class="line-left" @click="jumpLyric">
       <img src="~assets/img/player/play_icon.svg" alt="播放" />
     </div>
@@ -28,8 +28,8 @@
 <script>
 import { mapState } from "vuex";
 import { SET_PLAY_TIME } from "store/mutations-types";
-import ContentCover from "./childComps/ContentCover";
-import ContentLyric from "./childComps/ContentLyric";
+import ContentCover from "./ContentCover";
+import ContentLyric from "./ContentLyric";
 import { parseTime } from "common/utils";
 export default {
   name: "PlayerContent",
@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       isCover: true,
-      isScrolling: false,
+      isTouch: false,
       scrollTime: 0
     };
   },

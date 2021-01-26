@@ -149,6 +149,9 @@ export default {
     getScrollY() {
       return this.scroll ? this.scroll.y : 0;
     },
+    getMaxScrollY() {
+      return this.scroll ? this.scroll.maxScrollY : 0;
+    },
     /* 异步处理方法 */
     async pullingUpHandler() {
       this.isPullUpLoad = true;

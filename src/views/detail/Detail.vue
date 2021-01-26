@@ -26,8 +26,8 @@
             <template #bottom>
               <span class="detail-desc">
                 {{ info.desc }}
-                <font-awesome-icon :icon="['fas', 'chevron-right']" />
               </span>
+              <font-awesome-icon :icon="['fas', 'chevron-right']" />
             </template>
           </DescItem>
         </template>
@@ -136,7 +136,7 @@ import ListTab from "components/content/musicList/ListTab";
 import MusicListItem from "components/content/musicList/MusicListItem";
 
 import { _getSonglistById } from "network/detail";
-import { getSonglistDetail, getSongs } from "network/detail/index";
+import { getSonglistDetail, getSongsDetail } from "network/detail/index";
 import { changeUnit } from "common/utils";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
@@ -161,8 +161,8 @@ export default {
     const $store = useStore();
     onMounted(async () => {
       info.value = await getSonglistDetail($route.params.id);
-      console.log(info.value);
-      songs.value = await getSongs(info.value.songIds);
+      // console.log(info.value);
+      songs.value = await getSongsDetail(info.value.songIds);
     });
 
     /* 点击相关 */
@@ -198,18 +198,18 @@ export default {
     const handlePlay = item => {
       // console.log(item);
       $store
-        .dispatch("addPlayList", item.id)
+        .dispatch("addPlayList", [item.id])
         .then(song => {
           if (song) {
             // $toast.show("成功添加歌曲~", 1500);
             // 自动跳转到player页面
-            $store.commit(SET_FULL_PLAYER, true);
+            // $store.commit(SET_FULL_PLAYER, true);
           } else {
             // $toast.show("添加失败", 1500);
           }
-          if ($store.state.autoPlay) {
-            $store.commit(SET_CURRENT_SONG, song);
-          }
+          // if ($store.state.autoPlay) {
+          //   $store.commit(SET_CURRENT_SONG, song);
+          // }
         })
         .catch(err => {
           console.warn(err);

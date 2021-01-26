@@ -48,22 +48,24 @@ export default {
   },
   created() {
     // 自动添加歌曲
-    // let autoAdd = true;
-    let autoAdd = false;
+    let autoAdd = true;
+    // let autoAdd = false;
     if (autoAdd && Object.keys(this.currentSong).length === 0) {
-      this.initPlayerData({ songmid: "002dK7hR4DlIa3" }).then(song => {
-        this.$toast.show("已自动添加歌曲~", 1500);
-        this.$store.commit(SET_CURRENT_SONG, song);
-      });
+      this.addPlayList(["33894312"]);
+      // .then(song => {
+      //   this.$toast.show("已自动添加歌曲~", 1500);
+      //   this.$store.commit(SET_CURRENT_SONG, song);
+      // });
     }
   },
   methods: {
     ...mapActions({
-      initPlayerData: "addToPlayList",
+      addPlayList: "addPlayList",
       switchByOrder: "switchByOrder",
       switchByShuffle: "switchByShuffle"
     }),
     changeScreen() {
+      // console.log(this.currentSong);
       this.$store.commit(SET_FULL_PLAYER, !this.isPlayerFull);
     },
     switchSong(payload) {

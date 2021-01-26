@@ -72,6 +72,7 @@ export default {
       this.$emit("change-screen");
     },
     likeClick(e) {
+      console.log(this.currentSong);
       // console.log(e);
       // console.log("添加歌曲到喜欢列表");
     }

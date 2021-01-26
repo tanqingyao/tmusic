@@ -49,7 +49,6 @@ export default defineComponent({
   padding: 20px 10px;
 }
 /* 单行显示 */
-.info-top,
 .info-bottom {
   width: 80%;
   overflow: hidden;

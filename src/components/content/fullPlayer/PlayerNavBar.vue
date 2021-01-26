@@ -12,7 +12,7 @@
       <div class="text">
         <span>{{ currentSong.name }}</span>
         <span> - </span>
-        <span>{{ currentSong.singer }}</span>
+        <span>{{ singer }}</span>
       </div>
     </template>
   </NavBar>
@@ -29,7 +29,12 @@ export default {
     NavBar
   },
   computed: {
-    ...mapState(["currentSong"])
+    ...mapState(["currentSong"]),
+    singer() {
+      return this.currentSong.singers
+        ? Array.from(this.currentSong.singers, ({ id, name }) => name).join("/")
+        : "";
+    }
   },
   methods: {
     backIconClick() {

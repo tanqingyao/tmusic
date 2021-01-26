@@ -1,29 +1,20 @@
 import { ADD_TO_PLAYLIST, SET_CURRENT_SONG } from "./mutations-types";
 
-import {
-  _getSongUrlById,
-  _getSongInfoById,
-  _getLyricById,
-  Song
-} from "network/song";
-import { getSongUrl } from "network/player";
+import { getSongUrl, getSongsInfo, getSongsLyric } from "network/player";
+import { Song } from "network/player/model";
 import { _getAlbumById } from "network/album";
 export default {
   async addPlayList({ state, getters, dispatch, commit }, payload) {
-    // payload为歌曲id,当为多个id数组,返回url数组
-    const res = await getSongUrl(payload);
-    console.log(res);
-    // let song = getters.getSongById(id);
-    // // 若当前播放列表已经有,则不获取歌曲信息,直接设置当前歌曲
-    // if (!song) {
-    //   song = await dispatch("_fetchSongData", id);
-    //   commit(ADD_TO_PLAYLIST, song);
-    // }
-    // // TODO 若没有选择自动播放,直接添加至播放列表.否则改变当前歌曲
-    // // commit(SET_CURRENT_SONG, song);
-    // return new Promise((resolve, reject) => {
-    //   resolve(song);
-    // });
+    // TODO ts rebuild
+    // payload为歌曲id数组
+
+    // 过滤playlist已有歌曲
+    const ids = payload.filter(id => !getters.getSongById(id));
+
+    const songs = await dispatch("_fetchSongData", ids);
+    commit(ADD_TO_PLAYLIST, ...songs);
+    commit(SET_CURRENT_SONG, songs[0]);
+    // TODO 若没有选择自动播放,直接添加至播放列表.否则改变当前歌曲
   },
   async addToPlayList({ state, getters, dispatch, commit }, payload) {
     // 获取单个id信息:payload为专辑内歌曲信息
@@ -73,25 +64,23 @@ export default {
     commit(SET_CURRENT_SONG, state.playList[index]);
   },
 
-  async _fetchSongData(context, id) {
-    // 歌曲播放url
-    let urlResponse = await _getSongUrlById(id);
-    let url = urlResponse.data.data[id];
-    // 歌曲信息
-    let infoResponse = await _getSongInfoById(id);
-    let info = infoResponse.data.data[id];
-    // 歌曲对应专辑
-    let albumID = info.track_info.album.mid;
-    let albumResponse = await _getAlbumById(albumID);
-    let album = albumResponse.data.data;
-    // 歌曲对应歌词
-    // let lyricResponse = await _getLyricById(id);
-    let {
-      data: { data: lyrics }
-    } = await _getLyricById(id);
-
-    return new Promise((resolve, reject) => {
-      resolve(new Song(info, url, album, lyrics));
+  async _fetchSongData(context, ids) {
+    let songs = [];
+    try {
+      // 歌曲播放url
+      const urls = await getSongUrl(ids);
+      // 歌曲信息
+      const infos = await getSongsInfo(ids);
+      for (const i in ids) {
+        // 单个歌曲对应歌词
+        const lyric = await getSongsLyric(ids[i]);
+        songs.push(new Song(infos[i], urls[i], lyric));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    return new Promise(resolve => {
+      resolve(songs);
     });
   }
 };
