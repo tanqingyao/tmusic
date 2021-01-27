@@ -2,80 +2,109 @@
   <div class="player-view">
     <Audio ref="audio" />
     <transition name="fade">
-      <FullPlayer
-        v-if="isPlayerFull"
-        v-model:playOrder="playerControl.playOrder"
-        v-model:isLike="playerControl.isLike"
-        @change-screen="changeScreen"
-        @switch="switchSong"
-      />
+      <div class="full-screen" v-if="isFull">
+        <div class="player-bg" :style="styleObject"></div>
+        <div class="player-content">
+          <PlayerNavBar @change-screen="isFull = !isFull" />
+          <PlayerContent />
+          <PlayerProgress />
+          <PlayerTabBar
+            v-model:playOrder="playerControl.playOrder"
+            v-model:isLike="playerControl.isLike"
+            @switch="handleSwitchSong"
+            @update:isLike="handleLike($event)"
+          />
+        </div>
+      </div>
     </transition>
     <transition name="fade">
-      <MiniPlayer v-if="!isPlayerFull" @change-screen="changeScreen" />
+      <div v-if="!isFull">
+        <MiniTabBar @click="isFull = !isFull" @menuBtnClick="isShow = true" />
+
+        <transition name="fade">
+          <PlayerList v-show="isShow" v-model:isShow="isShow" />
+        </transition>
+      </div>
     </transition>
   </div>
 </template>
 <script>
-import Audio from "./childComps/Audio";
-import FullPlayer from "./childComps/FullPlayer";
-import MiniPlayer from "./childComps/MiniPlayer";
-
-import { _getSongById, Song } from "network/song";
-import { mapState, mapActions } from "vuex";
 import {
-  SET_CURRENT_SONG,
-  SET_FULL_PLAYER,
-  SET_PLAYING
-} from "store/mutations-types";
-import { provide, computed, getCurrentInstance } from "vue";
+  PlayerNavBar,
+  PlayerContent,
+  PlayerProgress,
+  PlayerTabBar
+} from "./comps/index";
+import Audio from "./comps/Audio";
+import MiniTabBar from "./comps/MiniTabBar";
+import PlayerList from "./comps/PlayerList";
+
+import { useStore } from "vuex";
+import { ref, watch } from "vue";
 export default {
   name: "Player",
   components: {
     Audio,
-    FullPlayer,
-    MiniPlayer
+    MiniTabBar,
+    PlayerList,
+
+    PlayerNavBar,
+    PlayerContent,
+    PlayerProgress,
+    PlayerTabBar
   },
-  data() {
-    return {
-      playerControl: {
-        playOrder: 0,
-        isLike: false
+  setup() {
+    const $store = useStore();
+    const currentSong = $store.state.currentSong;
+    let styleObject = ref(null);
+    let isFull = ref(false);
+    const isShow = ref(false);
+    let playerControl = ref({
+      playOrder: 0,
+      isLike: false
+    });
+    const handleLike = e => {
+      // console.log("添加歌曲到喜欢列表");
+    };
+    const handleSwitchSong = mode => {
+      // paylaod 为last或next
+      if (playerControl.value.playOrder === 0) {
+        $store.dispatch("switchByShuffle");
+      } else {
+        $store.dispatch("switchByShuffle", mode);
       }
     };
-  },
-  computed: {
-    ...mapState(["currentSong", "isPlayerFull"])
-  },
-  created() {
+
+    /* 背景虚化 */
+    const stop = watch(
+      currentSong,
+      (newVal, oldVal) => {
+        styleObject.value = {
+          "background-image": "url(" + newVal.albumImg + ")"
+        };
+      },
+      {
+        immediate: true
+      }
+    );
     // 自动添加歌曲
     let autoAdd = true;
     // let autoAdd = false;
-    if (autoAdd && Object.keys(this.currentSong).length === 0) {
-      this.addPlayList(["33894312"]);
+    if (autoAdd && Object.keys(currentSong).length === 0) {
+      $store.dispatch("addPlayList", ["33894312"]);
       // .then(song => {
       //   this.$toast.show("已自动添加歌曲~", 1500);
       //   this.$store.commit(SET_CURRENT_SONG, song);
       // });
     }
-  },
-  methods: {
-    ...mapActions({
-      addPlayList: "addPlayList",
-      switchByOrder: "switchByOrder",
-      switchByShuffle: "switchByShuffle"
-    }),
-    changeScreen() {
-      // console.log(this.currentSong);
-      this.$store.commit(SET_FULL_PLAYER, !this.isPlayerFull);
-    },
-    switchSong(payload) {
-      // paylaod 为last或next
-      if (this.playerControl.playOrder === 0) {
-        this.switchByShuffle();
-      } else {
-        this.switchByOrder(payload);
-      }
-    }
+    return {
+      isShow,
+      isFull,
+      styleObject,
+      playerControl,
+      handleSwitchSong,
+      handleLike
+    };
   }
 };
 </script>
@@ -85,12 +114,25 @@ export default {
   position: fixed;
   top: 0;
 }
-.audio-player {
-  width: 0;
-  height: 0;
-  display: none;
-}
 
+.full-screen {
+  position: relative;
+  height: 100vh;
+  color: aliceblue;
+  background-color: var(--color-highlight-background);
+}
+.player-content {
+  height: 100vh;
+}
+.player-bg {
+  position: fixed;
+  top: 40px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-size: cover;
+  filter: blur(90px);
+}
 .fade-enter-active {
   transition: all 0.4s ease-in-out;
 }

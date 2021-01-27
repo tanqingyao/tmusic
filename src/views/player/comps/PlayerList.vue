@@ -5,13 +5,13 @@
         class="list-item"
         v-for="item in playList"
         :key="item.id"
-        @click.native="songClick(item)"
+        @click="handlePlay(item)"
       >
-        <template #title>
+        <template #top>
           <span>{{ item.name }}</span>
         </template>
-        <template #desc>
-          <span> - {{ item.singer }}</span>
+        <template #bottom-left>
+          <span> - {{ showSinger(item.singers) }}</span>
         </template>
       </MusicListItem>
     </Scroll>
@@ -19,10 +19,9 @@
 </template>
 <script>
 import Scroll from "components/common/scroll/Scroll";
-
 import MusicListItem from "components/content/musicList/MusicListItem";
 import { SET_CURRENT_SONG } from "store/mutations-types";
-import { mapMutations } from "vuex";
+import { useStore } from "vuex";
 export default {
   name: "PlayerList",
   components: {
@@ -36,25 +35,25 @@ export default {
     isShow: {
       type: Boolean,
       default: false
-    },
-    playList: {
-      type: Array,
-      default() {
-        return [];
-      }
     }
   },
-  data() {
-    return {};
-  },
-  methods: {
-    ...mapMutations({
-      setCurrentSong: SET_CURRENT_SONG
-    }),
-    songClick(item) {
-      // 在播放列表中选歌,直接自动播放
-      this.setCurrentSong(item);
-    }
+  setup() {
+    const $store = useStore();
+    const playList = $store.state.playList;
+
+    const showSinger = singers => {
+      return singers
+        ? Array.from(singers, ({ id, name }) => name).join("/")
+        : "";
+    };
+    const handlePlay = item => {
+      $store.commit(SET_CURRENT_SONG, item);
+    };
+    return {
+      playList,
+      showSinger,
+      handlePlay
+    };
   }
 };
 </script>
@@ -67,7 +66,6 @@ export default {
   right: 0;
   bottom: 0;
   padding: 8px 15px;
-  color: #fff;
   background-color: rgba(0, 0, 0, 0.3);
 }
 .wrapper {
