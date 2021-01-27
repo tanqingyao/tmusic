@@ -11,7 +11,7 @@
   </div>
 </template>
 <script>
-import { changeUnit } from "common/utils";
+import { changeUnit } from "common/display";
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
 export default defineComponent({

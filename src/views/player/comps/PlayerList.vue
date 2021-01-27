@@ -22,6 +22,7 @@ import Scroll from "components/common/scroll/Scroll";
 import MusicListItem from "components/content/musicList/MusicListItem";
 import { SET_CURRENT_SONG } from "store/mutations-types";
 import { useStore } from "vuex";
+import { computed } from "vue";
 export default {
   name: "PlayerList",
   components: {
@@ -39,16 +40,19 @@ export default {
   },
   setup() {
     const $store = useStore();
-    const playList = $store.state.playList;
+
+    const playList = computed(() => $store.state.playList);
 
     const showSinger = singers => {
       return singers
         ? Array.from(singers, ({ id, name }) => name).join("/")
         : "";
     };
+
     const handlePlay = item => {
       $store.commit(SET_CURRENT_SONG, item);
     };
+
     return {
       playList,
       showSinger,

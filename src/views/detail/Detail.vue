@@ -137,7 +137,7 @@ import MusicListItem from "components/content/musicList/MusicListItem";
 
 import { _getSonglistById } from "network/detail";
 import { getSonglistDetail, getSongsDetail } from "network/detail/index";
-import { changeUnit } from "common/utils";
+import { changeUnit } from "common/display";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";

@@ -13,9 +13,7 @@
       <template #itemIcon>
         <span class="name"> {{ currentSong.name }}</span>
         <span class="padding"> - </span>
-        <span class="singer">
-          {{ singer }}
-        </span>
+        <span class="singer">{{ singer }}</span>
       </template>
     </TabBarItem>
     <TabBarItem class="tab-img" @click.stop @click="handlePlayClick">
@@ -40,10 +38,12 @@
   </TabBar>
 </template>
 <script>
-import { mapState } from "vuex";
-import { SET_PLAYING } from "store/mutations-types";
 import TabBar from "components/common/tabbar/TabBar";
 import TabBarItem from "components/common/tabbar/TabBarItem";
+
+import { SET_PLAYING } from "store/mutations-types";
+import { useStore } from "vuex";
+import { computed, onMounted } from "vue";
 export default {
   name: "MiniTabBar",
   components: {
@@ -55,19 +55,33 @@ export default {
     menuBtnClick: null
   },
   props: {},
-  computed: {
-    ...mapState(["currentSong", "isPlaying"]),
-    singer() {
-      return this.currentSong.singers
-        ? Array.from(this.currentSong.singers, ({ id, name }) => name).join("/")
-        : "";
-    }
-  },
-  methods: {
-    handlePlayClick() {
-      // console.log(this.currentSong);
-      this.$store.commit(SET_PLAYING, !this.isPlaying);
-    }
+  setup() {
+    const $store = useStore();
+
+    const isPlaying = computed(() => $store.state.isPlaying);
+    const currentSong = computed(() => $store.state.currentSong);
+    const singer = computed(() => {
+      if (currentSong.value) {
+        currentSong.value.singers
+          ? Array.from(currentSong.value.singers, ({ id, name }) => name).join(
+              "/"
+            )
+          : "";
+      }
+    });
+    const handlePlayClick = () => {
+      console.log("handlePlayClick");
+      $store.dispatch("setPlaying", !isPlaying.value);
+    };
+    onMounted(() => {
+      console.log(isPlaying.value, currentSong.value);
+    });
+    return {
+      isPlaying,
+      currentSong,
+      singer,
+      handlePlayClick
+    };
   }
 };
 </script>

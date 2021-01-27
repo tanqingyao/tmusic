@@ -1,9 +1,14 @@
-import { ADD_TO_PLAYLIST, SET_CURRENT_SONG } from "./mutations-types";
+import {
+  ADD_TO_PLAYLIST,
+  SET_CURRENT_SONG,
+  SET_PLAYING
+} from "./mutations-types";
 
 import { getSongUrl, getSongsInfo, getSongsLyric } from "network/player";
 import { Song } from "network/player/model";
 import { _getAlbumById } from "network/album";
 export default {
+  setPlaying: ({ commit }, payload) => commit(SET_PLAYING, payload),
   async addPlayList({ state, getters, dispatch, commit }, payload) {
     // TODO ts rebuild
     // payload为歌曲id数组

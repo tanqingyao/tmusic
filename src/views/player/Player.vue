@@ -40,7 +40,7 @@ import MiniTabBar from "./comps/MiniTabBar";
 import PlayerList from "./comps/PlayerList";
 
 import { useStore } from "vuex";
-import { ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 export default {
   name: "Player",
   components: {
@@ -55,14 +55,20 @@ export default {
   },
   setup() {
     const $store = useStore();
-    const currentSong = $store.state.currentSong;
+
+    const currentSong = computed(() => $store.state.currentSong);
+
     let styleObject = ref(null);
+
     let isFull = ref(false);
+
     const isShow = ref(false);
+
     let playerControl = ref({
       playOrder: 0,
       isLike: false
     });
+
     const handleLike = e => {
       // console.log("添加歌曲到喜欢列表");
     };
@@ -74,29 +80,30 @@ export default {
         $store.dispatch("switchByShuffle", mode);
       }
     };
-
-    /* 背景虚化 */
-    const stop = watch(
-      currentSong,
-      (newVal, oldVal) => {
-        styleObject.value = {
-          "background-image": "url(" + newVal.albumImg + ")"
-        };
-      },
-      {
-        immediate: true
+    onMounted(() => {
+      /* 自动添加歌曲 */
+      let autoAdd = true;
+      // let autoAdd = false;
+      if (autoAdd && Object.keys(currentSong.value).length === 0) {
+        $store.dispatch("addPlayList", ["33894312"]);
+        // .then(song => {
+        //   this.$toast.show("已自动添加歌曲~", 1500);
+        //   this.$store.commit(SET_CURRENT_SONG, song);
+        // });
       }
-    );
-    // 自动添加歌曲
-    let autoAdd = true;
-    // let autoAdd = false;
-    if (autoAdd && Object.keys(currentSong).length === 0) {
-      $store.dispatch("addPlayList", ["33894312"]);
-      // .then(song => {
-      //   this.$toast.show("已自动添加歌曲~", 1500);
-      //   this.$store.commit(SET_CURRENT_SONG, song);
-      // });
-    }
+      /* 背景虚化 */
+      const stop = watch(
+        currentSong.value,
+        (newVal, oldVal) => {
+          styleObject.value = {
+            "background-image": "url(" + newVal.albumImg + ")"
+          };
+        },
+        {
+          immediate: true
+        }
+      );
+    });
     return {
       isShow,
       isFull,

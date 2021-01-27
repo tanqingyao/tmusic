@@ -31,7 +31,7 @@ import { mapState } from "vuex";
 import { SET_PLAY_TIME } from "store/mutations-types";
 import ContentCover from "./ContentCover";
 import ContentLyric from "./ContentLyric";
-import { parseTime } from "common/utils";
+import { parseTime } from "common/display";
 export default {
   name: "PlayerContent",
   components: {

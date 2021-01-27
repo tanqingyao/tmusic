@@ -21,7 +21,7 @@
 <script>
 import { defineComponent, ref, computed } from "vue";
 
-import { changeUnit } from "common/utils";
+import { changeUnit } from "common/display";
 export default defineComponent({
   name: "RecommendSonglist",
   components: {},
