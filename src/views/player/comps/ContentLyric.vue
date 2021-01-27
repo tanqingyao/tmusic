@@ -71,6 +71,8 @@ export default defineComponent({
     };
     const { parseLyrics } = lyricParse(lyricsArr);
     /* 滚动监听相关 */
+    let unwatchLyric = () => {};
+    let unwatchJump = () => {};
     const scroll = ref(null);
     const verticalOffset = 255;
     const jumper = (currentEl = undefined, time = 1000, offsetY = 255) => {
@@ -139,9 +141,6 @@ export default defineComponent({
       }
     };
     /* 执行与回调相关 */
-    // 歌词滚动监听
-    let unwatchLyric = () => {};
-    let unwatchJump = () => {};
     onMounted(() => {
       parseLyrics(currentSong.value.lyrics);
       unwatchLyric = lyricWatcher();
