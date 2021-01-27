@@ -45,7 +45,29 @@ export function throttle(func, duration = 50, options) {
       isRun = true;
     }, duration);
   };
-} /* 转化数字为时间字符串 */
+}
+/* 指定时间内再次执行会被取消 */
+export const cancelRepeated = (func, duration = 100) => {
+  let isRun = true;
+  let timerId = undefined;
+  return (...args) => {
+    if (!isRun) {
+      //再次执行，取消后再判断
+      if (timerId !== undefined) {
+        clearTimeout(timerId);
+      }
+      timerId = undefined;
+      isRun = true;
+      return;
+    }
+    // 只执行一次
+    isRun = false;
+    timerId = setTimeout(() => {
+      func.apply(this, args);
+    }, duration);
+  };
+};
+/* 转化数字为时间字符串 */
 export function parseTime(num) {
   let min = Math.floor(num / 60);
   let sec = Math.floor(num - min * 60);

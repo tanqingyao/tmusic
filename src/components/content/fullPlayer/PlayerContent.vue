@@ -11,6 +11,7 @@
           v-else
           @touching="isTouch = $event"
           @scrollTime="scrollTime = $event"
+          @switch="switchContent"
         />
       </keep-alive>
     </transition>
@@ -74,7 +75,8 @@ export default {
   position: fixed;
   left: 0;
   right: 0;
-  top: var(--scroll-line-top);
+  /* navbar高度+占位高度-自身高度/2 */
+  top: calc(55px + 255px - 12px);
   display: flex;
   justify-content: space-evenly;
   align-items: center;

@@ -1,15 +1,22 @@
 <template>
-  <div>
-    Rank
-  </div>
+  Rank
 </template>
 <script>
-export default {
+import { defineComponent } from "vue";
+export default defineComponent({
   name: "Rank",
   components: {},
-  data() {
+  props: {
+    test: {
+      type: Array,
+      default() {
+        return [];
+      }
+    }
+  },
+  setup() {
     return {};
   }
-};
+});
 </script>
 <style scoped></style>

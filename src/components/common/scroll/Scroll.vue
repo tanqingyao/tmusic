@@ -133,9 +133,9 @@ export default {
     scrollBy(x, y, time = 500) {
       this.scroll && this.scroll.scrollBy(x, y, time);
     },
-    scrollToElement(el, time = 500, offsetX = true, offsetY = true) {
-      this.scroll && this.scroll.scrollToElement(el, time, offsetX, offsetY);
-    },
+    // scrollToElement(el, time = 500, offsetX = true, offsetY = true) {
+    //   this.scroll && this.scroll.scrollToElement(el, time, offsetX, offsetY);
+    // },
     finishPullUp() {
       // 等请求完成后,数据更新展示后,不能再次刷新,设置两秒后再次刷新
       setTimeout(() => {

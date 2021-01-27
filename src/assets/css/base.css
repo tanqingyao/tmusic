@@ -7,12 +7,6 @@
   --color-high-text: #000;
   --color-background: #eee;
 
-  /* 用于歌词显示相关 */
-  --lyric-line-height: 20px;
-  --lyric-margin-bottom: 20px;
-  --vertical-height-offset: 255px;
-  --scroll-line-top: 330px;
-
   /*  颜色定义规范 */
   /* --color-background: #222; */
   --color-background-d: rgba(0, 0, 0, 0.3);

@@ -1,33 +1,49 @@
 <template>
   <Scroll
     ref="scroll"
-    class="content-lyric"
+    class="scroll"
+    @click.stop
     @touchstart="handleTouchStart"
-    @touchend="debouncedTouchEnd"
-    @scroll="handleTouch"
+    @touchend="handleTouchEnd"
+    @scroll="handleTouchMove"
   >
-    <div :style="{ height: VerticalOffset + 'px' }"></div>
+    <div class="content-lyric">
+      <div :style="{ height: verticalOffset + 'px' }"></div>
 
-    <div
-      class="lyric-line"
-      v-for="index in lyricsArr.lyric.length"
-      :ref="setLyricRefs"
-    >
-      <div class="lyric-text">
-        {{ showLyricText(lyricsArr.lyric[index - 1]) }}
+      <div
+        class="lyric-line"
+        v-for="item in lyricsArr.lyric"
+        :ref="setLyricRefs"
+      >
+        <div class="lyric-text">
+          {{ item.text }}
+        </div>
+        <!-- <div class="lyric-text">
+        {{ item.trans }}
+      </div> -->
       </div>
-      <div class="lyric-text">
-        <!-- text -->
-      </div>
+      <div :style="{ height: verticalOffset + 'px' }"></div>
     </div>
-    <div :style="{ height: VerticalOffset + 'px' }"></div>
   </Scroll>
 </template>
 <script>
-import { debounce } from "common/utils";
-import { defineComponent, ref, onMounted } from "vue";
-import { mapState } from "vuex";
+import {
+  defineComponent,
+  ref,
+  watch,
+  computed,
+  onActivated,
+  onDeactivated,
+  onMounted
+} from "vue";
+import { useStore } from "vuex";
 import Scroll from "components/common/scroll/Scroll";
+
+import lyricScroll from "./composables/lyricScroll";
+import lyricParse from "./composables/lyricParse";
+import lyricTouch from "./composables/lyricTouch";
+
+import { debounce, cancelRepeated } from "common/utils";
 export default defineComponent({
   name: "ContentLyric",
   components: {
@@ -35,229 +51,174 @@ export default defineComponent({
   },
   emits: {
     touching: null,
-    scrollTime: null
+    scrollTime: null,
+    switch: null
   },
-  setup() {
-    const scroll = ref(null);
-    let content = ref({});
-    const setTransfrom = (el, position) => {
-      // 设置el移动位置
-      el.style.transform = `translate(0, ${position}px)`;
-    };
-    const setTransition = (el, duration) => {
-      // 设置el滚动动画
-      el.style.transition = `transform ${duration}ms`;
-    };
-    const scrollToElement = (content, target, duration, offsetY) => {
-      /* offsetY沿Y轴方向偏移 */
-      setTransition(content, duration);
-      setTransfrom(content, -target.offsetTop + offsetY);
-    };
-
-    const jumpTo = el => {
-      if (el && content) {
-        scrollToElement(content, el, 1000, 255);
-      }
-    };
-    onMounted(() => {
-      content = scroll.value.$el.children.item(0);
+  setup(props, { emit }) {
+    const $store = useStore();
+    const currentTime = computed(() => $store.state.currentTime);
+    const currentSong = computed(() => $store.state.currentSong);
+    /* 歌词解析 */
+    let lyricsArr = ref({
+      lyric: [], //{time: , text: }
+      trans: [], //{time: , text: }
+      el: []
+      // scrollY: []
     });
-    return {
-      scroll,
-      setTransfrom,
-      setTransition,
-      scrollToElement,
-      jumpTo
+    // 每行歌词滚动高度
+    const scrollY = computed(() =>
+      lyricsArr.value.el.map(el => el.offsetTop + 0.5 * el.offsetHeight)
+    );
+    const setLyricRefs = el => {
+      lyricsArr.value.el.push(el);
     };
-  },
-  data() {
-    return {
-      lyricsArr: {
-        lyric: [], //{time: , text: }
-        trans: [], //{time: , text: }
-        el: []
-      },
-      //播放歌词位置
-      currentLyricRef: undefined,
-      oldLyricRef: undefined,
-      //滚动歌词位置
-      isTouch: false,
-      currentTouchRef: undefined,
-      oldTouchRef: undefined,
-      posYs: [],
-      isScrolling: false,
-      VerticalOffset: 255 //垂直偏移量
+    const { parseLyrics } = lyricParse(lyricsArr);
+    /* 滚动监听相关 */
+    const scroll = ref(null);
+    const verticalOffset = 255;
+    const jumper = (
+      prevEl = undefined,
+      currentEl = undefined,
+      time = 1000,
+      offsetY = 255,
+      log = "watching"
+    ) => {
+      // 每个索引对应原词和翻译两行
+      if (prevEl !== currentEl) {
+        // console.log(log);
+        const height = currentEl.offsetTop + 0.5 * currentEl.offsetHeight;
+        scroll.value.scrollTo(0, -height + offsetY, time);
+      }
     };
-  },
-  computed: {
-    ...mapState(["currentSong", "currentTime"]),
-    lyricTrim() {
-      return this.lyricsArr.lyric.filter(el => el.time !== 0);
-    },
-    lyricLength() {
-      return this.lyricsArr.lyric.length;
-    },
-    lyricTrimLength() {
-      return this.lyricTrim.length;
-    }
-  },
-  created() {
-    // 歌词滚动监听
-    this.unwatchLyric = this.lyricWatcher();
-
-    this.parseLyrics(this.currentSong.lyrics);
-
-    // 防抖监听touchend
-    this.debouncedTouchEnd = debounce(() => {
-      this.isTouch = false;
-      this.jumpTo(this.currentLyricRef);
-      this.unwatchJump = this.jumpWatcher("create");
-      this.$emit("touching", false);
-    }, 5000);
-  },
-  activated() {
-    // console.log(this.lyricsArr);
-    // 每次进入刷新滚动高度
-    this.$refs.scroll.refresh();
-    // jump immediately
-    this.jumpTo(this.currentLyricRef);
-    // 歌词滚动监听
-    this.unwatchJump = this.jumpWatcher("activated");
-  },
-  deactivated() {
-    // set no touching before leave
-    this.isTouch = false;
-    if (this.debouncedTouchEnd) {
-      this.debouncedTouchEnd.cancel();
-    }
-  },
-  methods: {
-    lyricWatcher() {
-      return this.$watch("currentTime", (newVal, oldVal) => {
-        this.findLyricRef(newVal);
-        // 每个索引对应原词和翻译两行
-        if (this.oldLyricRef !== this.currentLyricRef) {
-          // 改变歌词样式
-          if (this.oldLyricRef) {
-            this.oldLyricRef.style.color = "";
-          }
-          this.currentLyricRef.style.color = `#fff`;
+    const styler = (prevEl, currentEl, color = "#fff") => {
+      // 每个索引对应原词和翻译两行
+      if (prevEl !== currentEl && prevEl && currentEl) {
+        // 改变歌词样式
+        if (prevEl.style && currentEl.style) {
+          prevEl.style.color = "";
+          currentEl.style.color = color;
         }
-      });
-    },
-    jumpWatcher(args) {
-      return this.$watch("currentTime", (newVal, oldVal) => {
-        // 每个索引对应原词和翻译两行
-        if (this.oldLyricRef !== this.currentLyricRef) {
-          //跳转
-          this.jumpTo(this.currentLyricRef);
-        }
-      });
-    },
-    parseLyrics(lyrics) {
-      // 正则匹配解析lyc文本，返回数组：{time,text}
-      const regexp = /\[\d{2}:\d{2}.\d{3}\]/g;
-      lyrics.lyric.split("\n").forEach(element => {
-        // 1.原歌词中提取time, lyric
-        const times = element.match(regexp);
-        let time = 0;
-        if (times) {
-          time = this.parseRawTime(times[0]);
-        }
-        const text = element.replaceAll(regexp, "");
-
-        this.lyricsArr.lyric.push({ time, text });
-      });
-      // 2.翻译歌词中提取time,trans
-      lyrics.trans.split("\n").forEach(element => {
-        const times = element.match(regexp);
-        let time = 0;
-        if (times) {
-          time = this.parseRawTime(times[0]);
-        }
-        const text = element.replaceAll(regexp, "");
-        this.lyricsArr.trans.push({ time, text });
-      });
-    },
-    parseRawTime(rawStringTime) {
-      const [min, sec] = rawStringTime.substring(1, 9).split(":");
-      return Number.parseFloat(min) * 60 + Number.parseFloat(sec);
-    },
-    showLyricText({ time, text }) {
-      if (time && text !== "") {
-        return text;
       }
-    },
-    findLyricRef(currentTime) {
-      // 该时间点所处的时间段的index
-      const index = this.lyricsArr.lyric.findIndex((el, i, arr) => {
-        const cond1 = arr[i + 1] && arr[i + 1].time > currentTime;
-        const cond2 = el && el.time < currentTime;
-        return i + 1 === arr.length ? cond2 : cond1 && cond2;
-      });
-      if (index !== -1) {
-        this.oldLyricRef = this.currentLyricRef;
-        this.currentLyricRef = this.lyricsArr.el[index];
-      }
-    },
-    setLyricRefs(el) {
-      this.lyricsArr.el.push(el);
-    },
-    handleTouchStart() {
-      this.isTouch = true;
-      this.$emit("touching", true);
-
+    };
+    const { currentLyricRef, lyricWatcher, jumpWatcher } = lyricScroll(
+      currentTime,
+      lyricsArr,
+      jumper,
+      styler
+    );
+    /* 歌词滑动相关 */
+    let isTouching = ref(false);
+    let canFire = false;
+    let currentTouchRef = ref({});
+    let oldTouchRef = ref({});
+    const debouncedTouchEnd = debounce(() => {
+      unwatchJump = jumpWatcher();
+      emit("touching", false);
+      isTouching.value = false;
+    }, 1000);
+    const shortedTouchStart = cancelRepeated(() => {
+      // console.log("touch start");
+      /* cancel scroll watcher */
+      isTouching.value = true;
+      emit("touching", true);
+      unwatchJump();
       // 长按情况，取消歌词跳动
-      if (this.debouncedTouchEnd) {
-        this.debouncedTouchEnd.cancel();
+      if (debouncedTouchEnd) {
+        debouncedTouchEnd.cancel();
       }
-      this.unwatchJump();
-    },
-    handleTouchEnd() {
-      this.isTouch = false;
-      // 频繁滑动情况，防抖处理
-      this.debouncedTouchEnd();
-    },
-    handleTouch(pos) {
-      if (!this.isTouch) {
-        // console.log(pos);
+    });
+    const handleTouchStart = e => {
+      shortedTouchStart();
+      // 模拟点击事件
+      canFire = true;
+      setTimeout(() => {
+        canFire = false;
+      }, 100);
+    };
+    const handleTouchEnd = e => {
+      shortedTouchStart();
+      //模拟点击
+      if (canFire) {
+        // console.log("click");
+        emit("switch");
+      } else {
+        // console.log("touch end");
+        // 频繁滑动情况，防抖处理
+        debouncedTouchEnd();
+      }
+    };
+
+    const handleTouchMove = pos => {
+      // console.log("handleTouchMove");
+      // 跳过处理自动滚动
+      if (!isTouching.value) {
         return;
       }
-      //40px一个el
-      const counter = Math.floor((Math.abs(pos.y) + 20) / 40);
-      if (counter < this.lyricTrimLength) {
-        this.$emit("scrollTime", this.lyricTrim[counter].time);
+      // 已默认偏移255px
+      const scrollTop = Math.abs(pos.y) + verticalOffset;
+      const index = scrollY.value.findIndex(
+        (el, i, arr) =>
+          Math.abs(scrollTop - arr[i]) <
+          0.5 * lyricsArr.value.el[i].offsetHeight
+      );
+      if (index !== -1) {
+        //滚动时歌词样式
+        oldTouchRef.value = currentTouchRef.value;
+        currentTouchRef.value = lyricsArr.value.el[index];
+        styler(oldTouchRef.value, currentTouchRef.value, "#999");
       }
-      const index = counter + this.lyricLength - this.lyricTrimLength;
+    };
+    /* 执行与回调相关 */
+    // 歌词滚动监听
+    let unwatchLyric = () => {};
+    let unwatchJump = () => {};
+    parseLyrics(currentSong.value.lyrics);
+    onMounted(() => {
+      unwatchLyric = lyricWatcher();
+      unwatchJump = jumpWatcher();
+    });
+    onActivated(() => {
+      // 每次进入刷新滚动高度
+      // scroll.value.refresh();
+      jumper(undefined, currentLyricRef.value, 0, undefined);
+    });
+    onDeactivated(() => {});
+    return {
+      scroll,
 
-      //滚动时歌词样式
-      this.oldTouchRef = this.currentTouchRef;
-      this.currentTouchRef = this.lyricsArr.el[index];
-      if (this.oldTouchRef) {
-        this.oldTouchRef.style.color = "";
-      }
-      if (this.currentTouchRef) {
-        this.currentTouchRef.style.color = "#999";
-      }
-    }
+      lyricsArr,
+      setLyricRefs,
+      verticalOffset,
+      handleTouchStart,
+      handleTouchEnd,
+      handleTouchMove
+    };
   }
 });
 </script>
 <style scoped>
-.content-lyric {
+.scroll {
   height: 100%;
-
   overflow: hidden;
   position: relative;
 }
+.content-lyric {
+  display: flex;
+  flex-direction: column;
+}
 .lyric-line {
-  margin-bottom: var(--lyric-margin-bottom);
+  display: flex;
+  flex-direction: column;
+
+  width: 90%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 10px;
   color: var(--color-text-d);
 }
-/* .lyric-placeholder {
-  height: var(--vertical-height-offset);
-} */
 .lyric-text {
-  line-height: var(--lyric-line-height);
+  flex: 1;
+  overflow-wrap: break-word;
+  line-height: 20px;
 }
 </style>
