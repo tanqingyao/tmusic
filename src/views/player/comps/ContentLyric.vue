@@ -2,7 +2,6 @@
   <Scroll
     ref="scroll"
     class="scroll"
-    @click.stop
     @touchstart="handleTouchStart"
     @touchend="handleTouchEnd"
     @scroll="handleTouchMove"
@@ -27,23 +26,22 @@
   </Scroll>
 </template>
 <script>
+import Scroll from "components/common/scroll/Scroll";
+
+import lyricScroll from "./composables/lyricScroll";
+import lyricParse from "./composables/lyricParse";
+
+import { debounce } from "common/utils";
+
 import {
   defineComponent,
   ref,
-  watch,
   computed,
   onActivated,
   onDeactivated,
   onMounted
 } from "vue";
 import { useStore } from "vuex";
-import Scroll from "components/common/scroll/Scroll";
-
-import lyricScroll from "./composables/lyricScroll";
-import lyricParse from "./composables/lyricParse";
-import lyricTouch from "./composables/lyricTouch";
-
-import { debounce, cancelRepeated } from "common/utils";
 export default defineComponent({
   name: "ContentLyric",
   components: {
@@ -63,7 +61,6 @@ export default defineComponent({
       lyric: [], //{time: , text: }
       trans: [], //{time: , text: }
       el: []
-      // scrollY: []
     });
     // 每行歌词滚动高度
     const scrollY = computed(() =>
@@ -76,22 +73,13 @@ export default defineComponent({
     /* 滚动监听相关 */
     const scroll = ref(null);
     const verticalOffset = 255;
-    const jumper = (
-      prevEl = undefined,
-      currentEl = undefined,
-      time = 1000,
-      offsetY = 255,
-      log = "watching"
-    ) => {
-      // 每个索引对应原词和翻译两行
-      if (prevEl !== currentEl) {
-        // console.log(log);
+    const jumper = (currentEl = undefined, time = 1000, offsetY = 255) => {
+      if (currentEl) {
         const height = currentEl.offsetTop + 0.5 * currentEl.offsetHeight;
         scroll.value.scrollTo(0, -height + offsetY, time);
       }
     };
     const styler = (prevEl, currentEl, color = "#fff") => {
-      // 每个索引对应原词和翻译两行
       if (prevEl !== currentEl && prevEl && currentEl) {
         // 改变歌词样式
         if (prevEl.style && currentEl.style) {
@@ -108,17 +96,14 @@ export default defineComponent({
     );
     /* 歌词滑动相关 */
     let isTouching = ref(false);
-    let canFire = false;
     let currentTouchRef = ref({});
-    let oldTouchRef = ref({});
+    let oldTouchRef = null;
     const debouncedTouchEnd = debounce(() => {
       unwatchJump = jumpWatcher();
       emit("touching", false);
       isTouching.value = false;
-    }, 1000);
-    const shortedTouchStart = cancelRepeated(() => {
-      // console.log("touch start");
-      /* cancel scroll watcher */
+    }, 5000);
+    const handleTouchStart = e => {
       isTouching.value = true;
       emit("touching", true);
       unwatchJump();
@@ -126,26 +111,9 @@ export default defineComponent({
       if (debouncedTouchEnd) {
         debouncedTouchEnd.cancel();
       }
-    });
-    const handleTouchStart = e => {
-      shortedTouchStart();
-      // 模拟点击事件
-      canFire = true;
-      setTimeout(() => {
-        canFire = false;
-      }, 100);
     };
     const handleTouchEnd = e => {
-      shortedTouchStart();
-      //模拟点击
-      if (canFire) {
-        // console.log("click");
-        emit("switch");
-      } else {
-        // console.log("touch end");
-        // 频繁滑动情况，防抖处理
-        debouncedTouchEnd();
-      }
+      debouncedTouchEnd();
     };
 
     const handleTouchMove = pos => {
@@ -163,9 +131,9 @@ export default defineComponent({
       );
       if (index !== -1) {
         //滚动时歌词样式
-        oldTouchRef.value = currentTouchRef.value;
+        oldTouchRef = currentTouchRef.value;
         currentTouchRef.value = lyricsArr.value.el[index];
-        styler(oldTouchRef.value, currentTouchRef.value, "#999");
+        styler(oldTouchRef, currentTouchRef.value, "#999");
         // 时间戳
         emit("scrollTime", lyricsArr.value.lyric[index].time);
       }
@@ -174,15 +142,15 @@ export default defineComponent({
     // 歌词滚动监听
     let unwatchLyric = () => {};
     let unwatchJump = () => {};
-    parseLyrics(currentSong.value.lyrics);
     onMounted(() => {
+      parseLyrics(currentSong.value.lyrics);
       unwatchLyric = lyricWatcher();
       unwatchJump = jumpWatcher();
     });
     onActivated(() => {
       // 每次进入刷新滚动高度
       // scroll.value.refresh();
-      jumper(undefined, currentLyricRef.value, 0, undefined);
+      jumper(currentLyricRef, 0, undefined);
     });
     onDeactivated(() => {});
     return {
