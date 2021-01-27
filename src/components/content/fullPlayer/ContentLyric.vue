@@ -165,10 +165,7 @@ export default defineComponent({
         //滚动时歌词样式
         oldTouchRef.value = currentTouchRef.value;
         currentTouchRef.value = lyricsArr.value.el[index];
-        if (currentTouchRef.value !== currentLyricRef.value) {
-          console.log(currentTouchRef.value, currentLyricRef.value);
-          styler(oldTouchRef.value, currentTouchRef.value, "#999");
-        }
+        styler(oldTouchRef.value, currentTouchRef.value, "#999");
         // 时间戳
         emit("scrollTime", lyricsArr.value.lyric[index].time);
       }
