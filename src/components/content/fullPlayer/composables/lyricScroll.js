@@ -19,8 +19,6 @@ export default function lyricScroll(currentTime, lyricsArr, jumper, styler) {
     return watch(
       currentTime,
       (newVal, oldVal) => {
-        // console.log(log);
-        // console.log(log, oldLyricRef.value, currentLyricRef.value);
         findLyricRef(newVal);
         styler(oldLyricRef.value, currentLyricRef.value);
       },
@@ -34,9 +32,6 @@ export default function lyricScroll(currentTime, lyricsArr, jumper, styler) {
     return watch(
       currentTime,
       (newVal, oldVal) => {
-        // console.log(log);
-        // console.log(log, oldLyricRef.value, currentLyricRef.value);
-        // findLyricRef(newVal);
         jumper(
           oldLyricRef.value,
           currentLyricRef.value,
