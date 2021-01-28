@@ -19,7 +19,7 @@
     </transition>
     <transition name="fade">
       <div v-if="!isFull">
-        <MiniTabBar @click="isFull = !isFull" @menuBtnClick="isShow = true" />
+        <MiniTabBar @click="isFull = !isFull" @menu-show="isShow = true" />
 
         <transition name="fade">
           <PlayerList v-show="isShow" v-model:isShow="isShow" />

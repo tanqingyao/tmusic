@@ -1,5 +1,5 @@
 <template>
-  <TabBar class="mini-tab-bar" @click="$emit('changeScreen')">
+  <TabBar class="mini-tab-bar">
     <TabBarItem class="tab-cover">
       <template #itemIcon>
         <img
@@ -16,7 +16,7 @@
         <span class="singer">{{ singer }}</span>
       </template>
     </TabBarItem>
-    <TabBarItem class="tab-img" @click.stop @click="handlePlayClick">
+    <TabBarItem class="tab-img" @click.stop @click="handlePlay">
       <template #itemIcon>
         <img
           v-show="isPlaying"
@@ -30,7 +30,7 @@
         />
       </template>
     </TabBarItem>
-    <TabBarItem class="tab-img" @click.stop @click="$emit('menuBtnClick')">
+    <TabBarItem class="tab-img" @click.stop @click="$emit('menu-show')">
       <template #itemIcon>
         <img src="~assets/img/player/mini_list.svg" alt="歌曲列表" />
       </template>
@@ -43,7 +43,7 @@ import TabBarItem from "components/common/tabbar/TabBarItem";
 
 import { SET_PLAYING } from "store/mutations-types";
 import { useStore } from "vuex";
-import { computed, onMounted } from "vue";
+import { computed } from "vue";
 export default {
   name: "MiniTabBar",
   components: {
@@ -51,15 +51,16 @@ export default {
     TabBarItem
   },
   emits: {
-    changeScreen: null,
-    menuBtnClick: null
+    "menu-show": null
   },
   props: {},
   setup() {
     const $store = useStore();
 
     const isPlaying = computed(() => $store.state.isPlaying);
+
     const currentSong = computed(() => $store.state.currentSong);
+
     const singer = computed(() => {
       if (currentSong.value) {
         currentSong.value.singers
@@ -69,18 +70,16 @@ export default {
           : "";
       }
     });
-    const handlePlayClick = () => {
-      console.log("handlePlayClick");
-      $store.dispatch("setPlaying", !isPlaying.value);
+
+    const handlePlay = () => {
+      $store.commit(SET_PLAYING, !isPlaying.value);
     };
-    onMounted(() => {
-      console.log(isPlaying.value, currentSong.value);
-    });
+
     return {
       isPlaying,
       currentSong,
       singer,
-      handlePlayClick
+      handlePlay
     };
   }
 };

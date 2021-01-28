@@ -1,65 +1,76 @@
 <template>
-  <div class="player-content" @click="switchContent">
+  <div class="player-content" @click="handleSwitch">
     <transition
       name="custom-classes-transition"
       enter-active-class="animated tada"
       leave-active-class="animated bounceOutRight"
     >
       <keep-alive>
-        <ContentCover v-if="isCover" />
+        <div class="content-cover" v-if="isCover">
+          <img
+            v-if="currentSong.album"
+            :src="currentSong.album.url"
+            alt="歌曲封面"
+          />
+        </div>
         <ContentLyric
           v-else
           @touching="isTouch = $event"
           @scrollTime="scrollTime = $event"
-          @switch="switchContent"
         />
       </keep-alive>
     </transition>
   </div>
   <div class="scroll-line" v-show="isTouch && !isCover">
-    <div class="line-left" @click="jumpLyric">
+    <div class="line-left" @click="handleJump">
       <img src="~assets/img/player/play_icon.svg" alt="播放" />
     </div>
     <div class="line-center"></div>
     <div class="line-right">
-      {{ showTime }}
+      {{ parseTime(scrollTime) }}
     </div>
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
-import { SET_PLAY_TIME } from "store/mutations-types";
-import ContentCover from "./ContentCover";
 import ContentLyric from "./ContentLyric";
 import { parseTime } from "common/display";
+
+import { SET_PLAY_TIME } from "store/mutations-types";
+
+import { useStore } from "vuex";
+import { computed, ref } from "vue";
 export default {
   name: "PlayerContent",
   components: {
-    ContentCover,
     ContentLyric
   },
-  data() {
-    return {
-      isCover: true,
-      isTouch: false,
-      scrollTime: 0
+  setup() {
+    const $store = useStore();
+    const currentTime = computed(() => $store.state.currentTime);
+    const currentSong = computed(() => $store.state.currentSong);
+
+    const isCover = ref(true);
+    const isTouch = ref(false);
+    const scrollTime = ref(0);
+
+    const handleJump = () => {
+      $store.commit(SET_PLAY_TIME, Number.parseFloat(scrollTime.value));
     };
-  },
-  computed: {
-    showTime() {
-      return parseTime(this.scrollTime);
-    }
-  },
-  methods: {
-    switchContent() {
-      this.isCover = !this.isCover;
-      if (this.isCover) {
+    const handleSwitch = () => {
+      isCover.value = !isCover.value;
+      if (isCover.value) {
         // TODO 去除播放器虚化背景
       }
-    },
-    jumpLyric() {
-      this.$store.commit(SET_PLAY_TIME, Number.parseFloat(this.scrollTime));
-    }
+    };
+    return {
+      currentSong,
+      isCover,
+      isTouch,
+      scrollTime,
+      handleSwitch,
+      handleJump,
+      parseTime
+    };
   }
 };
 </script>
@@ -70,7 +81,19 @@ export default {
   /* 居中对齐 */
   text-align: center;
 }
-
+/* 封面相关 */
+.content-cover {
+  height: 100%;
+}
+.content-cover img {
+  width: 250px;
+  border-radius: 50%;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  margin-left: -125px;
+}
+/* 滚动条相关 */
 .scroll-line {
   position: fixed;
   left: 0;
