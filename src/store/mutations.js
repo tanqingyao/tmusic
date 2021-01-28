@@ -25,7 +25,6 @@ export default {
     state.isPlayerFull = payload;
   },
   [SET_PLAY_TIME](state, payload) {
-    console.log(payload);
     state.expectTime = payload;
   },
   [SET_DURATION](state, payload) {

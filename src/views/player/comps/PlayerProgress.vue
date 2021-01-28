@@ -11,52 +11,60 @@
       @touchend="touchEnd"
     />
     <div class="progerss-time">
-      <span class="left">{{ parseTimeString(currentTime) }}</span>
-      <span class="right">{{ parseTimeString(duration) }}</span>
+      <span class="left">{{ parseTime(currentTime) }}</span>
+      <span class="right">{{ parseTime(duration) }}</span>
     </div>
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { useStore } from "vuex";
 import { SET_PLAY_TIME } from "store/mutations-types";
+import { computed, onMounted, ref, watchEffect } from "vue";
+
+import { parseTime } from "common/display";
 export default {
   name: "PlayerProgress",
-  data() {
-    return {
-      isTouch: false
-    };
-  },
-  computed: {
-    ...mapState(["duration", "currentTime"])
-  },
-  created() {
-    this.unwatch = this.progressWatcher();
-  },
-  methods: {
-    progressWatcher() {
-      return this.$watch("currentTime", (newVal, oldVal) => {
-        this.$refs.progress.value = newVal;
+  setup() {
+    const $store = useStore();
+
+    const duration = computed(() => $store.state.duration);
+
+    const currentTime = computed(() => $store.state.currentTime);
+
+    // 改变样式
+    let isTouch = ref(false);
+    const progress = ref(null);
+    let unwatch = null;
+
+    const progressWatcher = () => {
+      return watchEffect(() => {
+        progress.value.value = currentTime.value;
       });
-    },
-    parseTimeString(num) {
-      let min = Math.floor(num / 60);
-      let sec = Math.floor(num - min * 60);
-      sec = ("00" + sec).slice(-2);
-      return `${min}:${sec}`;
-    },
-    touchStart(e) {
-      // 暂停监听value
-      this.unwatch();
-      this.isTouch = true;
-    },
-    touchEnd(e) {
+    };
+
+    const touchStart = e => {
+      unwatch();
+      isTouch.value = true;
+    };
+
+    const touchEnd = e => {
       // 跳转至对应时间
-      this.$store.commit(SET_PLAY_TIME, Number.parseFloat(e.target.value));
-      // 开始监听
-      this.unwatch = this.progressWatcher();
-      // 改变样式
-      this.isTouch = false;
-    }
+      $store.commit(SET_PLAY_TIME, Number.parseFloat(e.target.value));
+      unwatch = progressWatcher();
+      isTouch.value = false;
+    };
+    onMounted(() => {
+      unwatch = progressWatcher();
+    });
+    return {
+      duration,
+      currentTime,
+      isTouch,
+      progress,
+      parseTime,
+      touchStart,
+      touchEnd
+    };
   }
 };
 </script>

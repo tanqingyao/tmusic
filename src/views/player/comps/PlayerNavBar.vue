@@ -2,7 +2,7 @@
   <NavBar class="player-nav-bar">
     <template #left>
       <icon
-        @click="backIconClick"
+        @click="$emit('change-screen')"
         class="down-icon"
         :icon="['fas', 'angle-down']"
         size="lg"
@@ -12,34 +12,34 @@
       <div class="text">
         <span>{{ currentSong.name }}</span>
         <span> - </span>
-        <span>{{ singer }}</span>
+        <span>{{ showSinger(currentSong.singers) }}</span>
       </div>
     </template>
   </NavBar>
 </template>
 <script>
-import { mapState } from "vuex";
 import NavBar from "components/common/navbar/NavBar";
+import { showSinger } from "common/display";
 export default {
   name: "PlayerNavBar",
-  emits: {
-    "change-screen": null
-  },
   components: {
     NavBar
   },
-  computed: {
-    ...mapState(["currentSong"]),
-    singer() {
-      return this.currentSong.singers
-        ? Array.from(this.currentSong.singers, ({ id, name }) => name).join("/")
-        : "";
+  props: {
+    currentSong: {
+      type: Object,
+      default() {
+        return {};
+      }
     }
   },
-  methods: {
-    backIconClick() {
-      this.$emit("change-screen");
-    }
+  emits: {
+    "change-screen": null
+  },
+  setup() {
+    return {
+      showSinger
+    };
   }
 };
 </script>

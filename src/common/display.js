@@ -23,6 +23,6 @@ export const changeUnit = (value, base = 10000, point = 0) => {
   return value.toFixed(point).toString() + unit;
 };
 
-export const joinSingerWith = (arr, string) => {
-  return arr ? Array.from(arr, ({ id, name }) => name).join(string) : "";
+export const showSinger = singers => {
+  return singers ? Array.from(singers, ({ id, name }) => name).join("/") : "";
 };
