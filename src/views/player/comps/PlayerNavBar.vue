@@ -1,11 +1,11 @@
 <template>
   <NavBar class="player-nav-bar">
     <template #left>
-      <img
+      <icon
         @click="backIconClick"
         class="down-icon"
-        src="~assets/img/common/down.svg"
-        alt="向下关闭"
+        :icon="['fas', 'angle-down']"
+        size="lg"
       />
     </template>
     <template #center>

@@ -7,9 +7,12 @@
       />
     </template>
     <template #right>
-      <div @click="settingClick" class="navbar-right">
-        <img src="~assets/img/common/settings.svg" alt="setting image" />
-      </div>
+      <icon
+        @click="settingClick"
+        class="navbar-right"
+        :icon="['fas', 'user']"
+        size="sm"
+      />
     </template>
   </NavBar>
 </template>
@@ -33,8 +36,7 @@ export default {
 </script>
 <style scoped>
 .navbar-right {
-  margin-top: 5px;
-  margin-left: 15px;
+  margin: 0 10px;
   width: 30px;
 }
 </style>

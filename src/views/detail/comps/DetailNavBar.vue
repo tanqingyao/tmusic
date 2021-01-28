@@ -1,7 +1,7 @@
 <template>
   <NavBar class="nav-bar">
     <template #left>
-      <font-awesome-icon
+      <icon
         @click="handleBack"
         class="icon"
         :icon="['fas', 'chevron-left']"
@@ -12,14 +12,14 @@
       <div class="title">{{ title }}</div>
     </template>
     <template #right>
-      <font-awesome-icon
+      <icon
         @click="handleSearch"
         class="icon"
         :icon="['fas', 'search']"
         size="lg"
         :style="{ color: '#fff' }"
       />
-      <font-awesome-icon
+      <icon
         @click="handleSetting"
         class="icon"
         :icon="['fas', 'ellipsis-v']"

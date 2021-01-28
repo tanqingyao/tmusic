@@ -16,10 +16,7 @@
                 <img :src="info.avatar" alt="" />
                 {{ info.name }}
                 <button @click="handleAddUser">
-                  <font-awesome-icon
-                    :icon="['fas', 'plus']"
-                    :style="{ color: '#eee' }"
-                  />
+                  <icon :icon="['fas', 'plus']" :style="{ color: '#eee' }" />
                 </button>
               </div>
             </template>
@@ -27,7 +24,7 @@
               <span class="detail-desc">
                 {{ info.desc }}
               </span>
-              <font-awesome-icon :icon="['fas', 'chevron-right']" />
+              <icon :icon="['fas', 'chevron-right']" />
             </template>
           </DescItem>
         </template>
@@ -35,15 +32,15 @@
         <template #below>
           <div class="detail-static">
             <button @click="handleSubs">
-              <font-awesome-icon :icon="['fas', 'folder-plus']" />
+              <icon :icon="['fas', 'folder-plus']" />
               {{ changeUnit(info.subscribedCount) }}
             </button>
             <button @click="handleComment">
-              <font-awesome-icon :icon="['fas', 'comment-dots']" />
+              <icon :icon="['fas', 'comment-dots']" />
               {{ changeUnit(info.commentCount) }}
             </button>
             <button @click="handleShare">
-              <font-awesome-icon :icon="['fas', 'share-alt']" />
+              <icon :icon="['fas', 'share-alt']" />
               {{ changeUnit(info.shareCount) }}
             </button>
           </div>
@@ -53,7 +50,7 @@
         <template #content>
           <ListTab>
             <template #left>
-              <font-awesome-icon
+              <icon
                 class="icon"
                 size="lg"
                 :icon="['fas', 'play-circle']"
@@ -66,13 +63,13 @@
               <span>({{ info.trackCount }})</span>
             </template>
             <template #right>
-              <font-awesome-icon
+              <icon
                 class="icon"
                 size="lg"
                 :icon="['fas', 'arrow-alt-circle-down']"
                 :style="{ color: '#000' }"
               />
-              <font-awesome-icon
+              <icon
                 class="icon"
                 size="lg"
                 :icon="['fas', 'check-circle']"
@@ -104,13 +101,13 @@
             </template>
 
             <template #right>
-              <font-awesome-icon
+              <icon
                 class="icon"
                 :icon="['fas', 'video']"
                 :style="{ color: '#999' }"
                 @click="handleVideo"
               />
-              <font-awesome-icon
+              <icon
                 class="icon"
                 :icon="['fas', 'ellipsis-v']"
                 :style="{ color: '#999' }"

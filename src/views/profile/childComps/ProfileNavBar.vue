@@ -1,9 +1,12 @@
 <template>
   <NavBar class="nav-bar">
     <template #left>
-      <div class="back-icon" @click="backClick">
-        <img src="~assets/img/common/arrow_left.svg" alt="" />
-      </div>
+      <icon
+        class="back-icon"
+        @click="$router.back"
+        :icon="['fas', 'arrow-left']"
+        size="lg"
+      />
     </template>
     <template #center>
       <div class="text">{{ title }}</div>
@@ -22,11 +25,6 @@ export default {
       type: String,
       default: ""
     }
-  },
-  methods: {
-    backClick() {
-      this.$router.back();
-    }
   }
 };
 </script>
@@ -36,8 +34,6 @@ export default {
   font-size: var(--font-size-small-s);
 }
 .back-icon {
-  margin-top: 5px;
-  margin-left: 15px;
   width: 30px;
 }
 </style>

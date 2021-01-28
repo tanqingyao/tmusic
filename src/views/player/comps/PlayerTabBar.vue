@@ -2,46 +2,35 @@
   <TabBar class="full-tab-bar">
     <TabBarItem class="order" @click="orderClick">
       <template #itemIcon>
-        <img
-          v-show="playOrder === 0"
-          src="~assets/img/player/shuffle.svg"
-          alt="随机播放"
-        />
-        <img
-          v-show="playOrder === 1"
-          src="~assets/img/player/loop.svg"
-          alt="顺序播放"
-        />
-        <img
-          v-show="playOrder === 2"
-          src="~assets/img/player/refresh.svg"
-          alt="单曲循环"
-        />
+        <icon v-show="playOrder === 0" :icon="['fas', 'random']" size="lg" />
+        <icon v-show="playOrder === 1" :icon="['fas', 'list-ol']" size="lg" />
+        <icon v-show="playOrder === 2" :icon="['fas', 'undo-alt']" size="lg" />
       </template>
     </TabBarItem>
     <TabBarItem class="back" @click="$emit('switch', 'last')">
       <template #itemIcon>
-        <img src="~assets/img/player/back.svg" alt="上一首" />
+        <icon :icon="['fas', 'step-backward']" size="lg" />
       </template>
     </TabBarItem>
     <TabBarItem class="play" @click="handlePlayClick">
       <template #itemIcon>
-        <img v-show="isPlaying" src="~assets/img/player/pause.svg" alt="暂停" />
-        <img v-show="!isPlaying" src="~assets/img/player/play.svg" alt="播放" />
+        <icon v-show="isPlaying" :icon="['fas', 'pause-circle']" size="lg" />
+        <icon v-show="!isPlaying" :icon="['fas', 'play-circle']" size="lg" />
       </template>
     </TabBarItem>
     <TabBarItem class="next" @click="$emit('switch', 'next')">
       <template #itemIcon>
-        <img src="~assets/img/player/next.svg" alt="下一首" />
+        <icon :icon="['fas', 'step-forward']" size="lg" />
       </template>
     </TabBarItem>
     <TabBarItem class="like" @click="$emit('update:isLike', !isLike)">
       <template #itemIcon>
-        <img v-show="!isLike" src="~assets/img/player/like.svg" alt="不喜欢" />
-        <img
+        <icon v-show="!isLike" :icon="['fas', 'heart']" size="lg" />
+        <icon
           v-show="isLike"
-          src="~assets/img/player/like_active.svg"
-          alt="喜欢"
+          :style="{ color: '#f00' }"
+          :icon="['fas', 'heart']"
+          size="lg"
         />
       </template>
     </TabBarItem>
@@ -51,8 +40,9 @@
 import TabBar from "components/common/tabbar/TabBar";
 import TabBarItem from "components/common/tabbar/TabBarItem";
 
-import { mapState, mapMutations } from "vuex";
+import { mapState } from "vuex";
 import { SET_PLAYING } from "store/mutations-types";
+import { computed } from "vue";
 export default {
   name: "PlayerTabBar",
   components: {
@@ -80,6 +70,12 @@ export default {
       default: false
     }
   },
+  // setup(){
+  //   computed
+  //   return {
+  //     isPlaying
+  //   }
+  // },
   computed: {
     ...mapState(["isPlaying"])
   },

@@ -4,7 +4,7 @@
       <h3 class="left">推荐歌单</h3>
       <button class="right" @click="handleMore">
         更多
-        <font-awesome-icon :icon="['fas', 'chevron-right']" />
+        <icon :icon="['fas', 'chevron-right']" />
       </button>
     </div>
     <div

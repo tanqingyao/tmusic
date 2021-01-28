@@ -1,12 +1,8 @@
 <template>
   <div class="search-bar">
-    <font-awesome-icon
-      class="icon-search"
-      :icon="['fas', 'search']"
-      size="lg"
-    />
+    <icon class="icon-search" :icon="['fas', 'search']" size="lg" />
     <input class="search-input" type="text" :value="Default.real" />
-    <font-awesome-icon
+    <icon
       v-show="isTyping"
       class="icon-close"
       :icon="['fas', 'times']"

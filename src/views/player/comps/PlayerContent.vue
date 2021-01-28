@@ -23,7 +23,7 @@
   </div>
   <div class="scroll-line" v-show="isTouch && !isCover">
     <div class="line-left" @click="handleJump">
-      <img src="~assets/img/player/play_icon.svg" alt="播放" />
+      <icon :icon="['fas', 'play']" size="sm" />
     </div>
     <div class="line-center"></div>
     <div class="line-right">

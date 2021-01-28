@@ -18,21 +18,13 @@
     </TabBarItem>
     <TabBarItem class="tab-img" @click.stop @click="handlePlay">
       <template #itemIcon>
-        <img
-          v-show="isPlaying"
-          src="~assets/img/player/mini_pause.svg"
-          alt="暂停"
-        />
-        <img
-          v-show="!isPlaying"
-          src="~assets/img/player/mini_play.svg"
-          alt="播放"
-        />
+        <icon v-show="isPlaying" :icon="['fas', 'pause']" size="lg" />
+        <icon v-show="!isPlaying" :icon="['fas', 'play']" size="lg" />
       </template>
     </TabBarItem>
     <TabBarItem class="tab-img" @click.stop @click="$emit('menu-show')">
       <template #itemIcon>
-        <img src="~assets/img/player/mini_list.svg" alt="歌曲列表" />
+        <icon :icon="['fas', 'bars']" size="lg" />
       </template>
     </TabBarItem>
   </TabBar>
@@ -88,12 +80,8 @@ export default {
 .mini-tab-bar {
   background-color: var(--color-background);
 }
-.mini-tab-bar img {
-  width: 20px;
-  vertical-align: middle;
-  margin: 3px 0;
-}
 .tab-cover img {
+  vertical-align: middle;
   width: 40px;
   border: 1px solid #999;
   border-radius: 50%;

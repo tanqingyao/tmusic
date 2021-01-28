@@ -1,9 +1,12 @@
 <template>
   <NavBar>
     <template #left>
-      <div class="back-icon" @click="$router.back">
-        <img src="~assets/img/common/arrow_left.svg" alt="" />
-      </div>
+      <icon
+        class="back-icon"
+        @click="$router.back"
+        :icon="['fas', 'arrow-left']"
+        size="lg"
+      />
     </template>
     <template #center>
       <SearchBar />
@@ -29,8 +32,7 @@ export default {
 </script>
 <style scoped>
 .back-icon {
-  margin-top: 5px;
-  margin-left: 15px;
+  margin: 0 15px;
   width: 30px;
 }
 </style>

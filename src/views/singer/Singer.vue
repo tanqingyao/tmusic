@@ -1,49 +1,10 @@
 <template>
-  <div class="singer">
-    <ul>
-      <li v-for="(item, index) in list" :ref="setLyricRefs">
-        {{ item }}
-      </li>
-    </ul>
-    <div class="scroll-line">
-      <div class="line-left">
-        <img src="~assets/img/player/mini_play.svg" alt="播放" />
-      </div>
-      <div class="line-center"></div>
-      <div class="line-right">时间</div>
-    </div>
-    <button @click="btnClick">点击</button>
-  </div>
+  <div class="singer"></div>
 </template>
 <script>
 export default {
   name: "Singer",
-  components: {},
-  data() {
-    return {
-      list: ["test1", "test2", "test3", "test4"],
-      lyricRefs: []
-    };
-  },
-  created() {
-    // console.log("Singer created");
-  },
-  beforeUpdate() {
-    // console.log("beforeUpdate");
-    // this.lyricRefs = [];
-  },
-  methods: {
-    setLyricRefs(el) {
-      this.lyricRefs.push(el);
-    },
-    btnClick() {
-      // 方法一：
-      console.log(this.lyricRefs[0].offsetHeight);
-
-      // 方法二 :ref="`list${index}`"
-      // console.log(this.$refs[`list1`].offsetHeight);
-    }
-  }
+  components: {}
 };
 </script>
 <style scoped>
