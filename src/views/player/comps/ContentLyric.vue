@@ -11,11 +11,11 @@
 
       <div
         class="lyric-line"
-        v-for="item in lyricsArr.lyric"
+        v-for="item in currentSong.lyrics"
         :ref="setLyricRefs"
       >
         <div class="lyric-text">
-          {{ item.text }}
+          {{ item.lyric }}
         </div>
         <!-- <div class="lyric-text">
         {{ item.trans }}
@@ -28,7 +28,6 @@
 <script>
 import Scroll from "components/common/scroll/Scroll";
 
-import lyricParse from "./composables/lyricParse";
 import lyricScroll from "./composables/lyricScroll";
 import lyricTouch from "./composables/lyricTouch";
 
@@ -59,14 +58,12 @@ export default defineComponent({
 
     /* 歌词解析 */
     let lyricsArr = ref({
-      lyric: [], //{time: , text: }
-      trans: [], //{time: , text: }
+      lyric: currentSong.value.lyrics, //{time: , lyric: , trans}
       el: []
     });
     const setLyricRefs = el => {
       lyricsArr.value.el.push(el);
     };
-    const { parseLyrics } = lyricParse(lyricsArr);
 
     /* 滚动监听相关 */
     const verticalOffset = 255;
@@ -89,7 +86,6 @@ export default defineComponent({
 
     /* 执行与回调相关 */
     onMounted(() => {
-      parseLyrics(currentSong.value.lyrics);
       const unwatchLyric = lyricWatcher();
       unwatchJump.value = jumpWatcher();
     });
@@ -103,8 +99,7 @@ export default defineComponent({
     onDeactivated(() => {});
     return {
       scroll,
-
-      lyricsArr,
+      currentSong,
       setLyricRefs,
       verticalOffset,
       handleTouchStart,

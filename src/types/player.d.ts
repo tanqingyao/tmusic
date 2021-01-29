@@ -17,24 +17,9 @@ declare type IAlbum = {
   name: string;
   url: string;
 };
-/* 应转化为ILyric */
-declare interface ILyricslyric {
-  time: number;
-  lyric: string;
-}
-declare interface ILyricstrans {
-  time: number;
-  trans: string;
-}
-declare interface ILyrics {
-  lyric: ILyricslyric[];
-  trans: ILyricstrans[];
-  user: string;
-}
-/* 应转化为ILyric */
 declare type ILyric = {
   time: number;
   lyric: string;
   trans: string;
-  user: string;
+  user?: string;
 };

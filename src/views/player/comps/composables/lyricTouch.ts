@@ -1,21 +1,23 @@
-import { computed, ref } from "vue";
-import { debounce } from "common/utils";
+import { computed, Ref, ref, WatchStopHandle } from "vue";
+import { debounce } from "@/common/utils";
 export default function lyricTouch(
-  emit,
-  jumpWatcher,
-  styler,
-  lyricsArr,
-  verticalOffset
+  emit: (event: string, ...args: unknown[]) => void,
+  jumpWatcher: WatchStopHandle,
+  styler: (prevEl: HTMLElement, currentEl: HTMLElement, color: string) => void,
+  lyricsArr: Ref,
+  verticalOffset: number
 ) {
   let isTouch = false;
-  let currentTouchEl = null;
-  let oldTouchEl = null;
+  let currentTouchEl: HTMLElement;
+  let oldTouchEl: HTMLElement;
 
-  let unwatchJump = ref(null);
+  let unwatchJump: Ref = ref(null);
 
   // 每行歌词滚动高度
   const scrollY = computed(() =>
-    lyricsArr.value.el.map(el => el.offsetTop + 0.5 * el.offsetHeight)
+    lyricsArr.value.el.map(
+      (el: HTMLElement) => el.offsetTop + 0.5 * el.offsetHeight
+    )
   );
 
   const debouncedTouchEnd = debounce(() => {
@@ -24,7 +26,7 @@ export default function lyricTouch(
     isTouch = false;
   }, 5000);
 
-  const handleTouchStart = e => {
+  const handleTouchStart = () => {
     isTouch = true;
     emit("touching", true);
     unwatchJump.value();
@@ -34,12 +36,11 @@ export default function lyricTouch(
     }
   };
 
-  const handleTouchEnd = e => {
+  const handleTouchEnd = () => {
     debouncedTouchEnd();
   };
 
-  const handleTouchMove = pos => {
-    // console.log("handleTouchMove");
+  const handleTouchMove = (pos: { y: number }) => {
     // 跳过处理自动滚动
     if (!isTouch) {
       return;
@@ -47,8 +48,8 @@ export default function lyricTouch(
     // 已默认偏移255px
     const scrollTop = Math.abs(pos.y) + verticalOffset;
     const index = scrollY.value.findIndex(
-      (el, i, arr) =>
-        Math.abs(scrollTop - arr[i]) < 0.5 * lyricsArr.value.el[i].offsetHeight
+      (el: number, i: number) =>
+        Math.abs(scrollTop - el) < 0.5 * lyricsArr.value.el[i].offsetHeight
     );
     if (index !== -1) {
       //滚动时歌词样式

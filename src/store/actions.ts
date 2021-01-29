@@ -15,7 +15,7 @@ export const actions: ActionTree<State, State> & Actions = {
     // 过滤playlist已有歌曲
     const ids = songsID.filter((id: number) => !getters.getSongById(id));
 
-    const songs = await _fetchSongData(ids);
+    const songs: ISong[] = await _fetchSongData(ids);
     commit(MutationType.ADD_TO_PLAYLIST, songs);
     commit(MutationType.SET_CURRENT_SONG, songs[0]);
     // TODO 若没有选择自动播放,直接添加至播放列表.否则改变当前歌曲
@@ -56,7 +56,7 @@ export const actions: ActionTree<State, State> & Actions = {
 };
 
 const _fetchSongData = async (ids: number[]) => {
-  let songs = [];
+  let songs: ISong[] = [];
   try {
     // 歌曲播放url
     const urls = await getSongUrl(ids);
@@ -64,8 +64,8 @@ const _fetchSongData = async (ids: number[]) => {
     const infos = await getSongsInfo(ids);
     for (const i in ids) {
       // 单个歌曲对应歌词
-      const lyric = await getSongsLyric(ids[i]);
-      songs.push(new Song(infos[i], urls[i], lyric));
+      const lyrics = await getSongsLyric(ids[i]);
+      songs.push(new Song(infos[i], urls[i], lyrics));
     }
   } catch (error) {
     console.error(error);
