@@ -19,7 +19,7 @@ export const getSongUrl = async (ids: number[]) => {
       return JSON.parse(data).data;
     }
   });
-  console.log(urls);
+
   return urls;
 };
 export const getSongsInfo = async (idArr: number[]) => {
@@ -34,7 +34,7 @@ export const getSongsInfo = async (idArr: number[]) => {
       return JSON.parse(data).songs;
     }
   });
-  console.log(songsInfo);
+
   return songsInfo;
 };
 export const getSongsLyric = async (id: number) => {
@@ -47,7 +47,6 @@ export const getSongsLyric = async (id: number) => {
       return JSON.parse(data);
     }
   });
-  console.log(lyric);
 
   return lyric;
 };

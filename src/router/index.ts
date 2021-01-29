@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
-const MainNavBar = () => import("components/content/mainNavBar/MainNavBar.vue");
+const MainNavBar = () =>
+  import("@/components/content/mainNavBar/MainNavBar.vue");
 
-const Recommend = () => import("views/recommend/Recommend.vue");
-const Singer = () => import("views/singer/Singer.vue");
-const Rank = () => import("views/rank/Rank.vue");
-const Search = () => import("views/search/Search.vue");
-const Detail = () => import("views/detail/Detail.vue");
-const Profile = () => import("views/profile/Profile.vue");
+const Recommend = () => import("@/views/recommend/Recommend.vue");
+const Singer = () => import("@/views/singer/Singer.vue");
+const Rank = () => import("@/views/rank/Rank.vue");
+const Search = () => import("@/views/search/Search.vue");
+const Detail = () => import("@/views/detail/Detail.vue");
+const Profile = () => import("@/views/profile/Profile.vue");
 
 const routes = [
   {

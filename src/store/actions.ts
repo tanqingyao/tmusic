@@ -1,36 +1,10 @@
-// import {
-//   ADD_TO_PLAYLIST,
-//   SET_CURRENT_SONG,
-//   SET_PLAYING
-// } from "./mutations-types";
-// /store/action.ts
-import { ActionContext, ActionTree } from "vuex";
-import { Mutations, MutationType } from "./mutations";
+import { ActionTree } from "vuex";
+
 import { State } from "./state";
+import { Actions, ActionTypes, MutationType } from "./types";
 
 import { getSongUrl, getSongsInfo, getSongsLyric } from "@/network/player";
 import { Song } from "@/network/player/model";
-// import { _getAlbumById } from "@/network/album";
-
-export enum ActionTypes {
-  SetPlaying = "SET_Player_Play",
-  AddPlayList = "Add_Song_TO_PlayList",
-  SwitchByOrder = "Order_Switch_Song",
-  SwitchByShuffle = "Shuffle_Switch_Song"
-}
-// /store/action.ts
-type ActionAugments = Omit<ActionContext<State, State>, "commit"> & {
-  commit<K extends keyof Mutations>(
-    key: K,
-    payload: Parameters<Mutations[K]>[1]
-  ): ReturnType<Mutations[K]>;
-};
-export type Actions = {
-  [ActionTypes.SetPlaying](context: ActionAugments, value: boolean): void;
-  [ActionTypes.AddPlayList](context: ActionAugments, ids: number[]): void;
-  [ActionTypes.SwitchByOrder](context: ActionAugments, mode: string): void;
-  [ActionTypes.SwitchByShuffle](context: ActionAugments, mode: string): void;
-};
 
 export const actions: ActionTree<State, State> & Actions = {
   [ActionTypes.SetPlaying]({ commit }, payload: boolean) {

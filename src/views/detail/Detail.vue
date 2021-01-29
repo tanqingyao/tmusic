@@ -138,7 +138,7 @@ import { changeUnit } from "common/display";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
-import { ActionTypes } from "@/store/actions";
+import { ActionTypes } from "@/store/types";
 export default {
   name: "Detail",
   components: {

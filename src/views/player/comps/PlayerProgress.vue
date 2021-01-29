@@ -19,7 +19,7 @@
 <script>
 import { useStore } from "vuex";
 import { SET_PLAY_TIME } from "store/mutations-types";
-import { computed, onMounted, ref, watchEffect } from "vue";
+import { computed, onMounted, onUnmounted, ref, watchEffect } from "vue";
 
 import { parseTime } from "common/display";
 export default {
@@ -55,6 +55,9 @@ export default {
     };
     onMounted(() => {
       unwatch = progressWatcher();
+    });
+    onUnmounted(() => {
+      unwatch();
     });
     return {
       duration,
