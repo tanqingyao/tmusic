@@ -1,6 +1,5 @@
 <template>
   <router-view name="one" class="nav-bar" />
-  <!-- keep-alive里面嵌套router-view已经不能用 -->
   <router-view v-slot="{ Component }">
     <keep-alive include="Recommend">
       <component :is="Component" />
@@ -9,15 +8,15 @@
   <Player />
 </template>
 
-<script>
-import Player from "views/player/Player";
-
-export default {
+<script lang="ts">
+import Player from "views/player/Player.vue";
+import { defineComponent } from "vue";
+export default defineComponent({
   name: "App",
   components: {
     Player
   }
-};
+});
 </script>
 
 <style scoped>

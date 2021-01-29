@@ -1,20 +1,28 @@
-export const collectSongUrl = res => {
+import { AxiosResponse } from "axios";
+
+export const transfromSongUrl = (res: AxiosResponse) => {
   return res.data.data;
 };
 
-export const collectSongInfo = res => {
+export const collectSongInfo = (res: AxiosResponse) => {
   return res.data.songs;
 };
 
-export const collectSongLyric = res => {
+export const collectSongLyric = (res: AxiosResponse) => {
   return res.data;
 };
 
-export class Song {
-  constructor(songInfo, songUrl, lyrics) {
+export class Song implements ISong {
+  id: number;
+  name: string;
+  singers: ISinger[];
+  album: IAlbum;
+  url: string;
+  lyrics: ILyrics;
+  constructor(songInfo: any, songUrl: any, lyrics: any) {
     this.id = songInfo.id;
     this.name = songInfo.name;
-    this.singers = songInfo.ar.map(singer => {
+    this.singers = songInfo.ar.map((singer: ISinger) => {
       return {
         id: singer.id,
         name: singer.name

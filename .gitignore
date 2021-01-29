@@ -23,4 +23,3 @@ pnpm-debug.log*
 *.sw?
 
 #Custom
-/src/network/request.js

@@ -4,7 +4,8 @@
   </div>
 </template>
 <script>
-export default {
+import { defineComponent } from "vue";
+export default defineComponent({
   name: "Toast",
   data() {
     return {
@@ -22,7 +23,7 @@ export default {
       }, delay);
     }
   }
-};
+});
 </script>
 <style scoped>
 .toast {

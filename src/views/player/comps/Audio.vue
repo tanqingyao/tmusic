@@ -1,5 +1,6 @@
 <template>
   <audio
+    v-if="currentSong"
     ref="audio"
     class="audio-player"
     :src="currentSong.url"

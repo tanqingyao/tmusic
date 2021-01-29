@@ -1,13 +1,13 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
-const MainNavBar = () => import("components/content/mainNavBar/MainNavBar");
+const MainNavBar = () => import("components/content/mainNavBar/MainNavBar.vue");
 
-const Recommend = () => import("views/recommend/Recommend");
-const Singer = () => import("views/singer/Singer");
-const Rank = () => import("views/rank/Rank");
-const Search = () => import("views/search/Search");
-const Detail = () => import("views/detail/Detail");
-const Profile = () => import("views/profile/Profile");
+const Recommend = () => import("views/recommend/Recommend.vue");
+const Singer = () => import("views/singer/Singer.vue");
+const Rank = () => import("views/rank/Rank.vue");
+const Search = () => import("views/search/Search.vue");
+const Detail = () => import("views/detail/Detail.vue");
+const Profile = () => import("views/profile/Profile.vue");
 
 const routes = [
   {
@@ -53,6 +53,6 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes: routes as RouteRecordRaw[]
 });
 export default router;

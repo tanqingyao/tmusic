@@ -2,8 +2,8 @@
 export function parseTime(num) {
   let min = Math.floor(num / 60);
   let sec = Math.floor(num - min * 60);
-  sec = ("00" + sec).slice(-2);
-  return `${min}:${sec}`;
+  const str = ("00" + sec).slice(-2);
+  return `${min}:${str}`;
 }
 /* 转化数字单位 */
 export const changeUnit = (value, base = 10000, point = 0) => {
@@ -22,7 +22,6 @@ export const changeUnit = (value, base = 10000, point = 0) => {
   }
   return value.toFixed(point).toString() + unit;
 };
-
 export const showSinger = singers => {
   return singers ? Array.from(singers, ({ id, name }) => name).join("/") : "";
 };

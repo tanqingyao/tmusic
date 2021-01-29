@@ -138,6 +138,7 @@ import { changeUnit } from "common/display";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
+import { ActionTypes } from "@/store/actions";
 export default {
   name: "Detail",
   components: {
@@ -193,24 +194,22 @@ export default {
       console.log("handleSetting");
     };
     const handlePlay = item => {
-      // console.log(item);
-      $store
-        .dispatch("addPlayList", [item.id])
-        .then(song => {
-          if (song) {
-            // $toast.show("成功添加歌曲~", 1500);
-            // 自动跳转到player页面
-            // $store.commit(SET_FULL_PLAYER, true);
-          } else {
-            // $toast.show("添加失败", 1500);
-          }
-          // if ($store.state.autoPlay) {
-          //   $store.commit(SET_CURRENT_SONG, song);
-          // }
-        })
-        .catch(err => {
-          console.warn(err);
-        });
+      $store.dispatch(ActionTypes.AddPlayList, [item.id]);
+      // .then(song => {
+      //   if (song) {
+      //     $toast.show("成功添加歌曲~", 1500);
+      //     自动跳转到player页面
+      //     $store.commit(SET_FULL_PLAYER, true);
+      //   } else {
+      //     $toast.show("添加失败", 1500);
+      //   }
+      //   if ($store.state.autoPlay) {
+      //     $store.commit(SET_CURRENT_SONG, song);
+      //   }
+      // })
+      // .catch(err => {
+      //   console.warn(err);
+      // });
     };
 
     return {

@@ -73,7 +73,11 @@
       </div>
     </transition>
     <transition name="fade">
-      <TabBar class="mini-tab-bar" v-if="!isFull" @click="isFull = !isFull">
+      <TabBar
+        class="mini-tab-bar"
+        v-if="!isFull && currentSong"
+        @click="isFull = !isFull"
+      >
         <TabBarItem class="tab-cover">
           <template #item>
             <img
@@ -115,7 +119,7 @@ import { PlayerNavBar, PlayerContent, PlayerProgress } from "./comps/index";
 import { showSinger } from "common/display";
 import { SET_PLAYING } from "store/mutations-types";
 import { useStore } from "vuex";
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted, watch, watchEffect } from "vue";
 export default {
   name: "Player",
   components: {
@@ -166,28 +170,25 @@ export default {
       mode.value = (mode.value + 1) % 3;
     };
     onMounted(() => {
-      /* 自动添加歌曲 */
-      let autoAdd = true;
-      // let autoAdd = false;
-      if (autoAdd && Object.keys(currentSong.value).length === 0) {
-        $store.dispatch("addPlayList", ["33894312"]);
-        // .then(song => {
-        //   this.$toast.show("已自动添加歌曲~", 1500);
-        //   this.$store.commit(SET_CURRENT_SONG, song);
-        // });
-      }
-      /* 背景虚化 */
-      const stop = watch(
-        currentSong.value,
-        (newVal, oldVal) => {
-          styleObject.value = {
-            "background-image": "url(" + newVal.albumImg + ")"
-          };
-        },
-        {
-          immediate: true
+      if (currentSong.value) {
+        /* 自动添加歌曲 */
+        let autoAdd = true;
+        console.log("自动添加歌曲", autoAdd);
+        // let autoAdd = false;
+        if (autoAdd && Object.keys(currentSong.value).length === 0) {
+          $store.dispatch("addPlayList", ["33894312"]);
+          // .then(song => {
+          //   this.$toast.show("已自动添加歌曲~", 1500);
+          //   this.$store.commit(SET_CURRENT_SONG, song);
+          // });
         }
-      );
+        /* 背景虚化 */
+        const stop = watchEffect(() => {
+          styleObject.value = {
+            "background-image": "url(" + currentSong.value.albumImg + ")"
+          };
+        });
+      }
     });
     return {
       isPlaying,
