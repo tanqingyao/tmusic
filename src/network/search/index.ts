@@ -20,7 +20,7 @@ export const getSearchDefault = async () => {
   return collectSearchDefault(res);
 };
 
-export const getSearchSuggest = async keywords => {
+export const getSearchSuggest = async (keywords: string) => {
   const res = await getNeteaseRequest({
     url: URL_search.suggest,
     params: {
@@ -32,19 +32,31 @@ export const getSearchSuggest = async keywords => {
 };
 
 export async function getSearchHot() {
-  const res = await getNeteaseRequest({
-    url: URL_search.hot
+  const { data: hots } = await getNeteaseRequest({
+    url: URL_search.hot,
+
+    transformResponse: data => {
+      const hots = JSON.parse(data).data.map((suggest: any) => {
+        return {
+          score: suggest.score,
+          key: suggest.searchWord,
+          iconL: suggest.iconUrl
+        };
+      });
+      return hots;
+    }
   });
-  return collectSearchHot(res);
+  return hots;
+  // return collectSearchHot(res);
 }
 
 export async function getSearchCloud(
-  keywords,
-  offset = 0,
-  limit = 30,
-  type = 1
+  keywords: string,
+  offset: number = 0,
+  limit: number = 30,
+  type: number = 1
 ) {
-  const res = await getNeteaseRequest({
+  const { data: cloudsearch } = await getNeteaseRequest({
     url: URL_search.cloudsearch,
     params: {
       keywords,
@@ -54,7 +66,13 @@ export async function getSearchCloud(
       limit,
       //搜索类型；默认为 1 即单曲 , 取值意义 : 1: 单曲, 10: 专辑, 100: 歌手, 1000: 歌单, 1002: 用户, 1004: MV, 1006: 歌词, 1009: 电台, 1014: 视频, 1018:综合
       type
+    },
+
+    transformResponse: data => {
+      return JSON.parse(data);
     }
   });
-  return collectSearchCloud(res);
+  console.log(cloudsearch);
+
+  // return collectSearchCloud(res);
 }

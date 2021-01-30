@@ -5,6 +5,7 @@ declare interface ISong {
   album: IAlbum;
   url: string;
   lyrics: ILyrics;
+  mv?: string;
 }
 
 declare type ISinger = {

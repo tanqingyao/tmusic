@@ -21,12 +21,8 @@
   </audio>
 </template>
 <script>
-import { mapState, mapMutations } from "vuex";
-import {
-  SET_PLAYING,
-  SET_CURRENT_TIME,
-  SET_DURATION
-} from "store/mutations-types";
+import { mapState } from "vuex";
+import { MutationType } from "@/store/types";
 export default {
   name: "Audio",
   props: {
@@ -68,10 +64,10 @@ export default {
     },
     _setPlayTime(time) {
       this.$refs.audio.currentTime = Number.parseFloat(time);
-      this.$store.commit(SET_PLAYING, true);
+      this.$store.commit(MutationType.SET_PLAYING, true);
     },
     setStorePlaying(state) {
-      this.$store.commit(SET_PLAYING, state);
+      this.$store.commit(MutationType.SET_PLAYING, state);
     },
     /*  
     getStartPostiong() {
@@ -95,7 +91,6 @@ export default {
     endListener() {
       console.log("end paly");
       this.setStorePlaying(false);
-      // this.$store.commit(SET_PLAYING, false);
     },
     loadedmetadataListener(e) {
       // console.log("loadedmetadata");
@@ -113,13 +108,16 @@ export default {
     },
     timeupdateListener(e) {
       //元素的currentTime属性表示的时间已经改变。
-      this.$store.commit(SET_CURRENT_TIME, this.$refs.audio.currentTime);
+      this.$store.commit(
+        MutationType.SET_CURRENT_TIME,
+        this.$refs.audio.currentTime
+      );
     },
     durationchangeListener() {
       //元信息已载入或已改变，表明媒体的长度发生了改变
       let payload = this.$refs.audio.duration;
       if (payload !== 0) {
-        this.$store.commit(SET_DURATION, payload);
+        this.$store.commit(MutationType.SET_DURATION, payload);
       } else {
         console.warn("获取歌曲长度失败，值为", payload);
       }

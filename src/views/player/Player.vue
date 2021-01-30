@@ -117,7 +117,7 @@ import PlayerList from "./comps/PlayerList";
 import { PlayerNavBar, PlayerContent, PlayerProgress } from "./comps/index";
 
 import { showSinger } from "common/display";
-import { SET_PLAYING } from "store/mutations-types";
+import { MutationType } from "@/store/types";
 import { useStore } from "vuex";
 import { ref, computed, onMounted, watch, watchEffect } from "vue";
 export default {
@@ -149,7 +149,7 @@ export default {
     let mode = ref(0);
 
     const handlePlay = () => {
-      $store.commit(SET_PLAYING, !isPlaying.value);
+      $store.commit(MutationType.SET_PLAYING, !isPlaying.value);
     };
 
     const handleLike = e => {

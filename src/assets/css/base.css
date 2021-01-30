@@ -5,7 +5,8 @@
   --color-text: #666;
   --color-tint: #333;
   --color-high-text: #000;
-  --color-background: #eee;
+  --color-background-shadow: #eee;
+  --color-background: #fff;
 
   /*  颜色定义规范 */
   /* --color-background: #222; */

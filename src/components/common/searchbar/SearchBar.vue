@@ -1,47 +1,31 @@
 <template>
   <div class="search-bar">
-    <icon class="icon-search" :icon="['fas', 'search']" size="lg" />
-    <input class="search-input" type="text" :value="Default.real" />
+    <icon class="icon-search" :icon="['fas', 'search']" size="sm" />
+    <input class="search-input" type="text" :placeholder="input" />
     <icon
-      v-show="isTyping"
+      v-show="input"
       class="icon-close"
       :icon="['fas', 'times']"
-      size="lg"
+      size="sm"
     />
   </div>
 </template>
-<script>
-import { toRefs } from "vue";
+<script lang="ts">
 export default {
   name: "SearchBar",
-  components: {},
   props: {
-    Default: {
-      type: Object,
-      default() {
-        return {};
-      }
-    },
-    isTyping: {
-      type: Boolean,
-      default: false
+    input: {
+      type: String,
+      default: ""
     }
-  },
-  setup(props) {
-    return {
-      ...toRefs(props)
-    };
   }
 };
 </script>
 <style scoped>
 .search-bar {
   width: 100%;
+  height: 100%;
   padding: 0 10px;
-  margin: 6px auto;
-
-  border-radius: 50px;
-  background-color: #fff;
 
   display: flex;
   align-items: center;
@@ -51,6 +35,7 @@ export default {
   margin: 0 5px;
   line-height: 18px;
   border: none;
+  background-color: inherit;
 }
 input:focus {
   outline: none;

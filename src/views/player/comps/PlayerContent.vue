@@ -35,7 +35,7 @@
 import ContentLyric from "./ContentLyric";
 import { parseTime } from "common/display";
 
-import { SET_PLAY_TIME } from "store/mutations-types";
+import { MutationType } from "@/store/types";
 
 import { useStore } from "vuex";
 import { computed, ref } from "vue";
@@ -54,7 +54,10 @@ export default {
     const scrollTime = ref(0);
 
     const handleJump = () => {
-      $store.commit(SET_PLAY_TIME, Number.parseFloat(scrollTime.value));
+      $store.commit(
+        MutationType.SET_PLAY_TIME,
+        Number.parseFloat(scrollTime.value)
+      );
     };
     const handleSwitch = () => {
       isCover.value = !isCover.value;

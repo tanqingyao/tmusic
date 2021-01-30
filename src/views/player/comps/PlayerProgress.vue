@@ -18,7 +18,7 @@
 </template>
 <script>
 import { useStore } from "vuex";
-import { SET_PLAY_TIME } from "store/mutations-types";
+import { MutationType } from "@/store/types";
 import { computed, onMounted, onUnmounted, ref, watchEffect } from "vue";
 
 import { parseTime } from "common/display";
@@ -49,7 +49,10 @@ export default {
 
     const touchEnd = e => {
       // 跳转至对应时间
-      $store.commit(SET_PLAY_TIME, Number.parseFloat(e.target.value));
+      $store.commit(
+        MutationType.SET_PLAY_TIME,
+        Number.parseFloat(e.target.value)
+      );
       unwatch = progressWatcher();
       isTouch.value = false;
     };

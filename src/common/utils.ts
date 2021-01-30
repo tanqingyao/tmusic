@@ -25,7 +25,7 @@ export function debounce<Params extends any[]>(
 export function throttle<Params extends any[]>(
   func: (...args: Params) => any,
   duration = 50,
-  options: { leading: boolean; trailing: boolean }
+  options?: { leading: boolean; trailing: boolean }
 ) {
   //默认先等待后调用
   let leading = false,

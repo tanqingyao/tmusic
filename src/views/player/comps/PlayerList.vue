@@ -1,6 +1,6 @@
 <template>
-  <div class="play-list" @click="$emit('update:isShow', false)">
-    <Scroll ref="scroll" class="wrapper" @click.stop>
+  <div class="dark-bg" @click="$emit('update:isShow', false)">
+    <Scroll ref="scroll" class="play-list" @click.stop>
       <MusicListItem
         class="list-item"
         v-for="item in playList"
@@ -20,7 +20,8 @@
 <script>
 import Scroll from "components/common/scroll/Scroll";
 import MusicListItem from "components/content/musicList/MusicListItem";
-import { SET_CURRENT_SONG } from "store/mutations-types";
+
+import { MutationType } from "@/store/types";
 import { useStore } from "vuex";
 import { computed } from "vue";
 import { showSinger } from "common/display";
@@ -45,7 +46,7 @@ export default {
     const playList = computed(() => $store.state.playList);
 
     const handlePlay = item => {
-      $store.commit(SET_CURRENT_SONG, item);
+      $store.commit(MutationType.SET_CURRENT_SONG, item);
     };
 
     return {
@@ -57,7 +58,7 @@ export default {
 };
 </script>
 <style scoped>
-.play-list {
+.dark-bg {
   z-index: 1;
   position: fixed;
   top: 0;
@@ -67,7 +68,7 @@ export default {
   padding: 8px 15px;
   background-color: rgba(0, 0, 0, 0.3);
 }
-.wrapper {
+.play-list {
   position: fixed;
   top: 20%;
   left: 5%;

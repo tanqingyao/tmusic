@@ -5,7 +5,7 @@ export default function lyricScroll(currentTime: ComputedRef, lyricsArr: Ref) {
   let oldLyricRef: HTMLElement;
   const scroll: Ref = ref(null);
   const jumper = (currentEl: HTMLElement, time = 1000, offsetY = 255) => {
-    if (currentEl) {
+    if (currentEl && scroll.value) {
       const height = currentEl.offsetTop + 0.5 * currentEl.offsetHeight;
       scroll.value.scrollTo(0, -height + offsetY, time);
     }

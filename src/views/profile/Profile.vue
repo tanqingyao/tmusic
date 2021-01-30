@@ -4,7 +4,7 @@
     <label for="autoPlay">
       选择歌曲时自动播放
       <input
-        @input="autoPlaySetting"
+        @input="handleAutoPlay"
         type="checkbox"
         v-model="isAutoPlay"
         id="autoPlay"
@@ -16,27 +16,25 @@
 <script>
 import ProfileNavBar from "./childComps/ProfileNavBar";
 
-import { SET_AUTOPLAY } from "store/mutations-types";
-import { mapMutations } from "vuex";
+import { MutationType } from "@/store/types";
+import { useStore } from "vuex";
 export default {
   name: "Profile",
   components: {
     ProfileNavBar
   },
-  data() {
-    return {
-      isAutoPlay: false
-    };
-  },
-  methods: {
-    ...mapMutations({
-      setAutoPlay: SET_AUTOPLAY
-    }),
-    autoPlaySetting(e) {
+  setup() {
+    const $store = useStore();
+    let isAutoPlay = ref(false);
+    const handleAutoPlay = e => {
       let state = e.target.checked;
-      this.isAutoPlay = state;
-      this.setAutoPlay(state);
-    }
+      isAutoPlay.value = state;
+      $store.commit(MutationType.SET_AUTOPLAY, state);
+    };
+    return {
+      isAutoPlay,
+      handleAutoPlay
+    };
   }
 };
 </script>

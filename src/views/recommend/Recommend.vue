@@ -142,6 +142,8 @@ export default {
 }
 .search-bar {
   height: 35px;
+  border-radius: 50px;
+  background-color: #fff;
   position: absolute;
   left: 0;
   right: 0;
