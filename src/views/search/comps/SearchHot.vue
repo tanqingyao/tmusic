@@ -45,9 +45,14 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, Ref, ref } from "vue";
 import SearchHotItem from "@/components/content/descItem/SearchHotItem.vue";
 import MusicListItem from "@/components/content/musicList/MusicListItem.vue";
+
+import { defineComponent, onMounted, Ref, ref } from "vue";
+
+import { getSearchID } from "@/network/search";
+import { ActionTypes } from "@/store/types";
+import { useStore } from "vuex";
 export default defineComponent({
   name: "SearchHot",
   components: {
@@ -61,8 +66,21 @@ export default defineComponent({
   },
   setup(props) {
     let showAll: Ref = ref(false);
-    const handlePlayAll = () => {
-      console.log("handleSearch");
+    const $store = useStore();
+    const handlePlayAll = async () => {
+      if (props.hots) {
+        let ids: number[];
+        console.log(typeof props.hots);
+
+        const promises = props.hots.map(async item => {
+          const id = await getSearchID((item as { key: string }).key);
+          return id;
+        });
+
+        ids = await Promise.all(promises);
+        // console.log(ids);
+        $store.dispatch(ActionTypes.AddPlayList, ids);
+      }
     };
 
     const handleSearch = () => {

@@ -23,7 +23,7 @@ import MusicListItem from "components/content/musicList/MusicListItem";
 
 import { MutationType } from "@/store/types";
 import { useStore } from "vuex";
-import { computed } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { showSinger } from "common/display";
 export default {
   name: "PlayerList",
@@ -42,14 +42,20 @@ export default {
   },
   setup() {
     const $store = useStore();
-
-    const playList = computed(() => $store.state.playList);
+    const scroll = ref(null);
+    let playList = computed(() => $store.state.playList);
 
     const handlePlay = item => {
       $store.commit(MutationType.SET_CURRENT_SONG, item);
     };
 
+    onMounted(() => {
+      setTimeout(() => {
+        scroll.value.refresh();
+      }, 100);
+    });
     return {
+      scroll,
       playList,
       showSinger,
       handlePlay

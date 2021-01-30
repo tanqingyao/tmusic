@@ -4,9 +4,7 @@ import { Mutations, MutationType } from "./types";
 
 export const mutations: MutationTree<State> & Mutations = {
   [MutationType.ADD_TO_PLAYLIST](state: State, payload: ISong[]) {
-    if (state.playList) {
-      state.playList.push(...payload);
-    }
+    state.playList.push(...payload);
   },
   [MutationType.SET_CURRENT_SONG](state: State, payload: ISong) {
     state.currentSong = payload;

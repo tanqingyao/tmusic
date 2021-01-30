@@ -2,7 +2,9 @@
   <div class="player-view">
     <Audio ref="audio" />
     <transition name="fade">
-      <PlayerList v-show="showList" v-model:isShow="showList" />
+      <keep-alive>
+        <PlayerList v-if="showList" v-model:isShow="showList" />
+      </keep-alive>
     </transition>
     <transition name="fade">
       <div class="full-screen" v-if="isFull">

@@ -1,5 +1,5 @@
 export type State = {
-  playList: ISong[] | undefined;
+  playList: ISong[];
   isPlayerFull: boolean;
   autoPlay: boolean;
   currentSong: ISong | undefined;
@@ -11,7 +11,7 @@ export type State = {
 export const state: State = {
   /* 歌曲信息相关 */
   // searchDefault: { real: "", show: "" },
-  playList: undefined,
+  playList: [],
   /* 播放器相关 */
   isPlayerFull: false,
   autoPlay: true,

@@ -50,7 +50,6 @@ export const getSongsLyric = async (id: number) => {
         tlyric: { lyric: trans }
       } = JSON.parse(data);
       const transform = Lyric_Transfrom(lrc, trans);
-      console.log(transform);
       return transform;
     }
   });
