@@ -94,9 +94,6 @@ export default defineComponent({
       throttleLog(searchKey.value);
     });
 
-    const handleFocus = () => {
-      console.log("handleFocus");
-    };
     onMounted(() => {
       _getSearchInfo();
     });
@@ -105,7 +102,6 @@ export default defineComponent({
       hots,
       searchKey,
       suggests,
-      handleFocus,
       focusSearch
     };
   }

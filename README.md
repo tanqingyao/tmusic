@@ -54,7 +54,7 @@ npm run serve
 
 ### 正在进行
 
-- [ ] 搜索页面显示
+- [ ] 搜索详情页显示
 - [ ] 歌单详情页功能
 
 ### 待完成
@@ -77,3 +77,4 @@ npm run serve
 - [x] 2021年1月27日：歌词滚动和跳转bug，歌词代码优化
 - [x] 2021年1月28日：player组件组合式api改造完成player组件代码结构调整;功能图片全部使用foteawsome-icon
 - [x] 2021年1月29日：添加typescript类型推断:vuex,network/player,歌词功能代码部分
+- [ ] 2021年1月30日：搜索页面显示
