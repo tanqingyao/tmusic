@@ -9,24 +9,32 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
 export default defineComponent({
-  name: "ListTab"
+  name: "PlayerListItem"
 });
 </script>
 <style scoped>
 .common-item {
+  display: flex;
+
   width: 100%;
   height: 30px;
   line-height: 30px;
-  display: flex;
-}
 
+  margin: 15px 0;
+}
+.item-left {
+  text-align: left;
+}
+.item-right {
+  text-align: right;
+}
 .item-left,
 .item-right {
-  text-align: center;
-  margin: 0 5px;
   flex: 1;
+  /* 多余文字省略 */
+  width: 50%;
 }
 </style>

@@ -3,7 +3,7 @@
     <Audio ref="audio" />
     <transition name="fade">
       <keep-alive>
-        <PlayerList v-if="showList" v-model:isShow="showList" />
+        <PlayerListSwiper v-if="showList" @click="showList = false" />
       </keep-alive>
     </transition>
     <transition name="fade">
@@ -115,20 +115,22 @@
 import TabBar from "components/common/tabbar/TabBar";
 import TabBarItem from "components/common/tabbar/TabBarItem";
 import Audio from "./comps/Audio";
-import PlayerList from "./comps/PlayerList";
+import PlayerListSwiper from "./comps/PlayerListSwiper";
 import { PlayerNavBar, PlayerContent, PlayerProgress } from "./comps/index";
 
 import { showSinger } from "common/display";
-import { MutationType } from "@/store/types";
+import { saveSongs, readSongs } from "@/common/localStorage";
+
+import { MutationType, ActionTypes } from "@/store/types";
 import { useStore } from "vuex";
-import { ref, computed, onMounted, watch, watchEffect } from "vue";
-export default {
+import { ref, computed, onMounted, watch, defineComponent } from "vue";
+export default defineComponent({
   name: "Player",
   components: {
     TabBar,
     TabBarItem,
     Audio,
-    PlayerList,
+    PlayerListSwiper,
     PlayerNavBar,
     PlayerContent,
     PlayerProgress
@@ -139,6 +141,8 @@ export default {
     const isPlaying = computed(() => $store.state.isPlaying);
 
     const currentSong = computed(() => $store.state.currentSong);
+
+    let playList = computed(() => $store.state.playList);
 
     let styleObject = ref(null);
 
@@ -171,19 +175,23 @@ export default {
     const handleOrder = () => {
       mode.value = (mode.value + 1) % 3;
     };
+    const stop = watch(
+      playList,
+      (newVal, oldVal) => {
+        saveSongs(newVal);
+      },
+      { deep: true }
+    );
     onMounted(() => {
-      if (currentSong.value) {
-        /* 自动添加歌曲 */
-        let autoAdd = true;
-        console.log("自动添加歌曲", autoAdd);
-        // let autoAdd = false;
-        if (autoAdd && Object.keys(currentSong.value).length === 0) {
-          $store.dispatch("addPlayList", ["33894312"]);
-          // .then(song => {
-          //   this.$toast.show("已自动添加歌曲~", 1500);
-          //   this.$store.commit(SET_CURRENT_SONG, song);
-          // });
+      /* 从浏览器缓存添加歌曲 */
+      setTimeout(() => {
+        const ids = readSongs().map(s => s.id);
+        if (ids.length !== 0) {
+          $store.dispatch(ActionTypes.AddPlayList, ids);
         }
+      }, 1000);
+
+      if (currentSong.value) {
         /* 背景虚化 */
         const stop = watchEffect(() => {
           styleObject.value = {
@@ -208,7 +216,7 @@ export default {
       handleLike
     };
   }
-};
+});
 </script>
 <style scoped>
 .player-view {
@@ -228,6 +236,7 @@ export default {
 }
 .player-bg {
   position: fixed;
+
   top: 40px;
   bottom: 0;
   left: 0;

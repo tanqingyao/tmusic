@@ -18,52 +18,24 @@
     </div>
   </div>
 </template>
-<script>
-import { defineComponent, ref, computed } from "vue";
+<script lang="ts">
+import { defineComponent, ref, Ref } from "vue";
 
-import { changeUnit } from "common/display";
+import { changeUnit } from "@/common/display";
+import useTouchElement from "@/common/hooks/useTouchElement";
 export default defineComponent({
   name: "RecommendSonglist",
   components: {},
   props: {},
   setup() {
     /* 滑动相关 */
-    let startX = 0;
-    let distance = 0;
-    let currentPos = 0;
-    const swiper = ref(null);
-    // 可滑动最长距离
-    const totleWidth = computed(() => {
-      let totle = 0;
-      for (let item of swiper.value.children) {
-        totle += item.offsetWidth;
-      }
-      return totle - swiper.value.offsetWidth;
-    });
-    const setTransfrom = position => {
-      // 设置移动位置
-      swiper.value.style.transform = `translate(${position}px, 0)`;
-    };
-    const handleTouchStart = e => {
-      // console.log(distance, currentPos, totleWidth.value);
-      startX = e.touches[0].pageX;
-    };
-    const handleTouchMove = e => {
-      // 元素移动位置 = 当前距离 + 滑动距离
-      distance = currentPos + (e.touches[0].pageX - startX);
-      // distance += e.touches[0].pageX - startX;
-      if (distance < -totleWidth.value) {
-        distance = -totleWidth.value;
-      } else if (distance > 0) {
-        distance = 0;
-      } else {
-        setTransfrom(distance);
-      }
-    };
-    const handleTouchEnd = () => {
-      currentPos = distance;
-    };
-
+    const swiper: Ref = ref(null);
+    let sliderIndex: Ref = ref(0);
+    const {
+      handleTouchStart,
+      handleTouchMove,
+      handleTouchEnd
+    } = useTouchElement(swiper, sliderIndex);
     /* 点击相关 */
     const handleMore = () => {
       console.log("进入歌单广场");
@@ -72,7 +44,6 @@ export default defineComponent({
     return {
       changeUnit,
       swiper,
-      totleWidth,
       handleTouchStart,
       handleTouchMove,
       handleTouchEnd,

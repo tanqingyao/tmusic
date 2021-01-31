@@ -137,7 +137,7 @@ export default {
 </script>
 <style scoped>
 #recommend {
-  height: 100vh;
+  height: 100vh -44px;
   position: relative;
 }
 .search-bar {

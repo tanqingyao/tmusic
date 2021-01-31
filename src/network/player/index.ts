@@ -43,12 +43,22 @@ export const getSongsLyric = async (id: number) => {
     params: {
       id
     },
-    transformResponse: data => {
+    transformResponse: rdata => {
+      const data = JSON.parse(rdata);
+
+      let lrc: string = "";
+      let trans: string = "";
       /* 提取原歌词和翻译歌词 */
-      const {
-        lrc: { lyric: lrc },
-        tlyric: { lyric: trans }
-      } = JSON.parse(data);
+      if (data.lrc) {
+        lrc = data.lrc.lyric;
+      }
+      if (data.tlyric) {
+        trans = data.tlyric.lyric;
+      }
+      // const {
+      //   lrc: { lyric: lrc },
+      //   tlyric: { lyric: trans }
+      // } = data;
       const transform = Lyric_Transfrom(lrc, trans);
       return transform;
     }

@@ -64,7 +64,7 @@ import {
   getSearchCloud
 } from "@/network/search";
 
-import { throttle } from "@/common/utils";
+import { throttle } from "@/common/utils/func";
 export default defineComponent({
   name: "Search",
   components: {
@@ -82,8 +82,8 @@ export default defineComponent({
     const _getSearchInfo = async () => {
       dft.value = await getSearchDefault();
       hots.value = await getSearchHot();
-      const songs = await getSearchCloud(searchKey.value);
-      console.log(songs);
+      // const songs = await getSearchCloud(searchKey.value);
+      // console.log(songs);
     };
     const throttleLog = throttle(async value => {
       if (value) {

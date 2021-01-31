@@ -6,12 +6,6 @@
 <script>
 export default {
   name: "SwiperItem"
-  // created() {
-  //   console.log("SwiperItem");
-  // },
-  // mounted() {
-  //   console.log("SwiperItem mounted");
-  // }
 };
 </script>
 <style scoped>

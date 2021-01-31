@@ -22,7 +22,7 @@ export const actions: ActionTree<State, State> & Actions = {
   },
 
   [ActionTypes.SwitchByOrder]({ state, getters, commit }, payload: string) {
-    let length = getters.listLength;
+    let length = getters.LIST_LENGTH;
     if (!length || length === 1) {
       // TODO: toast提醒
       console.log("请多添加点歌曲哟~");
@@ -40,7 +40,7 @@ export const actions: ActionTree<State, State> & Actions = {
   },
 
   [ActionTypes.SwitchByShuffle]({ state, getters, commit }) {
-    let length = getters.listLength;
+    let length = getters.LIST_LENGTH;
     if (!length || length === 1) {
       console.log("请多添加点歌曲哟~");
       return;
@@ -57,18 +57,25 @@ export const actions: ActionTree<State, State> & Actions = {
 
 const _fetchSongData = async (ids: number[]) => {
   let songs: ISong[] = [];
-  try {
-    // 歌曲播放url
-    const urls = await getSongUrl(ids);
-    // 歌曲信息
-    const infos = await getSongsInfo(ids);
-    for (const i in ids) {
-      // 单个歌曲对应歌词
-      const lyrics = await getSongsLyric(ids[i]);
-      songs.push(new Song(infos[i], urls[i], lyrics));
+
+  // 歌曲播放url
+  const urls = await getSongUrl(ids);
+  // 歌曲信息
+  const infos = await getSongsInfo(ids);
+  for (const i in ids) {
+    // 单个歌曲对应歌词
+    const lyrics = await getSongsLyric(ids[i]);
+    try {
+      if (infos[i]) {
+        songs.push(new Song(infos[i], urls[i], lyrics));
+      }
+    } catch (error) {
+      console.error(error);
+
+      console.error(infos[i]);
+      console.error(urls[i]);
+      console.error(lyrics);
     }
-  } catch (error) {
-    console.error(error);
   }
   return songs;
 };

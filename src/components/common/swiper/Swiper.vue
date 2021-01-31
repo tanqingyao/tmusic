@@ -21,7 +21,9 @@
   </div>
 </template>
 <script>
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
   name: "Swiper",
   components: {},
   props: {
@@ -101,6 +103,7 @@ export default {
       this.scrolling = false;
     },
     setTransfrom(position) {
+      // console.log("setTransfrom", position, this.$refs.swiper.style.transform);
       // 设置移动位置
       this.swiperStyle.transform = `translate(${position}px, 0)`;
     },
@@ -166,7 +169,7 @@ export default {
       this.startTimer();
     }
   }
-};
+});
 </script>
 <style scoped>
 /* 合页:横向排布的图片,只显示一张 */

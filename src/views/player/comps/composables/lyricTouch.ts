@@ -1,5 +1,5 @@
 import { computed, Ref, ref, WatchStopHandle } from "vue";
-import { debounce } from "@/common/utils";
+import { debounce } from "@/common/utils/func";
 export default function lyricTouch(
   emit: (event: string, ...args: unknown[]) => void,
   jumpWatcher: WatchStopHandle,

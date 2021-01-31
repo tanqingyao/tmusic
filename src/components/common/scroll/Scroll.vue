@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { debounce } from "common/utils";
+import { debounce } from "@/common/utils/func";
 // 封装滚动组件
 import BScroll from "@better-scroll/core";
 import Pullup from "@better-scroll/pull-up";
@@ -126,6 +126,19 @@ export default {
         this.scroll.on("pullingUp", this.pullingUpHandler);
       }
     },
+    /* 状态 */
+    getEnabled() {
+      return this.scroll ? this.scroll.enabled : false;
+    },
+    getPending() {
+      return this.scroll ? this.scroll.pending : false;
+    },
+    getScrollY() {
+      return this.scroll ? this.scroll.y : 0;
+    },
+    getMaxScrollY() {
+      return this.scroll ? this.scroll.maxScrollY : 0;
+    },
     /* scroll相关方法 */
     scrollTo(x, y, time = 500) {
       this.scroll && this.scroll.scrollTo(x, y, time);
@@ -146,11 +159,14 @@ export default {
       this.scroll && this.scroll.refresh();
       // console.log("scroll refresh");
     },
-    getScrollY() {
-      return this.scroll ? this.scroll.y : 0;
+    enable() {
+      this.scroll && this.scroll.enable();
     },
-    getMaxScrollY() {
-      return this.scroll ? this.scroll.maxScrollY : 0;
+    disable() {
+      this.scroll && this.scroll.disable();
+    },
+    destroy() {
+      this.scroll && this.scroll.destroy();
     },
     /* 异步处理方法 */
     async pullingUpHandler() {

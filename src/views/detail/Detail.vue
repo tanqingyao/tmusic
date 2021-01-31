@@ -48,34 +48,36 @@
       </DetailHead>
       <DetailContent>
         <template #content>
-          <ListTab>
+          <ListTab class="list-tab">
             <template #left>
-              <icon
-                class="icon"
-                size="lg"
-                :icon="['fas', 'play-circle']"
-                :style="{ color: '#f00' }"
-                @click="handlePlayAll"
-              />
-            </template>
-            <template #center>
-              <span>播放全部</span>
-              <span>({{ info.trackCount }})</span>
+              <div class="list-tab-left">
+                <icon
+                  class="list-tab-icon"
+                  size="lg"
+                  :icon="['fas', 'play-circle']"
+                  :style="{ color: '#f00' }"
+                  @click="handlePlayAll"
+                />
+                <span>播放全部</span>
+                <span>({{ info.trackCount }})</span>
+              </div>
             </template>
             <template #right>
-              <icon
-                class="icon"
-                size="lg"
-                :icon="['fas', 'arrow-alt-circle-down']"
-                :style="{ color: '#000' }"
-              />
-              <icon
-                class="icon"
-                size="lg"
-                :icon="['fas', 'check-circle']"
-                :style="{ color: '#000' }"
-                @click="handleCheckAll"
-              />
+              <div class="list-tab-right">
+                <icon
+                  class="list-tab-icon"
+                  size="lg"
+                  :icon="['fas', 'arrow-alt-circle-down']"
+                  :style="{ color: '#000' }"
+                />
+                <icon
+                  class="list-tab-icon"
+                  size="lg"
+                  :icon="['fas', 'check-circle']"
+                  :style="{ color: '#000' }"
+                  @click="handleCheckAll"
+                />
+              </div>
             </template>
           </ListTab>
           <MusicListItem
@@ -320,7 +322,19 @@ export default {
   outline: none;
 }
 
-.icon {
-  margin: 0 8px;
+.list-tab {
+  margin-bottom: 25px;
+}
+.list-tab-left {
+  text-align: left;
+
+  font-size: var(--font-size-large);
+  color: var(--color-text);
+}
+.list-tab-right {
+  text-align: right;
+}
+.list-tab-icon {
+  margin: 0 10px;
 }
 </style>

@@ -4,7 +4,7 @@ import { ActionContext } from "vuex";
 
 /* Getters */
 export type Getters = {
-  listLength(state: State): number;
+  LIST_LENGTH(state: State): number;
   currentSongIndex(state: State): number;
   getSongById(state: State): (id: number) => ISong | undefined;
 };

@@ -3,7 +3,7 @@ import { State } from "./state";
 import { Getters } from "./types";
 
 export const getters: GetterTree<State, State> & Getters = {
-  listLength: (state: State) => {
+  LIST_LENGTH: (state: State) => {
     return state.playList ? state.playList.length : 0;
   },
   currentSongIndex: (state: State) => {
