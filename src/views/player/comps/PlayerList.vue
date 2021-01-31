@@ -59,15 +59,15 @@
     </Scroll>
   </div>
 </template>
-<script>
-import Scroll from "components/common/scroll/Scroll";
-import ListTab from "components/content/musicList/ListTab";
-import PlayerListItem from "components/content/musicList/PlayerListItem";
+<script lang="ts">
+import Scroll from "components/common/scroll/Scroll.vue";
+import ListTab from "components/content/musicList/ListTab.vue";
+import PlayerListItem from "components/content/musicList/PlayerListItem.vue";
 
 import { MutationType } from "@/store/types";
 import { useStore } from "vuex";
-import { computed, onMounted, ref, watchEffect } from "vue";
-import { showSinger } from "common/display";
+import { computed, onMounted, Ref, ref, watchEffect } from "vue";
+import { showSinger } from "@/common/utils/show";
 export default {
   name: "PlayerList",
   components: {
@@ -83,11 +83,11 @@ export default {
   },
   setup(props) {
     const $store = useStore();
-    const scroll = ref(null);
+    const scroll: Ref = ref(null);
     let playList = computed(() => $store.state.playList);
     let playListLength = computed(() => $store.getters.LIST_LENGTH);
 
-    const handlePlay = item => {
+    const handlePlay = (item: ISong) => {
       $store.commit(MutationType.SET_CURRENT_SONG, item);
     };
     const stop = watchEffect(() => {
@@ -102,15 +102,10 @@ export default {
       }
     });
     onMounted(() => {
+      // 刷新可滚动高度
       setTimeout(() => {
         scroll.value.refresh();
       }, 100);
-      // setInterval(() => {
-      //   console.log(scroll.value.getEnabled(), props.touching);
-      // }, 3000);
-      // setTimeout(() => {
-      //   scroll.value.disable();
-      // }, 1000);
     });
     return {
       scroll,

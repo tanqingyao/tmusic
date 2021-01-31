@@ -69,7 +69,8 @@ export default {
     };
     /* 滑动相关 */
     let oldPos = ref(0);
-    let isPullDown = ref(false);
+    // TODO 推荐页面内容更多时隐藏搜索框
+    let isPullDown = ref(true);
     const handleScroll = pos => {
       isPullDown.value = pos.y > oldPos.value;
       oldPos.value = pos.y;
@@ -142,11 +143,15 @@ export default {
 }
 .search-bar {
   height: 35px;
+  margin: 10px 0;
+
+  border: 1px solid #ccc;
   border-radius: 50px;
   background-color: #fff;
-  position: absolute;
+  /* position: absolute;
   left: 0;
-  right: 0;
+  right: 0; */
+  position: relative;
   z-index: 9;
 }
 .wrapper {

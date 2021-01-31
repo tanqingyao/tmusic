@@ -10,8 +10,8 @@
     </div>
   </div>
 </template>
-<script>
-import { changeUnit } from "common/display";
+<script lang="ts">
+import { changeUnit } from "@/common/utils/show";
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
 export default defineComponent({
@@ -31,7 +31,7 @@ export default defineComponent({
   },
   setup() {
     const $router = useRouter();
-    const handleDetail = id => {
+    const handleDetail = (id: number) => {
       $router.push("/detail/songlist/" + id);
     };
     return {

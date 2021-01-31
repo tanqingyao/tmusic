@@ -16,12 +16,20 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { useStore } from "vuex";
 import { MutationType } from "@/store/types";
-import { computed, onMounted, onUnmounted, ref, watchEffect } from "vue";
+import {
+  computed,
+  onMounted,
+  onUnmounted,
+  Ref,
+  ref,
+  watchEffect,
+  WatchStopHandle
+} from "vue";
 
-import { parseTime } from "common/display";
+import { parseTime } from "@/common/utils/show";
 export default {
   name: "PlayerProgress",
   setup() {
@@ -33,8 +41,8 @@ export default {
 
     // 改变样式
     let isTouch = ref(false);
-    const progress = ref(null);
-    let unwatch = null;
+    const progress: Ref = ref(null);
+    let unwatch: WatchStopHandle;
 
     const progressWatcher = () => {
       return watchEffect(() => {
@@ -42,17 +50,19 @@ export default {
       });
     };
 
-    const touchStart = e => {
+    const touchStart = () => {
       unwatch();
       isTouch.value = true;
     };
 
-    const touchEnd = e => {
-      // 跳转至对应时间
-      $store.commit(
-        MutationType.SET_PLAY_TIME,
-        Number.parseFloat(e.target.value)
-      );
+    const touchEnd = (e: TouchEvent) => {
+      if (e.target) {
+        // 跳转至对应时间
+        $store.commit(
+          MutationType.SET_PLAY_TIME,
+          Number.parseFloat((e.target as HTMLTextAreaElement).value)
+        );
+      }
       unwatch = progressWatcher();
       isTouch.value = false;
     };

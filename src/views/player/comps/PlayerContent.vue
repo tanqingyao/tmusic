@@ -31,14 +31,14 @@
     </div>
   </div>
 </template>
-<script>
-import ContentLyric from "./ContentLyric";
-import { parseTime } from "common/display";
+<script lang="ts">
+import ContentLyric from "./ContentLyric.vue";
+import { parseTime } from "@/common/utils/show";
 
 import { MutationType } from "@/store/types";
 
 import { useStore } from "vuex";
-import { computed, ref } from "vue";
+import { computed, Ref, ref } from "vue";
 export default {
   name: "PlayerContent",
   components: {
@@ -51,7 +51,7 @@ export default {
 
     const isCover = ref(true);
     const isTouch = ref(false);
-    const scrollTime = ref(0);
+    const scrollTime: Ref = ref(0);
 
     const handleJump = () => {
       $store.commit(

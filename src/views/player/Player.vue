@@ -111,19 +111,27 @@
     </transition>
   </div>
 </template>
-<script>
-import TabBar from "components/common/tabbar/TabBar";
-import TabBarItem from "components/common/tabbar/TabBarItem";
-import Audio from "./comps/Audio";
-import PlayerListSwiper from "./comps/PlayerListSwiper";
+<script lang="ts">
+import TabBar from "components/common/tabbar/TabBar.vue";
+import TabBarItem from "components/common/tabbar/TabBarItem.vue";
+import Audio from "./comps/Audio.vue";
+import PlayerListSwiper from "./comps/PlayerListSwiper.vue";
 import { PlayerNavBar, PlayerContent, PlayerProgress } from "./comps/index";
 
-import { showSinger } from "common/display";
+import { showSinger } from "@/common/utils/show";
 import { saveSongs, readSongs } from "@/common/localStorage";
 
 import { MutationType, ActionTypes } from "@/store/types";
 import { useStore } from "vuex";
-import { ref, computed, onMounted, watch, defineComponent } from "vue";
+import {
+  ref,
+  computed,
+  onMounted,
+  watch,
+  defineComponent,
+  watchEffect,
+  Ref
+} from "vue";
 export default defineComponent({
   name: "Player",
   components: {
@@ -144,7 +152,7 @@ export default defineComponent({
 
     let playList = computed(() => $store.state.playList);
 
-    let styleObject = ref(null);
+    let styleObject: Ref = ref(null);
 
     let isFull = ref(false);
 
@@ -158,12 +166,12 @@ export default defineComponent({
       $store.commit(MutationType.SET_PLAYING, !isPlaying.value);
     };
 
-    const handleLike = e => {
+    const handleLike = (e: MouseEvent) => {
       isLike.value = !isLike.value;
       // console.log("添加歌曲到喜欢列表");
     };
 
-    const handleSwitchSong = order => {
+    const handleSwitchSong = (order: string) => {
       // paylaod 为last或next
       if (mode.value === 0) {
         $store.dispatch("switchByShuffle");
@@ -193,6 +201,7 @@ export default defineComponent({
 
       if (currentSong.value) {
         /* 背景虚化 */
+
         const stop = watchEffect(() => {
           styleObject.value = {
             "background-image": "url(" + currentSong.value.albumImg + ")"

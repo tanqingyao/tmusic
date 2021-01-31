@@ -17,9 +17,9 @@
     </template>
   </NavBar>
 </template>
-<script>
-import NavBar from "components/common/navbar/NavBar";
-import { showSinger } from "common/display";
+<script lang="ts">
+import NavBar from "components/common/navbar/NavBar.vue";
+import { showSinger } from "@/common/utils/show";
 export default {
   name: "PlayerNavBar",
   components: {

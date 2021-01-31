@@ -122,21 +122,21 @@
     </Scroll>
   </div>
 </template>
-<script>
-import DetailNavBar from "./comps/DetailNavBar";
-import DetailHead from "./comps/DetailHead";
-import DetailContent from "./comps/DetailContent";
+<script lang="ts">
+import DetailNavBar from "./comps/DetailNavBar.vue";
+import DetailHead from "./comps/DetailHead.vue";
+import DetailContent from "./comps/DetailContent.vue";
 
-import Scroll from "components/common/scroll/Scroll";
+import Scroll from "components/common/scroll/Scroll.vue";
 
-import Cover from "components/content/cover/Cover";
-import DescItem from "components/content/descItem/DescItem";
-import ListTab from "components/content/musicList/ListTab";
-import MusicListItem from "components/content/musicList/MusicListItem";
+import Cover from "components/content/cover/Cover.vue";
+import DescItem from "components/content/descItem/DescItem.vue";
+import ListTab from "components/content/musicList/ListTab.vue";
+import MusicListItem from "components/content/musicList/MusicListItem.vue";
 
-import { _getSonglistById } from "network/detail";
-import { getSonglistDetail, getSongsDetail } from "network/detail/index";
-import { changeUnit } from "common/display";
+import { _getSonglistById } from "@/network/detail";
+import { getSonglistDetail, getSongsDetail } from "@/network/detail/index";
+import { changeUnit } from "@/common/utils/show";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
@@ -162,7 +162,9 @@ export default {
     onMounted(async () => {
       info.value = await getSonglistDetail($route.params.id);
       // console.log(info.value);
-      songs.value = await getSongsDetail(info.value.songIds);
+      songs.value = await getSongsDetail(
+        (info.value as { songIds: number[] }).songIds
+      );
     });
 
     /* 点击相关 */
@@ -195,23 +197,8 @@ export default {
     const handleSetting = () => {
       console.log("handleSetting");
     };
-    const handlePlay = item => {
+    const handlePlay = (item: ISong) => {
       $store.dispatch(ActionTypes.AddPlayList, [item.id]);
-      // .then(song => {
-      //   if (song) {
-      //     $toast.show("成功添加歌曲~", 1500);
-      //     自动跳转到player页面
-      //     $store.commit(SET_FULL_PLAYER, true);
-      //   } else {
-      //     $toast.show("添加失败", 1500);
-      //   }
-      //   if ($store.state.autoPlay) {
-      //     $store.commit(SET_CURRENT_SONG, song);
-      //   }
-      // })
-      // .catch(err => {
-      //   console.warn(err);
-      // });
     };
 
     return {
@@ -230,30 +217,6 @@ export default {
       handleSetting,
       handlePlay
     };
-  },
-  data() {
-    return {
-      type: null,
-      navBarTitle: "",
-      albumSonglist: [],
-      coverLogo: ""
-    };
-  },
-  mounted() {
-    let type = this.$route.params.category;
-    let albumID = this.$route.params.id;
-    // this.getSonglist(albumID);
-  },
-  methods: {
-    getSonglist(albumID) {
-      _getSonglistById(albumID).then(res => {
-        // console.log(res);
-        let data = res.data.data;
-        this.navBarTitle = data.desc;
-        this.coverLogo = data.logo;
-        this.albumSonglist = data.songlist;
-      });
-    }
   }
 };
 </script>

@@ -21,7 +21,7 @@
 <script lang="ts">
 import { defineComponent, ref, Ref } from "vue";
 
-import { changeUnit } from "@/common/display";
+import { changeUnit } from "@/common/utils/show";
 import useTouchElement from "@/common/hooks/useTouchElement";
 export default defineComponent({
   name: "RecommendSonglist",
