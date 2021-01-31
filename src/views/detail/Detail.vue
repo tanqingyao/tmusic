@@ -134,7 +134,6 @@ import DescItem from "components/content/descItem/DescItem.vue";
 import ListTab from "components/content/musicList/ListTab.vue";
 import MusicListItem from "components/content/musicList/MusicListItem.vue";
 
-import { _getSonglistById } from "@/network/detail";
 import { getSonglistDetail, getSongsDetail } from "@/network/detail/index";
 import { changeUnit } from "@/common/utils/show";
 import { ref, onMounted } from "vue";

@@ -17,8 +17,6 @@
 <script>
 import MusicListItem from "components/content/musicList/MusicListItem";
 
-import { _getSonglistById } from "network/detail";
-
 import { MutationType } from "@/store/types";
 export default {
   name: "Songlist",
