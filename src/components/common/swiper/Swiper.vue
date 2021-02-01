@@ -3,30 +3,54 @@
     <div
       ref="swiper"
       class="swiper"
-      @touchstart="touchStart"
-      @touchmove="touchMove"
-      @touchend="touchEnd"
+      @touchstart="handleTouchStart"
+      @touchmove="handleTouchMove"
+      @touchend="handleTouchEnd"
     >
       <slot />
     </div>
     <div class="dots">
-      <slot name="indicator" v-if="showIndicator && sliderCount > 1">
+      <slot name="indicator" v-if="showIndicator && slider.count > 1">
         <div
-          v-for="(item, index) in sliderCount"
+          v-for="(item, index) in slider.count"
           class="dot"
-          :class="{ active: index + 1 === sliderIndex }"
+          :class="{ active: index + 1 === slider.index }"
         ></div>
       </slot>
     </div>
   </div>
 </template>
-<script>
-import { defineComponent } from "vue";
+<script lang="ts">
+import {
+  computed,
+  ComputedRef,
+  defineComponent,
+  onMounted,
+  reactive,
+  ref,
+  Ref,
+  toRef,
+  toRefs,
+  watchEffect
+} from "vue";
 
+import {
+  setTransfrom,
+  setTransition,
+  scrollTo
+} from "@/common/utils/scrollElement";
+import useTouchElement from "@/common/hooks/useTouchElement";
 export default defineComponent({
   name: "Swiper",
   components: {},
   props: {
+    /**
+     * 监听的数据
+     */
+    loaded: {
+      type: Boolean,
+      default: false
+    },
     showIndicator: {
       type: Boolean,
       default: true
@@ -45,129 +69,137 @@ export default defineComponent({
       default: 0.25
     }
   },
-  data() {
-    return {
-      sliderCount: 0,
-      swiperWidth: 0,
-      swiperStyle: {},
-      sliderIndex: 1 //当前slider的index
-    };
-  },
-  mounted() {
-    // 1.监听图片加载情况
-    // 2.操作dom,前后添加图片,添加样式
-    // this.handleDOM();
-    // 3.开始滑动
-    // this.startTimer();
-  },
-  methods: {
-    handleDOM() {
-      // console.log("开始操作DOM");
-      //   1.获取子节点
-      let sliderElements = this.$refs.swiper.children;
-      this.sliderCount = sliderElements.length;
-      let firstChlid = sliderElements.item(0).cloneNode(true);
-      let lastChlid = sliderElements.item(this.sliderCount - 1).cloneNode(true);
-      //   2.多于一张图片,前后插入一张图片
-      //   if (length > 1) {
-      //     let swiperElement = this.$refs.swiper;
-      //     swiperElement.appendChild(firstChlid);
-      //     swiperElement.appendChild(lastChlid);
-      //     console.log(swiperElement);
-      //   }
-      let swiperElement = this.$refs.swiper;
-      swiperElement.appendChild(firstChlid);
-      swiperElement.insertBefore(lastChlid, sliderElements.item(0));
-      this.swiperWidth = swiperElement.offsetWidth;
-      this.swiperStyle = swiperElement.style;
-      //   3.显示第一张图片
-      this.setTransfrom(-this.swiperWidth);
-    },
-    startTimer() {
-      this.timer = window.setInterval(() => {
-        this.sliderIndex++;
-        this.scrollTo(-this.swiperWidth * this.sliderIndex);
-      }, this.sliderInterval);
-    },
-    stopTimer() {
-      window.clearInterval(this.timer);
-    },
-    /* DOM元素相关操作 */
-    scrollTo(position) {
-      this.scrolling = true;
-      //   console.log("正常滑动");
-      this.setTransition(this.sliderDuration);
-      this.setTransfrom(position);
-      // 调整位置
-      this.adjustPostion();
-      this.scrolling = false;
-    },
-    setTransfrom(position) {
-      // console.log("setTransfrom", position, this.$refs.swiper.style.transform);
-      // 设置移动位置
-      this.swiperStyle.transform = `translate(${position}px, 0)`;
-    },
-    setTransition(duration) {
-      // 设置滚动动画
-      this.swiperStyle.transition = `transform ${duration}ms`;
-    },
-    adjustPostion() {
-      // 异步执行:等上一段动画结束后再执行,
-      // 同步执行则会没有动画直接跳转
-      window.setTimeout(() => {
-        //   最后附加页直接移动到第一页
-        this.setTransition(0);
-        if (this.sliderIndex >= this.sliderCount + 1) {
-          this.sliderIndex = 1;
-          this.setTransfrom(-this.swiperWidth * this.sliderIndex);
-        } else if (this.sliderIndex <= 0) {
-          //   最前附加页直接移动到第最后一页
-          this.sliderIndex = this.sliderCount;
-          this.setTransfrom(-this.swiperWidth * this.sliderIndex);
-        }
-      }, this.sliderDuration);
-    },
+  setup(props) {
+    let swiper: Ref = ref(null);
+
+    const silderWidth = computed(() =>
+      swiper.value ? swiper.value.offsetWidth : 0
+    );
+
+    let slider = reactive({
+      count: 0, // 子元素个数
+      index: 1 // 当前子元素索引
+    });
+
     /* touch事件 */
-    touchStart(e) {
-      if (this.scrolling) {
+    const {
+      currentDistance,
+      touchDistach,
+      useTouchStart,
+      useTouchMove,
+      useTouchEnd
+    } = useTouchElement(swiper);
+
+    /* 轮播事件 */
+    // 滚动状态
+    let scrolling = false;
+    let timer: number;
+
+    // 轮播定时器
+    const startTimer = () => {
+      timer = window.setInterval(() => {
+        slider.index++;
+        scrollContent(-silderWidth.value * slider.index);
+      }, props.sliderInterval);
+    };
+
+    const stopTimer = () => {
+      window.clearInterval(timer);
+    };
+
+    // 轮播操作
+    const handleTouchStart = (e: TouchEvent) => {
+      if (scrolling) {
         return;
       }
-      // 暂停轮播
-      this.stopTimer();
-      //   pageX包括滚动条的视口宽度,clientX不包括滚动条
-      this.StartX = e.touches[0].pageX;
-    },
-    touchMove(e) {
-      let MoveX = e.touches[0].pageX;
-      // 移动距离
-      this.touchDistance = MoveX - this.StartX;
+      stopTimer();
+      useTouchStart(e);
+    };
 
-      // 自动轮播已经滑动的距离
-      let currentDistance = -this.sliderIndex * this.swiperWidth;
+    const handleTouchMove = useTouchMove;
 
-      // 开始移动
-      this.setTransfrom(this.touchDistance + currentDistance);
-    },
-    touchEnd(e) {
-      // 判断触摸移动后的边界情况
-      if (this.touchDistance === 0) {
+    const handleTouchEnd = (e: TouchEvent) => {
+      useTouchEnd(e);
+      // 判断边界情况
+      if (touchDistach.value === 0) {
         return;
       } else if (
-        this.touchDistance > 0 &&
-        Math.abs(this.touchDistance) > this.ratio * this.swiperWidth
+        touchDistach.value > 0 &&
+        touchDistach.value > props.ratio * silderWidth.value
       ) {
-        this.sliderIndex--;
+        slider.index--;
       } else if (
-        this.touchDistance < 0 &&
-        Math.abs(this.touchDistance) > this.ratio * this.swiperWidth
+        touchDistach.value < 0 &&
+        Math.abs(touchDistach.value) > props.ratio * silderWidth.value
       ) {
-        this.sliderIndex++;
+        slider.index++;
       }
-      //   滚动到对应位置
-      this.scrollTo(-this.swiperWidth * this.sliderIndex);
-      // 开始自动轮播
-      this.startTimer();
-    }
+      // 下一个页面的定位
+      currentDistance.value = -slider.index * silderWidth.value;
+
+      scrollContent(currentDistance.value);
+
+      startTimer();
+    };
+
+    /* DOM相关操作 */
+    const handleDOM = () => {
+      // 1.前后插入一张图片
+
+      let firstChlid = swiper.value.children.item(0);
+      let lastChlid = swiper.value.children.item(slider.count - 1);
+
+      if (slider.count > 1) {
+        swiper.value.appendChild(firstChlid.cloneNode(true));
+        swiper.value.insertBefore(lastChlid.cloneNode(true), firstChlid);
+      }
+      // 2.显示第一张图片
+      setTransfrom(swiper.value, -silderWidth.value);
+    };
+    /* 滚动到对应位置 */
+    const scrollContent = (position: number) => {
+      scrolling = true;
+
+      scrollTo(swiper.value, position);
+      correctSwiper();
+
+      scrolling = false;
+    };
+    // 滚动结束纠正swiper位置
+    const correctSwiper = () => {
+      // 异步执行:等上一段动画结束后再执行,同步执行则会没有动画直接跳转
+      window.setTimeout(() => {
+        setTransition(swiper.value, 0);
+
+        if (slider.index >= slider.count + 1) {
+          // 最后附加页直接移动到第一页
+          slider.index = 1;
+        } else if (slider.index <= 0) {
+          // 最前附加页直接移动到第最后一页
+          slider.index = slider.count;
+        }
+        setTransfrom(swiper.value, -silderWidth.value * slider.index);
+      }, props.sliderDuration);
+    };
+
+    onMounted(() => {
+      const stop = watchEffect(() => {
+        // 加载完毕开始轮播
+        if (props.loaded && swiper.value) {
+          slider.count = swiper.value.children.length;
+          handleDOM();
+          startTimer();
+        }
+      });
+    });
+    return {
+      swiper,
+      slider,
+      handleTouchStart,
+      handleTouchMove,
+      handleTouchEnd,
+      handleDOM
+    };
   }
 });
 </script>

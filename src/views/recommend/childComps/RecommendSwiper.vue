@@ -1,12 +1,12 @@
 <template>
-  <Swiper ref="swiper">
+  <Swiper ref="swiper" :loaded="counter !== 0 && counter === banners.length">
     <SwiperItem v-for="item in banners">
-      <img :src="item.img" @load="imgLoad" alt="轮播图片" />
+      <img :src="item.img" @load="counter++" alt="轮播图片" />
     </SwiperItem>
   </Swiper>
 </template>
 <script>
-import { defineComponent, ref, onMounted, toRefs } from "vue";
+import { defineComponent, ref } from "vue";
 import { Swiper, SwiperItem } from "components/common/swiper";
 export default defineComponent({
   name: "RecommendSwiper",
@@ -19,20 +19,13 @@ export default defineComponent({
       }
     }
   },
-  setup(props) {
-    const { banners } = toRefs(props);
+  setup() {
     const swiper = ref(null);
-    let counter = 0;
-    const imgLoad = () => {
-      counter++;
-      if (counter === banners.value.length) {
-        swiper.value.handleDOM();
-        swiper.value.startTimer();
-      }
-    };
+    // 记录图片加载情况
+    let counter = ref(0);
     return {
       swiper,
-      imgLoad
+      counter
     };
   }
 });

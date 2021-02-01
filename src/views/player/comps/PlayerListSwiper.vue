@@ -17,7 +17,7 @@
         @touchmove="handleTouchMove"
         @touchend="handleTouchEnd"
       >
-        <PlayerList :canRoll="canRoll" />
+        <PlayerList />
       </div>
     </div>
   </div>
@@ -41,21 +41,20 @@ export default defineComponent({
     let sliderIndex: Ref = ref(0);
 
     /* touch事件 */
-    const {
-      handleTouchStart,
-      handleTouchMove,
-      handleTouchEnd,
-      canRoll
-    } = useTouchElement(swiper, sliderIndex);
+    const { useTouchStart, useTouchMove, useTouchEnd } = useTouchElement(
+      swiper
+    );
 
+    const handleTouchStart = useTouchStart;
+    const handleTouchMove = useTouchMove;
+    const handleTouchEnd = useTouchEnd;
     return {
       swiper,
       sliderIndex,
       lists,
       handleTouchStart,
       handleTouchMove,
-      handleTouchEnd,
-      canRoll
+      handleTouchEnd
     };
   }
 });

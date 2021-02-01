@@ -6,12 +6,7 @@
       v-show="isPullDown"
       @click="handleSearch"
     />
-    <Scroll
-      ref="scroll"
-      class="wrapper"
-      :requestData="fetchData"
-      @scroll="handleScroll"
-    >
+    <Scroll ref="scroll" class="wrapper" @scroll="handleScroll">
       <RecommendSwiper class="swiper" :banners="banners" />
       <RecommendSonglist>
         <template #cover>
