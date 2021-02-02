@@ -125,8 +125,6 @@ export async function getSearchComplex(
     },
 
     transformResponse: data => {
-      console.log(JSON.parse(data));
-
       const complexInfo = Complex_Transfrom(JSON.parse(data).result);
       return complexInfo;
     }

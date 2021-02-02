@@ -39,6 +39,8 @@ export const collectSearchCloud = (res: AxiosResponse) => {
   return songs;
 };
 export const Complex_Transfrom = (res: any) => {
+  console.log(res);
+
   // 所需要的数据
   let displayItem = ["song", "playList", "artist", "album", "user"];
 
@@ -90,7 +92,10 @@ export const Complex_Transfrom = (res: any) => {
     return res[key].moreText;
   });
 
+  const simiQuery = res.sim_query.sim_querys;
+
   return {
+    simiQuery,
     moreTextArr,
     items: {
       songs,

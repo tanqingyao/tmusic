@@ -1,5 +1,5 @@
 <template>
-  <div class="complex-body">
+  <Scroll ref="scroll" class="complex-body">
     <div v-for="(item, key, index) in complex">
       <ListCard>
         <template #header>
@@ -75,7 +75,21 @@
         </template>
       </ListCard>
     </div>
-  </div>
+    <div>
+      <ListCard>
+        <template #header>
+          <span class="left">相关搜索</span>
+        </template>
+        <template #content>
+          <div class="simi-query">
+            <div class="simi-item" v-for="item in simiQuery">
+              {{ item.keyword }}
+            </div>
+          </div>
+        </template>
+      </ListCard>
+    </div>
+  </Scroll>
 </template>
 <script lang="ts">
 import {
@@ -83,8 +97,16 @@ import {
   ListItem,
   ListItemCenter
 } from "@/components/content/customList";
+import Scroll from "@/components/common/scroll/Scroll.vue";
 
-import { defineComponent, onMounted, reactive, ReactiveEffect, ref } from "vue";
+import {
+  defineComponent,
+  onMounted,
+  reactive,
+  ReactiveEffect,
+  Ref,
+  ref
+} from "vue";
 import { useRoute } from "vue-router";
 
 import { getSearchComplex } from "@/network/search";
@@ -93,7 +115,8 @@ export default defineComponent({
   components: {
     ListCard,
     ListItem,
-    ListItemCenter
+    ListItemCenter,
+    Scroll
   },
   props: {
     titles: {
@@ -106,6 +129,9 @@ export default defineComponent({
   setup() {
     const $route = useRoute();
 
+    const scroll: Ref = ref(null);
+
+    let simiQuery = ref([]);
     let moreText = ref([]);
     let complex = reactive({
       songs: {},
@@ -129,19 +155,27 @@ export default defineComponent({
     };
 
     onMounted(async () => {
-      const key = $route.params.key;
+      setTimeout(() => {
+        scroll.value.refresh();
+      }, 500);
 
+      const key = $route.params.key;
       const res = await getSearchComplex(key as string);
+
+      simiQuery.value = res.simiQuery;
+
+      moreText.value = res.moreTextArr;
 
       complex.songs = res.items.songs;
       complex.playLists = res.items.playLists;
       complex.artists = res.items.artists;
       complex.albums = res.items.albums;
       complex.users = res.items.users;
-
-      moreText.value = res.moreTextArr;
     });
     return {
+      scroll,
+
+      simiQuery,
       moreText,
       complex,
 
@@ -155,8 +189,8 @@ export default defineComponent({
 </script>
 <style scoped>
 .complex-body {
-  width: 100%;
-  height: 100%;
+  height: calc(100vh - 44px - 40px - 60px);
+  width: 100vw;
   padding: 20px;
   overflow: hidden;
   border-radius: 5%;
@@ -187,5 +221,18 @@ export default defineComponent({
   width: 40px;
   height: 40px;
   border-radius: 50%;
+}
+
+.simi-query {
+  /* display: flex; */
+}
+.simi-item {
+  /* flex: 1 0; */
+  display: inline-block;
+  color: var(--color-high-text);
+  background-color: var(--color-background-shadow);
+  border-radius: 20px;
+  margin: 5px;
+  padding: 5px 10px;
 }
 </style>
