@@ -1,10 +1,10 @@
 <template>
-  <router-view> </router-view>
+  DetailSinger
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
 export default defineComponent({
-  name: "Songlist",
+  name: "DetailSinger",
   components: {},
   props: {
     test: {

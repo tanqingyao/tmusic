@@ -37,3 +37,13 @@ export const collectSearchCloud = (res: AxiosResponse) => {
   });
   return songs;
 };
+export const Complex_Transfrom = (res: any) => {
+  return {
+    order: res.order,
+    song: res.song,
+    playList: res.playList,
+    artist: res.artist,
+    album: res.album,
+    user: res.user
+  };
+};

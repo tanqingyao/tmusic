@@ -1,6 +1,6 @@
 <template>
   <div class="recommend-list">
-    <MusicListItem v-for="item in album" @click="songClick(item.id)">
+    <ListItem v-for="item in album" @click="songClick(item.id)">
       <template #img>
         <img :src="item.cover" @load="imgload" alt="" />
       </template>
@@ -12,15 +12,15 @@
       <template #btm-left>
         <span>播放量:{{ unitChange(item.playNum) }}万</span>
       </template>
-    </MusicListItem>
+    </ListItem>
   </div>
 </template>
 <script>
-import MusicListItem from "components/content/musicList/MusicListItem";
+import ListItem from "components/content/musicList/ListItem";
 export default {
   name: "RecommendList",
   components: {
-    MusicListItem
+    ListItem
   },
   props: {
     album: {

@@ -1,53 +1,27 @@
 <template>
-  <NavBar class="search-nav">
-    <template #left>
-      <icon
-        class="back-icon"
-        @click="$router.back"
-        :icon="['fas', 'arrow-left']"
-        size="sm"
-      />
-    </template>
-    <template #center>
-      <div class="search-head">
-        <div class="search-bar">
-          <icon
-            v-show="!searchKey"
-            class="icon-search"
-            :icon="['fas', 'search']"
-            size="sm"
-          />
-          <input
-            class="search-input"
-            type="text"
-            :placeholder="dft.show"
-            v-model="searchKey"
-            @focusin="focusSearch = true"
-            @focusout="focusSearch = false"
-          />
-          <icon
-            v-show="searchKey"
-            class="icon-close"
-            :icon="['fas', 'times']"
-            size="sm"
-          />
-        </div>
-      </div>
-    </template>
-  </NavBar>
+  <SearchNavBar
+    :dftSearchKey="dft.show"
+    @update:searchKey="searchKey = $event"
+    @focus-state="focusSearch = $event"
+  />
   <SearchSuggest
     :searchKey="searchKey"
     :suggests="suggests"
     v-show="searchKey && focusSearch"
   >
   </SearchSuggest>
-  <SearchHot :hots="hots" />
+
+  <TabControl
+    :titles="['综合', '单曲', '歌单', '歌手', '专辑', '用户']"
+    @tab-click="handleTabClick"
+    v-show="$route.path !== '/search/hots'"
+  />
+  <router-view> </router-view>
 </template>
 <script lang="ts">
-import NavBar from "components/common/navbar/NavBar.vue";
-import SearchHot from "./comps/SearchHot.vue";
+import SearchNavBar from "@/components/content/searchBar/SearchNavBar.vue";
 import SearchSuggest from "./comps/SearchSuggest.vue";
-
+import TabControl from "@/components/content/tabControl/TabControl.vue";
 import {
   defineComponent,
   ref,
@@ -57,91 +31,56 @@ import {
   WatchStopHandle
 } from "vue";
 
-import {
-  getSearchDefault,
-  getSearchHot,
-  getSearchSuggest,
-  getSearchCloud
-} from "@/network/search";
+import { getSearchDefault, getSearchSuggest } from "@/network/search";
 
 import { throttle } from "@/common/utils/func";
+import { useRoute, useRouter } from "vue-router";
 export default defineComponent({
   name: "Search",
   components: {
-    NavBar,
-    SearchHot,
-    SearchSuggest
+    SearchNavBar,
+    SearchSuggest,
+    TabControl
   },
-  setup(props) {
+  setup() {
     let dft: Ref = ref({ real: "", show: "" });
-    let hots: Ref = ref([]);
     let suggests: Ref = ref([]);
-
     let searchKey: Ref = ref("");
     let focusSearch: Ref = ref(false);
-    const _getSearchInfo = async () => {
-      dft.value = await getSearchDefault();
-      hots.value = await getSearchHot();
-      // const songs = await getSearchCloud(searchKey.value);
-      // console.log(songs);
-    };
-    const throttleLog = throttle(async value => {
+
+    const throttleGetSuggest = throttle(async value => {
       if (value) {
         suggests.value = await getSearchSuggest(value);
       }
     }, 500);
     const stop: WatchStopHandle = watchEffect(() => {
-      throttleLog(searchKey.value);
+      throttleGetSuggest(searchKey.value);
     });
 
-    onMounted(() => {
-      _getSearchInfo();
+    const $router = useRouter();
+    const $route = useRoute();
+    const path = [
+      "/search/detail/",
+      "/search/detail/solo/",
+      "/search/detail/songlist/",
+      "/search/detail/singers/",
+      "/search/detail/album/",
+      "/search/detail/users/"
+    ];
+    const handleTabClick = (index: number) => {
+      $router.replace(path[index] + $route.params.key);
+    };
+    onMounted(async () => {
+      dft.value = await getSearchDefault();
     });
     return {
       dft,
-      hots,
       searchKey,
       suggests,
-      focusSearch
+      focusSearch,
+      handleTabClick
     };
   }
 });
 </script>
-<style scoped>
-.search-nav {
-  box-shadow: none;
-}
-.back-icon {
-  margin: 0 15px;
-  width: 30px;
-}
-.search-head {
-  height: 44px;
-  padding: 8px 0px;
-}
-.search-bar {
-  border-bottom: solid 1px #666;
-  width: 100%;
-  height: 100%;
-  padding: 0 10px;
-
-  display: flex;
-  align-items: center;
-}
-.search-input {
-  flex: 1;
-  margin: 0 5px;
-  line-height: 18px;
-  border: none;
-  background-color: inherit;
-
-  /* 多余文字省略 */
-  width: 200px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-input:focus {
-  outline: none;
-}
-</style>
+<style scoped></style>

@@ -1,12 +1,11 @@
 <template>
   <div id="recommend">
-    <SearchBar
-      class="search-bar"
-      :Default="{ real: '默认搜索' }"
-      v-show="isPullDown"
-      @click="handleSearch"
+    <MainNavBar />
+    <TabControl
+      :titles="['推荐', '歌手', '排行']"
+      :path="['/recommend', '/singer', '/rank']"
     />
-    <Scroll ref="scroll" class="wrapper" @scroll="handleScroll">
+    <Scroll ref="scroll" class="wrapper">
       <RecommendSwiper class="swiper" :banners="banners" />
       <RecommendSonglist>
         <template #cover>
@@ -26,8 +25,8 @@
   </div>
 </template>
 <script>
-import SearchBar from "components/common/searchbar/SearchBar";
-
+import MainNavBar from "@/components/content/mainNavBar/MainNavBar.vue";
+import TabControl from "components/content/tabControl/TabControl";
 import Cover from "components/content/cover/Cover";
 
 import RecommendSwiper from "./childComps/RecommendSwiper";
@@ -43,7 +42,8 @@ import { getBanner, getRecommendSonglist } from "network/recommend/index";
 export default {
   name: "Recommend",
   components: {
-    SearchBar,
+    MainNavBar,
+    TabControl,
     Cover,
     RecommendSwiper,
     RecommendSonglist,
@@ -51,19 +51,6 @@ export default {
     Scroll
   },
   setup() {
-    /* 路由相关 */
-    const $router = useRouter();
-    const handleSearch = () => {
-      $router.push("/search");
-    };
-    /* 滑动相关 */
-    let oldPos = ref(0);
-    // TODO 推荐页面内容更多时隐藏搜索框
-    let isPullDown = ref(true);
-    const handleScroll = pos => {
-      isPullDown.value = pos.y > oldPos.value;
-      oldPos.value = pos.y;
-    };
     /* 获取属性相关 */
     const banners = ref([]);
     const songlists = ref([]);
@@ -72,11 +59,6 @@ export default {
       songlists.value = await getRecommendSonglist();
     });
     return {
-      handleSearch,
-
-      isPullDown,
-      handleScroll,
-
       banners,
       songlists
     };
@@ -87,19 +69,6 @@ export default {
 #recommend {
   height: 100vh -44px;
   position: relative;
-}
-.search-bar {
-  height: 35px;
-  margin: 10px 0;
-
-  border: 1px solid #ccc;
-  border-radius: 50px;
-  background-color: #fff;
-  /* position: absolute;
-  left: 0;
-  right: 0; */
-  position: relative;
-  z-index: 9;
 }
 .wrapper {
   height: calc(100% - 44px - 40px - 60px);

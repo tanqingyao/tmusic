@@ -1,10 +1,10 @@
-<template>
-  <router-view> </router-view>
-</template>
+<template> songlist</template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import { getSearchCloud } from "@/network/search";
+import { defineComponent, onMounted } from "vue";
+import { useRoute } from "vue-router";
 export default defineComponent({
-  name: "Songlist",
+  name: "DetailSearch",
   components: {},
   props: {
     test: {

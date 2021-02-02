@@ -1,6 +1,6 @@
 <template>
   <div class="hot-view">
-    <div class="hot-title">
+    <div class="list-header">
       <span class="left">热搜榜</span>
 
       <button class="right" @click="handlePlayAll">
@@ -8,32 +8,34 @@
         播放
       </button>
     </div>
-    <transition-group class="hot-list" name="list" tag="div">
-      <SearchHotItem
-        class="list-item"
-        v-for="(item, index) in hots"
-        :key="item"
-        @click="handleSearch"
-        v-show="index < 10 || showAll"
-      >
-        <template #left>
-          {{ index + 1 }}
-        </template>
+    <div class="list-content">
+      <transition-group class="hot-list" name="list" tag="div">
+        <SearchHotItem
+          class="list-item"
+          v-for="(item, index) in hots"
+          :key="item"
+          @click="handleSearch(item.key)"
+          v-show="index < 10 || showAll"
+        >
+          <template #left>
+            {{ index + 1 }}
+          </template>
 
-        <template #center>
-          <span>{{ item.key }}</span>
-        </template>
-        <template #right>
-          <img
-            class="hot-icon"
-            v-if="item.iconL"
-            :src="item.iconL"
-            alt="icon"
-          />
-        </template>
-      </SearchHotItem>
-    </transition-group>
-    <div class="hot-more" @click="showAll = true" v-if="!showAll">
+          <template #center>
+            <span>{{ item.key }}</span>
+          </template>
+          <template #right>
+            <img
+              class="hot-icon"
+              v-if="item.iconL"
+              :src="item.iconL"
+              alt="icon"
+            />
+          </template>
+        </SearchHotItem>
+      </transition-group>
+    </div>
+    <div class="list-footer" @click="showAll = true" v-if="!showAll">
       展开更多热搜
       <icon
         @click="$emit('change-screen')"
@@ -46,50 +48,55 @@
 </template>
 <script lang="ts">
 import SearchHotItem from "@/components/content/descItem/SearchHotItem.vue";
-import MusicListItem from "@/components/content/musicList/MusicListItem.vue";
+import ListItem from "@/components/content/musicList/ListItem.vue";
 
 import { defineComponent, onMounted, Ref, ref } from "vue";
-
-import { getSearchID } from "@/network/search";
 import { ActionTypes } from "@/store/types";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+
+import { getSearchID } from "@/network/search";
+import { getSearchHot } from "@/network/search";
 export default defineComponent({
   name: "SearchHot",
   components: {
     SearchHotItem,
-    MusicListItem
-  },
-  props: {
-    hots: {
-      type: Array
-    }
+    ListItem
   },
   setup(props) {
+    let hots: Ref = ref([]);
+
     let showAll: Ref = ref(false);
     const $store = useStore();
     const handlePlayAll = async () => {
-      if (props.hots) {
+      if (hots.value) {
         let ids: number[];
-        console.log(typeof props.hots);
 
-        const promises = props.hots.map(async item => {
-          const id = await getSearchID((item as { key: string }).key);
+        const promises = hots.value.map(async (item: { key: string }) => {
+          const id = await getSearchID(item.key);
           return id;
         });
 
         ids = await Promise.all(promises);
-        // console.log(ids);
+
         $store.dispatch(ActionTypes.AddPlayList, ids);
       }
     };
 
-    const handleSearch = () => {
-      console.log("handleSearch");
+    const $router = useRouter();
+    const handleSearch = (key: string) => {
+      $router.push("/search/detail/" + key);
     };
+
+    onMounted(async () => {
+      hots.value = await getSearchHot();
+    });
     return {
       handlePlayAll,
       handleSearch,
-      showAll
+      showAll,
+
+      hots
     };
   }
 });
@@ -104,14 +111,14 @@ export default defineComponent({
   width: 100%;
 }
 /* header */
-.hot-title {
+.list-header {
   line-height: 22px;
   height: 22px;
   text-align: center;
   margin: 15px;
   font-weight: 700;
 }
-.hot-title button {
+.list-header button {
   font-size: 13px;
   line-height: 22px;
   height: 22px;
@@ -139,7 +146,7 @@ export default defineComponent({
   font-weight: 700;
 }
 /* footer */
-.hot-more {
+.list-footer {
   text-align: center;
   font-size: 13px;
 }

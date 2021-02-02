@@ -1,10 +1,10 @@
 <template>
-  SearchDetail
+  DetailUsers
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
 export default defineComponent({
-  name: "SearchDetail",
+  name: "DetailUsers",
   components: {},
   props: {
     test: {

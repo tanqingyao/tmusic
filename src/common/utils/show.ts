@@ -5,6 +5,12 @@ export function parseTime(num: number) {
   const str = ("00" + sec).slice(-2);
   return `${min}:${str}`;
 }
+/* 转化数字为日期 */
+export function parseDate(num: number) {
+  let date = new Date(num);
+
+  return `${date.getFullYear()}.${date.getMonth()}.${date.getDate()}`;
+}
 /* 转化数字单位 */
 export const changeUnit = (value: number, base = 10000, point = 0) => {
   if (!value) {

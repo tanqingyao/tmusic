@@ -14,9 +14,9 @@ import {
   faHeart,
   // 功能相关
   faUser,
-  faAngleDown,
-  faChevronRight,
-  faChevronLeft,
+  faAngleDown, //向下
+  faChevronRight, //向右
+  faChevronLeft, //向左
   faArrowLeft,
   faSearch,
   faTimes,

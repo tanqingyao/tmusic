@@ -61,7 +61,6 @@ npm run serve
 
 ### 待完成
 
-- [ ] 轮播图滑动hook提取
 - [ ] playlist显示历史播放列表
 - [ ] 排行页面
 - [ ] 歌手列表和歌手详情页
@@ -84,3 +83,5 @@ npm run serve
 - [x] 2021年1月29日：添加typescript类型推断:vuex,network/player,歌词功能代码部分
 - [x] 2021年1月30日：搜索页面显示;搜索建议显示及功能
 - [x] 2021年1月31日：搜索热榜播放功能;playlist显示样式;playlist滑动功能;一些hooks抽取
+
+- [ ] 轮播图滑动hook提取

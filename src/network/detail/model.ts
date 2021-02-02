@@ -1,4 +1,6 @@
-export const collectSonglistDetail = res => {
+import { AxiosResponse } from "axios";
+
+export const collectSonglistDetail = (res: AxiosResponse) => {
   const {
     creator: { avatarUrl: avatar, nickname: name },
     name: title,
@@ -10,7 +12,9 @@ export const collectSonglistDetail = res => {
     shareCount,
     commentCount
   } = res.data.playlist;
-  const songIds = res.data.playlist.trackIds.map(item => item.id);
+  const songIds = res.data.playlist.trackIds.map(
+    (item: { id: number }) => item.id
+  );
   return {
     avatar,
     name,
@@ -26,9 +30,10 @@ export const collectSonglistDetail = res => {
   };
 };
 
-export const collectSongDetail = res => {
-  return res.data.songs.map(item => {
-    const artists = item.ar.map(item => item.name);
+// TODO 改到 axios中的transformResponse
+export const collectSongDetail = (res: AxiosResponse) => {
+  return res.data.songs.map((item: any) => {
+    const artists = item.ar.map((item: any) => item.name);
     return {
       id: item.id,
       name: item.name,

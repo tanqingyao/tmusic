@@ -3,7 +3,8 @@ import {
   collectSearchDefault,
   collectSearchSuggest,
   // collectSearchHot,
-  collectSearchCloud
+  collectSearchCloud,
+  Complex_Transfrom
 } from "./model";
 
 const URL_search = {
@@ -82,7 +83,7 @@ export async function getSearchCloud(
   limit: number = 30,
   type: number = 1
 ) {
-  const { data: cloudsearch } = await getNeteaseRequest({
+  const { data: soloResult } = await getNeteaseRequest({
     url: URL_search.cloudsearch,
     params: {
       keywords,
@@ -95,10 +96,41 @@ export async function getSearchCloud(
     },
 
     transformResponse: data => {
-      return JSON.parse(data);
+      console.log(JSON.parse(data).result);
+
+      const solo = Complex_Transfrom(JSON.parse(data).result);
+      return solo;
     }
   });
-  console.log(cloudsearch);
 
-  // return collectSearchCloud(res);
+  return soloResult;
+}
+
+export async function getSearchComplex(
+  keywords: string,
+  offset: number = 0,
+  limit: number = 30,
+  type: number = 1018
+) {
+  const { data: complexInfo } = await getNeteaseRequest({
+    url: URL_search.search,
+    params: {
+      keywords,
+      // 分页
+      offset,
+      //数量
+      limit,
+      //搜索类型；默认为 1 即单曲 , 取值意义 : 1: 单曲, 10: 专辑, 100: 歌手, 1000: 歌单, 1002: 用户, 1004: MV, 1006: 歌词, 1009: 电台, 1014: 视频, 1018:综合
+      type
+    },
+
+    transformResponse: data => {
+      console.log(JSON.parse(data));
+
+      const complexInfo = Complex_Transfrom(JSON.parse(data).result);
+      return complexInfo;
+    }
+  });
+
+  return complexInfo;
 }

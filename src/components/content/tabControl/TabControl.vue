@@ -3,8 +3,8 @@
     <div
       class="tab-control-item"
       v-for="(item, index) in titles"
-      @click="itemClick(index)"
-      :class="{ active: $route.path === path[index] }"
+      @click="handleClick(index)"
+      :class="{ active: index === currentIndex }"
     >
       <span> {{ item }} </span>
     </div>
@@ -12,8 +12,7 @@
 </template>
 
 <script>
-import { toRefs } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { ref } from "vue";
 export default {
   name: "TabControl",
   props: {
@@ -22,25 +21,20 @@ export default {
       default() {
         return [];
       }
-    },
-    path: {
-      type: Array,
-      default() {
-        return [];
-      }
     }
   },
-  setup(props) {
-    const { path } = toRefs(props);
-    const $router = useRouter();
-    const $route = useRoute();
-    const itemClick = index => {
-      if ($route.path !== path.value[index]) {
-        $router.push(path.value[index]);
-      }
+  emits: {
+    "tab-click": null
+  },
+  setup(props, { emit }) {
+    let currentIndex = ref(0);
+    const handleClick = index => {
+      currentIndex.value = index;
+      emit("tab-click", index);
     };
     return {
-      itemClick
+      currentIndex,
+      handleClick
     };
   }
 };
@@ -50,7 +44,7 @@ export default {
 .tab-control {
   display: flex;
   text-align: center;
-  font-size: 15px;
+  font-size: 13px;
   height: 40px;
   line-height: 40px;
   background-color: var(--color-background);
@@ -61,15 +55,16 @@ export default {
 }
 
 .tab-control-item span {
-  padding: 5px;
+  padding: 0px;
 }
 
 .active {
-  color: var(--color-theme);
+  font-weight: 700;
+  color: var(--color-theme-d);
 }
 
 /* 活跃状态下的小横条 */
 .active span {
-  border-bottom: 3px solid var(--color-theme);
+  border-bottom: 4px solid var(--color-theme);
 }
 </style>

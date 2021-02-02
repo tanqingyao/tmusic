@@ -1,5 +1,4 @@
 <template>
-  <router-view name="one" class="nav-bar" />
   <router-view v-slot="{ Component }">
     <keep-alive include="Recommend">
       <component :is="Component" />

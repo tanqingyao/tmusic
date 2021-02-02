@@ -10,7 +10,7 @@ export default {
 <style scoped>
 .singer {
   height: 100vh;
-  background-color: var(--color-background-d);
+  background-color: var(--color-background-shadow);
 }
 .scroll-line {
   position: fixed;

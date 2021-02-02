@@ -238,7 +238,7 @@ export default defineComponent({
   position: relative;
   height: 100vh;
   color: aliceblue;
-  background-color: var(--color-highlight-background);
+  background-color: var(--color-background-d);
 }
 .player-content {
   height: 100vh;

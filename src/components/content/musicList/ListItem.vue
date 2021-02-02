@@ -7,14 +7,10 @@
       <span class="top">
         <slot name="top" />
       </span>
-      <div class="bottom">
-        <span class="bottom-left">
-          <slot name="bottom-left" />
-        </span>
-        <span class="bottom-right">
-          <slot name="bottom-right" />
-        </span>
-      </div>
+
+      <span class="bottom">
+        <slot name="bottom" />
+      </span>
     </div>
 
     <div class="item-right">
@@ -24,7 +20,7 @@
 </template>
 <script>
 export default {
-  name: "MusicListItem"
+  name: "ListItem"
 };
 </script>
 <style scoped>
@@ -35,15 +31,13 @@ export default {
   margin: 10px 0;
   display: flex;
 }
-
+/* 左边 */
 .item-left {
   flex: 1;
   text-align: center;
   margin: 0 5px;
 }
-.item-right {
-  flex: 2;
-}
+/* 中间 */
 .item-center {
   flex: 8;
   font-size: var(--font-size-medium);
@@ -68,6 +62,15 @@ export default {
   color: var(--color-high-text);
 }
 .bottom {
+  font-size: var(--font-size-small);
   color: var(--color-text);
+}
+/* 右边 */
+.item-right {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-content: space-evenly;
 }
 </style>

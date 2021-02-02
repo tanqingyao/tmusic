@@ -32,7 +32,7 @@ export default defineComponent({
   setup() {
     const $router = useRouter();
     const handleDetail = (id: number) => {
-      $router.push("/detail/songlist/" + id);
+      $router.push("/songlist/detail/" + id);
     };
     return {
       changeUnit,
@@ -49,7 +49,7 @@ export default defineComponent({
   color: #fff;
   font-size: 12px;
   border-radius: 10px;
-  background-color: var(--color-background-d);
+  background-color: var(--color-background-shadow);
 
   position: relative;
   top: 25px;
