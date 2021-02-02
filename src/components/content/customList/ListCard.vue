@@ -35,7 +35,11 @@ export default defineComponent({
   background-color: var(--color-background);
   outline: none;
 }
-
+/* content */
+.list-content {
+  display: flex;
+  flex-direction: column;
+}
 /* footer */
 .list-footer {
   text-align: center;

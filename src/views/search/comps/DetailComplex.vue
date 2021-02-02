@@ -1,13 +1,13 @@
 <template>
   <div class="complex-body">
-    <div v-for="item in complex">
-      <ListCard v-if="item">
+    <div v-for="(item, key, index) in complex">
+      <ListCard>
         <template #header>
-          <span class="left">{{ item.title }}</span>
+          <span class="left">{{ titles[index] }}</span>
           <button
             class="right solo-play-btn"
             @click="handlePlayAll"
-            v-if="item.title === '单曲'"
+            v-if="key === 'songs'"
           >
             <icon :icon="['fas', 'play']" size="sm" />
             播放
@@ -15,160 +15,104 @@
         </template>
 
         <template #content>
-          <div class="solo" v-if="item.title === '单曲'">
-            <ListItem
-              v-for="(item, index) in item.songs"
-              @click="handleClickItem(item)"
-            >
-              <template #top>
-                <span>{{ item.name }}</span>
-              </template>
-              <template #bottom>
-                <span>{{ showSinger(item.ar) }} - </span>
+          <ListItem
+            v-for="(item, index) in item"
+            @click="handleClickItem(item)"
+          >
+            <template #left>
+              <img
+                v-if="item.imgUrl"
+                class="artist-cover"
+                :src="item.imgUrl"
+                alt=""
+              />
+            </template>
 
-                <span> {{ item.al.name }}</span>
-              </template>
-              <template #right>
-                <icon
-                  class="icon"
-                  :icon="['fas', 'video']"
-                  :style="{ color: '#999' }"
-                  @click="handleVideo"
-                />
-                <icon
-                  class="icon"
-                  :icon="['fas', 'ellipsis-v']"
-                  :style="{ color: '#999' }"
-                  @click="handleSetting"
-                />
-              </template>
-            </ListItem>
-          </div>
+            <template #center>
+              <ListItemCenter>
+                <template #center-item>
+                  <span>{{ item.name }}</span>
+                </template>
+              </ListItemCenter>
+              <ListItemCenter>
+                <template #center-item>
+                  <span>{{ item.desc }}</span>
+                </template>
+              </ListItemCenter>
+            </template>
 
-          <div class="playlist" v-if="item.title === '歌单'">
-            <ListItem
-              v-for="(item, index) in item.playLists"
-              @click="handleClickItem(item)"
-            >
-              <template #left>
-                <img class="playlist-cover" :src="item.coverImgUrl" alt="" />
-              </template>
-              <template #top>
-                {{ item.name }}
-              </template>
-              <template #bottom>
-                <span>{{ item.trackCount }}首，</span>
-                <span v-if="item.creator">
-                  by {{ item.creator.nickname }}，
-                </span>
-                <span> 播放{{ item.playCount }}次</span>
-              </template>
-            </ListItem>
-          </div>
-
-          <div class="artist" v-if="item.title === '艺人'">
-            <ListItem
-              v-for="(item, index) in item.artists"
-              @click="handleClickItem(item)"
-            >
-              <template #left>
-                <img class="artist-cover" :src="item.picUrl" alt="" />
-              </template>
-              <template #top>
-                <span>{{ item.name }}</span>
-                <span v-if="item.alias[0]"> ({{ item.alias[0] }}) </span>
-              </template>
-            </ListItem>
-          </div>
-
-          <div class="artist" v-if="item.title === '专辑'">
-            <ListItem
-              v-for="(item, index) in item.albums"
-              @click="handleClickItem(item)"
-            >
-              <template #left>
-                <img class="artist-cover" :src="item.picUrl" alt="" />
-              </template>
-              <template #top>
-                <span>{{ item.name }}</span>
-                <span v-if="item.alias[0]"> ({{ item.alias[0] }}) </span>
-              </template>
-              <template #bottom>
-                <span>{{ item.artist.anme }}</span>
-                <span>{{ parseDate(item.publishTime) }}</span>
-              </template>
-            </ListItem>
-          </div>
-
-          <div class="artist" v-if="item.title === '用户'">
-            <ListItem
-              v-for="(item, index) in item.users"
-              @click="handleClickItem(item)"
-            >
-              <template #left>
-                <img class="users-cover" :src="item.avatarUrl" alt="" />
-              </template>
-              <template #top>
-                <span>{{ item.nickname }}</span>
-              </template>
-              <template #bottom>
-                <span>{{ item.signature }}</span>
-              </template>
-              <template #right>
-                <button class="right solo-play-btn" @click="handleAddUser">
-                  <icon :icon="['fas', 'plus']" size="sm" />
-                  关注
-                </button>
-              </template>
-            </ListItem>
-          </div>
+            <template #right>
+              <icon
+                v-if="key === 'songs'"
+                class="icon"
+                :icon="['fas', 'video']"
+                :style="{ color: '#999' }"
+                @click="handleVideo"
+              />
+              <icon
+                v-if="key === 'songs'"
+                class="icon"
+                :icon="['fas', 'ellipsis-v']"
+                :style="{ color: '#999' }"
+                @click="handleSetting"
+              />
+              <button
+                v-if="key === 'users'"
+                class="right solo-play-btn"
+                @click="handleAddUser"
+              >
+                <icon :icon="['fas', 'plus']" size="sm" />
+                关注
+              </button>
+            </template>
+          </ListItem>
         </template>
 
         <template #footer>
-          <span>{{ item.moreText }}</span>
+          <span>{{ moreText[index] }}</span>
 
-          <icon
-            @click="$emit('change-screen')"
-            class="down-icon"
-            :icon="['fas', 'chevron-right']"
-            size="sm"
-          />
+          <icon class="down-icon" :icon="['fas', 'chevron-right']" size="sm" />
         </template>
       </ListCard>
     </div>
   </div>
 </template>
 <script lang="ts">
-import ListCard from "@/components/content/musicList/ListCard.vue";
-import ListItem from "@/components/content/musicList/ListItem.vue";
+import {
+  ListCard,
+  ListItem,
+  ListItemCenter
+} from "@/components/content/customList";
 
-import { defineComponent, onMounted, reactive } from "vue";
+import { defineComponent, onMounted, reactive, ReactiveEffect, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import { getSearchComplex } from "@/network/search";
-import { showSinger, parseDate } from "@/common/utils/show";
 export default defineComponent({
   name: "DetailComplex",
   components: {
     ListCard,
-    ListItem
+    ListItem,
+    ListItemCenter
   },
   props: {
-    test: {
+    titles: {
       type: Array,
       default() {
-        return [];
+        return ["单曲", "歌单", "艺人", "专辑", "用户"];
       }
     }
   },
   setup() {
     const $route = useRoute();
+
+    let moreText = ref([]);
     let complex = reactive({
-      song: {},
-      playList: {},
-      artist: {},
-      album: {},
-      user: {}
+      songs: {},
+      playLists: {},
+      artists: {},
+      albums: {},
+      users: {}
     });
 
     const handleClickItem = (item: any) => {
@@ -187,26 +131,20 @@ export default defineComponent({
     onMounted(async () => {
       const key = $route.params.key;
 
-      const { song, playList, artist, album, user } = await getSearchComplex(
-        key as string
-      );
-      song.title = "单曲";
-      playList.title = "歌单";
-      artist.title = "艺人";
-      album.title = "专辑";
-      user.title = "用户";
+      const res = await getSearchComplex(key as string);
 
-      complex.song = song;
-      complex.playList = playList;
-      complex.artist = artist;
-      complex.album = album;
-      complex.user = user;
-      console.log(complex);
+      complex.songs = res.items.songs;
+      complex.playLists = res.items.playLists;
+      complex.artists = res.items.artists;
+      complex.albums = res.items.albums;
+      complex.users = res.items.users;
+
+      moreText.value = res.moreTextArr;
     });
     return {
+      moreText,
       complex,
-      showSinger,
-      parseDate,
+
       handleClickItem,
       handleVideo,
       handleSetting,
@@ -246,7 +184,8 @@ export default defineComponent({
 }
 .artist-cover,
 .users-cover {
-  width: 100%;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
 }
 </style>

@@ -1,23 +1,8 @@
 <template>
   <div>solo</div>
-  <!-- <div class="recommend-list">
-    <ListItem v-for="item in album" @click="songClick(item.id)">
-      <template #img>
-        <img :src="item.cover" @load="imgload" alt="" />
-      </template>
-
-      <template #title>
-        <span>{{ item.title }}</span>
-      </template>
-
-      <template #btm-left>
-        <span>播放量:{{ unitChange(item.playNum) }}万</span>
-      </template>
-    </ListItem>
-  </div> -->
 </template>
 <script>
-import ListItem from "components/content/musicList/ListItem";
+import { ListItem } from "@/components/content/customList";
 export default {
   name: "RecommendList",
   components: {

@@ -61,9 +61,7 @@
 </template>
 <script lang="ts">
 import Scroll from "components/common/scroll/Scroll.vue";
-import ListTab from "components/content/musicList/ListTab.vue";
-import PlayerListItem from "components/content/musicList/PlayerListItem.vue";
-
+import { ListTab, PlayerListItem } from "@/components/content/customList";
 import { MutationType } from "@/store/types";
 import { useStore } from "vuex";
 import { computed, onMounted, Ref, ref, watchEffect } from "vue";
@@ -81,7 +79,7 @@ export default {
       default: true
     }
   },
-  setup(props) {
+  setup() {
     const $store = useStore();
     const scroll: Ref = ref(null);
     let playList = computed(() => $store.state.playList);
@@ -90,17 +88,17 @@ export default {
     const handlePlay = (item: ISong) => {
       $store.commit(MutationType.SET_CURRENT_SONG, item);
     };
-    const stop = watchEffect(() => {
-      if (props.canRoll) {
-        if (scroll.value) {
-          scroll.value.enable();
-        }
-      } else {
-        if (scroll.value) {
-          scroll.value.disable();
-        }
-      }
-    });
+    // const stop = watchEffect(() => {
+    //   if (props.canRoll) {
+    //     if (scroll.value) {
+    //       scroll.value.enable();
+    //     }
+    //   } else {
+    //     if (scroll.value) {
+    //       scroll.value.disable();
+    //     }
+    //   }
+    // });
     onMounted(() => {
       // 刷新可滚动高度
       setTimeout(() => {

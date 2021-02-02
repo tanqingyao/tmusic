@@ -84,15 +84,18 @@
             <template #left>
               <span>{{ index + 1 }}</span>
             </template>
-            <template #top>
-              <span>{{ item.name }}</span>
+            <template #center>
+              <ListItemCenter>
+                <template #center-item>
+                  <span class="list-item-title">{{ item.name }}</span>
+                </template>
+              </ListItemCenter>
 
-              <span v-for="(ar, index) in item.artists">
-                <span v-if="index !== item.artists.length - 1">
-                  {{ ar }} /
-                </span>
-                <span v-else>{{ ar }} - {{ item.album }}</span>
-              </span>
+              <ListItemCenter>
+                <template #center-item>
+                  <span class="list-item-desc">{{ item.name }}</span>
+                </template>
+              </ListItemCenter>
             </template>
 
             <template #right>
@@ -124,8 +127,12 @@ import Scroll from "components/common/scroll/Scroll.vue";
 
 import Cover from "components/content/cover/Cover.vue";
 import DescItem from "components/content/descItem/DescItem.vue";
-import ListTab from "components/content/musicList/ListTab.vue";
-import ListItem from "components/content/musicList/ListItem.vue";
+
+import {
+  ListTab,
+  ListItem,
+  ListItemCenter
+} from "@/components/content/customList";
 
 import { getSonglistDetail, getSongsDetail } from "@/network/detail";
 import { changeUnit } from "@/common/utils/show";
@@ -141,6 +148,7 @@ export default {
     Cover,
     DetailContent,
     DescItem,
+    ListItemCenter,
     ListTab,
     ListItem,
     Scroll
@@ -292,5 +300,14 @@ export default {
 }
 .list-tab-icon {
   margin: 0 10px;
+}
+/* 歌曲列表 */
+.list-item-title {
+  font-size: var(--font-size-medium-x);
+  color: var(--color-high-text);
+}
+.list-item-desc {
+  font-size: var(--font-size-small);
+  color: var(--color-text);
 }
 </style>

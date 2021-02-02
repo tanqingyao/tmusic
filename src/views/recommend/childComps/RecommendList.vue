@@ -16,7 +16,7 @@
   </div>
 </template>
 <script>
-import ListItem from "components/content/musicList/ListItem";
+import ListItem from "components/content/customList/ListItem";
 export default {
   name: "RecommendList",
   components: {

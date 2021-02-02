@@ -48,7 +48,7 @@
 </template>
 <script lang="ts">
 import SearchHotItem from "@/components/content/descItem/SearchHotItem.vue";
-import ListItem from "@/components/content/musicList/ListItem.vue";
+import { ListItem } from "@/components/content/customList";
 
 import { defineComponent, onMounted, Ref, ref } from "vue";
 import { ActionTypes } from "@/store/types";

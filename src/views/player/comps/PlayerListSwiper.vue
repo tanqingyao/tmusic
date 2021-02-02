@@ -24,8 +24,11 @@
 </template>
 <script lang="ts">
 import PlayerList from "./PlayerList.vue";
-import PlayerListItem from "@/components/content/musicList/PlayerListItem.vue";
+import PlayerListItem from "@/components/content/customList/PlayerListItem.vue";
 
+// import {
+//   PlayerListItem
+// } from "@/components/content/customList";
 import { defineComponent, Ref, ref } from "vue";
 
 import useTouchElement from "@/common/hooks/useTouchElement";
