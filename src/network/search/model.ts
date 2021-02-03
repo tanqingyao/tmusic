@@ -108,6 +108,7 @@ export const SonglistsTransfrom = (res: Array<Songlist>) => {
 export const ArtistsTransfrom = (res: Array<Artist>) => {
   const artists = res.map((a: Artist) => {
     return {
+      id: a.accountId,
       imgUrl: a.picUrl,
       // 判断是否显示别名
       name: `${a.name}${a.alias[0] ? "（" + a.alias[0] + "）" : ""}`,

@@ -59,25 +59,31 @@
     </template>
 
     <template #right>
-      <div class="list-item-icon">
+      <div class="list-item-icon" v-if="listType === '单曲'">
         <icon
-          v-if="listType === '单曲' && item.mv"
-          class="icon"
+          v-if="item.mv"
           :icon="['fas', 'video']"
           :style="{ color: '#999' }"
           @click="handleVideo"
         />
       </div>
-
-      <div class="list-item-icon">
+      <div class="list-item-icon" v-if="listType === '单曲'">
         <icon
-          v-if="listType === '单曲'"
-          class="icon"
           :icon="['fas', 'ellipsis-v']"
           :style="{ color: '#999' }"
           @click="handleSetting"
         />
       </div>
+
+      <div class="list-item-icon" v-if="listType === '艺人'">
+        <icon
+          :icon="['fas', 'user']"
+          :style="{ color: '#999' }"
+          @click="handleSetting"
+        />
+        已入驻
+      </div>
+
       <div class="list-item-icon" v-if="listType === '用户'">
         <button class="right list-item-btn" @click="handleAddUser">
           <icon :icon="['fas', 'plus']" size="sm" />

@@ -100,6 +100,7 @@ export async function getSearchCloud(
 
     transformResponse: data => {
       const result = JSON.parse(data).result;
+      // console.log(result);
 
       let dataTransfrom;
       switch (type) {

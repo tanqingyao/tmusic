@@ -28,6 +28,7 @@ declare type Songlist = {
 };
 
 declare type Artist = {
+  accountId: number;
   picUrl: string;
   name: string;
   alias: Array<string>;
