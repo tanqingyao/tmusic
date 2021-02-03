@@ -16,7 +16,7 @@
     @tab-click="handleTabClick"
     v-show="$route.path !== '/search/hots'"
   />
-  <router-view> </router-view>
+  <router-view :searchKey="searchKey"> </router-view>
 </template>
 <script lang="ts">
 import SearchNavBar from "@/components/content/searchBar/SearchNavBar.vue";

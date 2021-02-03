@@ -4,7 +4,9 @@ import {
   collectSearchSuggest,
   // collectSearchHot,
   collectSearchCloud,
-  Complex_Transfrom
+  ComplexTransfrom,
+  SoloTransfrom,
+  SonglistTransfrom
 } from "./model";
 
 const URL_search = {
@@ -83,7 +85,7 @@ export async function getSearchCloud(
   limit: number = 30,
   type: number = 1
 ) {
-  const { data: soloResult } = await getNeteaseRequest({
+  const { data } = await getNeteaseRequest({
     url: URL_search.cloudsearch,
     params: {
       keywords,
@@ -96,14 +98,29 @@ export async function getSearchCloud(
     },
 
     transformResponse: data => {
-      console.log(JSON.parse(data).result);
+      let dataTransfrom;
+      switch (type) {
+        case 1:
+          dataTransfrom = SoloTransfrom(JSON.parse(data).result);
+          break;
 
-      const solo = Complex_Transfrom(JSON.parse(data).result);
-      return solo;
+        case 1002:
+          dataTransfrom = SonglistTransfrom(JSON.parse(data).result);
+
+          break;
+        case 1018:
+          dataTransfrom = ComplexTransfrom(JSON.parse(data).result);
+
+          break;
+        default:
+          break;
+      }
+      // const solo = SoloTransfrom(JSON.parse(data).result);
+      return dataTransfrom;
     }
   });
 
-  return soloResult;
+  return data;
 }
 
 export async function getSearchComplex(
@@ -112,7 +129,7 @@ export async function getSearchComplex(
   limit: number = 30,
   type: number = 1018
 ) {
-  const { data: complexInfo } = await getNeteaseRequest({
+  const { data } = await getNeteaseRequest({
     url: URL_search.search,
     params: {
       keywords,
@@ -125,10 +142,11 @@ export async function getSearchComplex(
     },
 
     transformResponse: data => {
-      const complexInfo = Complex_Transfrom(JSON.parse(data).result);
+      // console.log(JSON.parse(data).result);
+      const complexInfo = ComplexTransfrom(JSON.parse(data).result);
       return complexInfo;
     }
   });
 
-  return complexInfo;
+  return data;
 }

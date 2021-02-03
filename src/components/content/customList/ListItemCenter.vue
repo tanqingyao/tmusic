@@ -16,7 +16,7 @@ export default defineComponent({
   line-height: initial;
 
   /* 多余文字省略 */
-  width: inherit;
+  width: 200px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

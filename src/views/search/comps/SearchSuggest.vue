@@ -2,7 +2,11 @@
   <div class="search-suggest">
     <div class="suggest-title">搜索"{{ searchKey }}"</div>
     <div class="suggest-list">
-      <div class="suggest-item" v-for="item in suggests">
+      <div
+        class="suggest-item"
+        v-for="item in suggests"
+        @click="handleClick(item)"
+      >
         <span>
           <icon class="icon-search" :icon="['fas', 'search']" size="sm" />
           {{ item.key }}
@@ -24,7 +28,12 @@ export default {
     }
   },
   setup() {
-    return {};
+    const handleClick = e => {
+      console.log(e);
+    };
+    return {
+      handleClick
+    };
   }
 };
 </script>

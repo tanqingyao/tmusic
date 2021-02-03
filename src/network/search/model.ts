@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 import { showSinger, parseDate, changeUnit } from "@/common/utils/show";
+import { ListType } from "@/common/constant";
 
 export const collectSearchDefault = (res: AxiosResponse) => {
   const { realkeyword: real, showKeyword: show } = res.data.data;
@@ -9,11 +10,14 @@ export const collectSearchDefault = (res: AxiosResponse) => {
   };
 };
 export const collectSearchSuggest = (res: AxiosResponse) => {
-  const suggests = res.data.result.allMatch.map((suggest: any) => {
-    return {
-      key: suggest.keyword
-    };
-  });
+  let suggests: { key: string }[] = [];
+  if (res.data.result.allMatch) {
+    suggests = res.data.result.allMatch.map((suggest: any) => {
+      return {
+        key: suggest.keyword
+      };
+    });
+  }
   return suggests;
 };
 
@@ -38,9 +42,7 @@ export const collectSearchCloud = (res: AxiosResponse) => {
   });
   return songs;
 };
-export const Complex_Transfrom = (res: any) => {
-  console.log(res);
-
+export const ComplexTransfrom = (res: any) => {
   // 所需要的数据
   let displayItem = ["song", "playList", "artist", "album", "user"];
 
@@ -76,7 +78,7 @@ export const Complex_Transfrom = (res: any) => {
     return {
       imgUrl: a.picUrl,
       name: `${a.name}${a.alias[0] ? "（" + a.alias[0] + "）" : ""}`,
-      desc: `${a.signature}`
+      desc: `${a.artist.name} ${parseDate(a.publishTime)}`
     };
   });
 
@@ -98,11 +100,27 @@ export const Complex_Transfrom = (res: any) => {
     simiQuery,
     moreTextArr,
     items: {
-      songs,
-      playLists,
-      artists,
-      albums,
-      users
+      [ListType.SONGS]: songs,
+      [ListType.PLAYLISTS]: playLists,
+      [ListType.ARTISTS]: artists,
+      [ListType.ALBUMS]: albums,
+      [ListType.USERS]: users
     }
   };
+};
+
+export const SoloTransfrom = (res: any) => {
+  const songs = (res.songs as any[]).map(s => {
+    return {
+      name: s.name,
+      desc: `${showSinger(s.ar)} - ${s.al.name}`,
+      alia: s.alias ? s.alias[0] : "",
+      mv: s.mv
+    };
+  });
+  return songs;
+};
+
+export const SonglistTransfrom = (res: any) => {
+  console.log(res);
 };

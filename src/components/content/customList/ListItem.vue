@@ -42,11 +42,11 @@ export default {
 /* 右边 */
 .item-right {
   flex: 1;
-
   /* 横向水平垂直居中 */
   display: flex;
   align-items: center;
-  justify-content: center;
   justify-content: space-evenly;
+
+  margin-right: 10px;
 }
 </style>
