@@ -1,6 +1,11 @@
 <template>
   <Scroll ref="scroll" class="list-body">
-    <MusicList :songs="songs" :showDownld="false" listType="单曲" />
+    <MusicList
+      :data="songs"
+      :showDownld="false"
+      listType="单曲"
+      coverType="round"
+    />
   </Scroll>
 </template>
 <script lang="ts">

@@ -2,12 +2,14 @@ import { getNeteaseRequest } from "../request";
 import {
   collectSearchDefault,
   collectSearchSuggest,
-  // collectSearchHot,
-  collectSearchCloud,
   ComplexTransfrom,
-  SoloTransfrom,
-  SonglistTransfrom
+  SongsTransfrom,
+  SonglistsTransfrom,
+  ArtistsTransfrom,
+  AlbumsTransfrom,
+  UsersTransfrom
 } from "./model";
+import { SearchType } from "@/common/constant";
 
 const URL_search = {
   default: "/search/default",
@@ -51,7 +53,6 @@ export async function getSearchHot() {
     }
   });
   return hots;
-  // return collectSearchHot(res);
 }
 export async function getSearchID(
   keywords: string,
@@ -83,7 +84,7 @@ export async function getSearchCloud(
   keywords: string,
   offset: number = 0,
   limit: number = 30,
-  type: number = 1
+  type: number = 1018
 ) {
   const { data } = await getNeteaseRequest({
     url: URL_search.cloudsearch,
@@ -98,24 +99,33 @@ export async function getSearchCloud(
     },
 
     transformResponse: data => {
+      const result = JSON.parse(data).result;
+
       let dataTransfrom;
       switch (type) {
-        case 1:
-          dataTransfrom = SoloTransfrom(JSON.parse(data).result);
+        case SearchType.SONGS:
+          dataTransfrom = SongsTransfrom(result.songs);
           break;
 
-        case 1002:
-          dataTransfrom = SonglistTransfrom(JSON.parse(data).result);
-
+        case SearchType.PLAYLISTS:
+          dataTransfrom = SonglistsTransfrom(result.playlists);
           break;
-        case 1018:
-          dataTransfrom = ComplexTransfrom(JSON.parse(data).result);
 
+        case SearchType.ARTISTS:
+          dataTransfrom = ArtistsTransfrom(result.artists);
           break;
+
+        case SearchType.ALBUMS:
+          dataTransfrom = AlbumsTransfrom(result.albums);
+          break;
+
+        case SearchType.USERS:
+          dataTransfrom = UsersTransfrom(result.users);
+          break;
+
         default:
           break;
       }
-      // const solo = SoloTransfrom(JSON.parse(data).result);
       return dataTransfrom;
     }
   });
@@ -142,7 +152,6 @@ export async function getSearchComplex(
     },
 
     transformResponse: data => {
-      // console.log(JSON.parse(data).result);
       const complexInfo = ComplexTransfrom(JSON.parse(data).result);
       return complexInfo;
     }

@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { showSinger, parseDate, changeUnit } from "@/common/utils/show";
-import { ListType } from "@/common/constant";
+import { ListSetting } from "@/common/constant";
 
 export const collectSearchDefault = (res: AxiosResponse) => {
   const { realkeyword: real, showKeyword: show } = res.data.data;
@@ -42,20 +42,58 @@ export const collectSearchCloud = (res: AxiosResponse) => {
   });
   return songs;
 };
-export const ComplexTransfrom = (res: any) => {
-  // 所需要的数据
-  let displayItem = ["song", "playList", "artist", "album", "user"];
 
+export const ComplexTransfrom = (res: Complex) => {
   // 转化信息
-  const songs = (res.song.songs as any[]).map(s => {
+
+  let moreTextArr: Array<string> = [];
+  moreTextArr.push(
+    res.song.moreText,
+    res.playList.moreText,
+    res.artist.moreText,
+    res.album.moreText,
+    res.user.moreText
+  );
+
+  const songs = SongsTransfrom(res.song.songs);
+
+  const playLists = SonglistsTransfrom(res.playList.playLists);
+
+  const artists = ArtistsTransfrom(res.artist.artists);
+
+  const albums = AlbumsTransfrom(res.album.albums);
+
+  const users = UsersTransfrom(res.user.users);
+
+  const simiQuery = res.sim_query.sim_querys;
+
+  return {
+    simiQuery,
+    moreTextArr,
+    items: {
+      [ListSetting.SONGS]: songs,
+      [ListSetting.PLAYLISTS]: playLists,
+      [ListSetting.ARTISTS]: artists,
+      [ListSetting.ALBUMS]: albums,
+      [ListSetting.USERS]: users
+    }
+  };
+};
+
+export const SongsTransfrom = (res: Array<Song>) => {
+  const songs = res.map((s: Song) => {
     return {
-      imgUrl: "",
       name: s.name,
-      desc: `${showSinger(s.ar)} - ${s.al.name}`
+      desc: `${showSinger(s.ar)} - ${s.al.name}`,
+      alia: s.alia ? s.alia[0] : "",
+      mv: s.mv
     };
   });
+  return songs;
+};
 
-  const playLists = (res.playList.playLists as any[]).map(p => {
+export const SonglistsTransfrom = (res: Array<Songlist>) => {
+  const songlists = res.map((p: Songlist) => {
     return {
       imgUrl: p.coverImgUrl,
       name: p.name,
@@ -64,63 +102,39 @@ export const ComplexTransfrom = (res: any) => {
       }，播放${changeUnit(p.playCount)}次`
     };
   });
+  return songlists;
+};
 
-  const artists = (res.artist.artists as any[]).map(a => {
+export const ArtistsTransfrom = (res: Array<Artist>) => {
+  const artists = res.map((a: Artist) => {
     return {
       imgUrl: a.picUrl,
       // 判断是否显示别名
       name: `${a.name}${a.alias[0] ? "（" + a.alias[0] + "）" : ""}`,
-      desc: `${showSinger(a.ar)} - ${a.al ? a.al.name : ""}`
+      desc: ``
     };
   });
+  return artists;
+};
 
-  const albums = (res.album.albums as any[]).map(a => {
+export const AlbumsTransfrom = (res: Array<Album>) => {
+  const albums = res.map((a: Album) => {
     return {
       imgUrl: a.picUrl,
       name: `${a.name}${a.alias[0] ? "（" + a.alias[0] + "）" : ""}`,
-      desc: `${a.artist.name} ${parseDate(a.publishTime)}`
+      desc: `${showSinger(a.artist)} ${parseDate(a.publishTime)}`
     };
   });
+  return albums;
+};
 
-  const users = (res.user.users as any[]).map(u => {
+export const UsersTransfrom = (res: Array<User>) => {
+  const users = res.map((u: User) => {
     return {
       imgUrl: u.avatarUrl,
       name: u.nickname,
       desc: `${u.signature}`
     };
   });
-
-  const moreTextArr = displayItem.map((key: string) => {
-    return res[key].moreText;
-  });
-
-  const simiQuery = res.sim_query.sim_querys;
-
-  return {
-    simiQuery,
-    moreTextArr,
-    items: {
-      [ListType.SONGS]: songs,
-      [ListType.PLAYLISTS]: playLists,
-      [ListType.ARTISTS]: artists,
-      [ListType.ALBUMS]: albums,
-      [ListType.USERS]: users
-    }
-  };
-};
-
-export const SoloTransfrom = (res: any) => {
-  const songs = (res.songs as any[]).map(s => {
-    return {
-      name: s.name,
-      desc: `${showSinger(s.ar)} - ${s.al.name}`,
-      alia: s.alias ? s.alias[0] : "",
-      mv: s.mv
-    };
-  });
-  return songs;
-};
-
-export const SonglistTransfrom = (res: any) => {
-  console.log(res);
+  return users;
 };

@@ -17,10 +17,11 @@
 
           <template #content>
             <MusicList
-              :songs="item"
-              :showTab="false"
-              :showIndex="false"
+              :data="item"
+              :showTab="option.showTab"
+              :showIndex="option.showIndex"
               :listType="key"
+              coverType="round"
             />
           </template>
 
@@ -53,7 +54,7 @@
   </Scroll>
 </template>
 <script lang="ts">
-import { ListType } from "@/common/constant";
+import { ListSetting } from "@/common/constant";
 import {
   ListCard,
   ListItem,
@@ -62,14 +63,7 @@ import {
 } from "@/components/content/customList";
 import Scroll from "@/components/common/scroll/Scroll.vue";
 
-import {
-  defineComponent,
-  onMounted,
-  reactive,
-  ReactiveEffect,
-  Ref,
-  ref
-} from "vue";
+import { defineComponent, onMounted, reactive, Ref, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import { getSearchComplex } from "@/network/search";
@@ -88,18 +82,25 @@ export default defineComponent({
 
     const scroll: Ref = ref(null);
 
+    // 选择展示列表类型
+    let option = reactive({
+      showTab: false,
+      showIndex: false
+    });
+
     // 展示数据
     let titles: Ref = ref([]);
     let simiQuery = ref([]);
     let moreText = ref([]);
     let complex = reactive({
-      [ListType.SONGS]: [],
-      [ListType.PLAYLISTS]: [],
-      [ListType.ARTISTS]: [],
-      [ListType.ALBUMS]: [],
-      [ListType.USERS]: []
+      [ListSetting.SONGS]: [],
+      [ListSetting.PLAYLISTS]: [],
+      [ListSetting.ARTISTS]: [],
+      [ListSetting.ALBUMS]: [],
+      [ListSetting.USERS]: []
     });
 
+    // 操作回调
     const handleClickItem = (item: any) => {
       console.log(item);
     };
@@ -124,22 +125,22 @@ export default defineComponent({
       const res = await getSearchComplex(key as string);
 
       titles.value.push(
-        ListType.SONGS,
-        ListType.PLAYLISTS,
-        ListType.ARTISTS,
-        ListType.ALBUMS,
-        ListType.USERS
+        ListSetting.SONGS,
+        ListSetting.PLAYLISTS,
+        ListSetting.ARTISTS,
+        ListSetting.ALBUMS,
+        ListSetting.USERS
       );
 
       simiQuery.value = res.simiQuery;
 
       moreText.value = res.moreTextArr;
 
-      complex[ListType.SONGS] = res.items[ListType.SONGS];
-      complex[ListType.PLAYLISTS] = res.items[ListType.PLAYLISTS];
-      complex[ListType.ARTISTS] = res.items[ListType.ARTISTS];
-      complex[ListType.ALBUMS] = res.items[ListType.ALBUMS];
-      complex[ListType.USERS] = res.items[ListType.USERS];
+      complex[ListSetting.SONGS] = res.items[ListSetting.SONGS];
+      complex[ListSetting.PLAYLISTS] = res.items[ListSetting.PLAYLISTS];
+      complex[ListSetting.ARTISTS] = res.items[ListSetting.ARTISTS];
+      complex[ListSetting.ALBUMS] = res.items[ListSetting.ALBUMS];
+      complex[ListSetting.USERS] = res.items[ListSetting.USERS];
     });
     return {
       scroll,
@@ -147,6 +148,7 @@ export default defineComponent({
       simiQuery,
       moreText,
       complex,
+      option,
 
       handleClickItem,
       handleVideo,

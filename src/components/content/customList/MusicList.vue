@@ -31,11 +31,14 @@
       </div>
     </template>
   </ListTab>
-  <ListItem v-for="(item, index) in songs" @click="handlePlay(item)">
+  <ListItem v-for="(item, index) in data" @click="handlePlay(item)">
     <template #left>
       <img
         v-if="showImg && item.imgUrl"
-        class="list-item-cover"
+        :class="{
+          'list-item-cover-round': coverType === 'round',
+          'list-item-cover-square': coverType === 'square'
+        }"
         :src="item.imgUrl"
         alt=""
       />
@@ -99,7 +102,7 @@ export default defineComponent({
     ListItemCenter
   },
   props: {
-    songs: {
+    data: {
       type: Array as PropType<Array<{}>>,
       default() {
         return [];
@@ -122,6 +125,10 @@ export default defineComponent({
       default: true
     },
     listType: {
+      type: String as PropType<String>,
+      default: ""
+    },
+    coverType: {
       type: String as PropType<String>,
       default: ""
     }
@@ -175,10 +182,15 @@ export default defineComponent({
 }
 /* 歌曲列表 */
 
-.list-item-cover {
+.list-item-cover-round {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+}
+.list-item-cover-square {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
 }
 
 .list-item-title {
