@@ -4,13 +4,15 @@ import { State } from "./state";
 import { Actions, ActionTypes, MutationType } from "./types";
 
 import { getSongUrl, getSongsInfo, getSongsLyric } from "@/network/player";
-import { Song } from "@/network/song";
+import { Song } from "@/network/player/song";
 
 export const actions: ActionTree<State, State> & Actions = {
+  /* 播放器相关 */
   [ActionTypes.SetPlaying]({ commit }, payload: boolean) {
     commit(MutationType.SET_PLAYING, payload);
   },
 
+  /* 播放列表相关 */
   async [ActionTypes.AddPlayList]({ getters, commit }, songsID: number[]) {
     // 过滤playlist已有歌曲
     const ids = songsID.filter((id: number) => !getters.getSongById(id));

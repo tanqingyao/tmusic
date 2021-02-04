@@ -17,6 +17,12 @@ declare type Song = {
   mv: number;
 };
 
+interface SonglistCover {
+  id: number;
+  picUrl: string;
+  name: string;
+  playCount: number;
+}
 declare type Songlist = {
   coverImgUrl: string;
   name: string;

@@ -48,10 +48,13 @@ export default {
   height: 40px;
   line-height: 40px;
   background-color: var(--color-background);
+  /* overflow: hidden; */
+  flex-wrap: nowrap;
 }
 
 .tab-control-item {
   flex: 1;
+  min-width: 70px;
 }
 
 .tab-control-item span {

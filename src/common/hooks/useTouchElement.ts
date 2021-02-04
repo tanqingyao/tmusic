@@ -4,7 +4,7 @@ import {
   setTransfrom,
   setTransition
 } from "@/common/utils/scrollElement";
-export default function useTouchElement(el: Ref) {
+export default function useTouchElement(r: Ref) {
   let option = reactive({ isTouch: false, canRoll: true });
 
   let startX: number = 0;
@@ -15,10 +15,19 @@ export default function useTouchElement(el: Ref) {
   // touch结束后移动的目标位置
   let dist: number = 0;
 
+  // 判断为DOM元素还是代理对象
+  const filterDOM = (ref: any) => {
+    if (ref.value.nodeType === 1) {
+      return r.value;
+    } else {
+      return r.value.$el;
+    }
+  };
   // 可滑动最长距离
-  const totalDistance = computed(
-    () => el.value.scrollWidth - el.value.offsetWidth
-  );
+  const totalDistance = computed(() => {
+    const el = filterDOM(r);
+    return el.scrollWidth - el.offsetWidth;
+  });
 
   const useTouchStart = (e: TouchEvent) => {
     startX = e.touches[0].pageX;
@@ -44,7 +53,8 @@ export default function useTouchElement(el: Ref) {
       dist = 0;
     } else {
       // 可移动范围内移动
-      setTransfrom(el.value, dist);
+      const el = filterDOM(r);
+      setTransfrom(el, dist);
     }
   };
 

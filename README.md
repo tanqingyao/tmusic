@@ -83,5 +83,6 @@ npm run serve
 - [x] 2021年1月29日：添加typescript类型推断:vuex,network/player,歌词功能代码部分
 - [x] 2021年1月30日：搜索页面显示;搜索建议显示及功能
 - [x] 2021年1月31日：搜索热榜播放功能;playlist显示样式;playlist滑动功能;一些hooks抽取
-
+- [x] 2021年2月1-4日：热搜页面,搜索详情页显示
 - [ ] 轮播图滑动hook提取
+  

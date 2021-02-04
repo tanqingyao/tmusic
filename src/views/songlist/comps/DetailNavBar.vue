@@ -2,7 +2,7 @@
   <NavBar class="nav-bar">
     <template #left>
       <icon
-        @click="handleBack"
+        @click="$router.back"
         class="icon"
         :icon="['fas', 'chevron-left']"
         :style="{ color: '#fff' }"
@@ -31,7 +31,6 @@
 </template>
 <script>
 import NavBar from "components/common/navbar/NavBar";
-import { useRouter } from "vue-router";
 export default {
   name: "DetailNavBar",
   components: {
@@ -44,10 +43,6 @@ export default {
     }
   },
   setup() {
-    const $router = useRouter();
-    const handleBack = () => {
-      $router.back();
-    };
     const handleSearch = () => {
       console.log("handleBack");
     };
@@ -55,7 +50,6 @@ export default {
       console.log("handleBack");
     };
     return {
-      handleBack,
       handleSearch,
       handleSetting
     };
@@ -64,7 +58,7 @@ export default {
 </script>
 <style scoped>
 .nav-bar {
-  background-color: var(--color-background-shadow);
+  background-color: var(--color-background-d);
 }
 .icon {
   vertical-align: middle;
