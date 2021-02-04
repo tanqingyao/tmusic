@@ -4,7 +4,7 @@
       <icon :icon="['fas', 'play']" size="sm" />
       {{ changeUnit(item.playCount, 10000, 0) }}
     </div>
-    <img :src="item.cover" alt="封面图片" />
+    <img v-lazy="item.cover" alt="封面图片" />
     <div class="title" v-show="showTitle">
       {{ item.title }}
     </div>
