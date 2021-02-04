@@ -8,19 +8,19 @@ declare interface ISong {
   mv?: string;
 }
 
-declare type ISinger = {
+declare interface ISinger {
   id: number;
   name: string;
-};
+}
 
-declare type IAlbum = {
+declare interface IAlbum {
   id: number;
   name: string;
   url: string;
-};
-declare type ILyric = {
+}
+declare interface ILyric {
   time: number;
   lyric: string;
   trans: string;
   user?: string;
-};
+}

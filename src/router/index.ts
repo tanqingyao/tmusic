@@ -58,27 +58,7 @@ const routes = [
       },
       {
         path: "detail/:key",
-        component: () => import("@/views/search/comps/DetailComplex.vue")
-      },
-      {
-        path: "detail/solo/:key",
-        component: () => import("@/views/search/comps/DetailSolo.vue")
-      },
-      {
-        path: "detail/songlist/:key",
-        component: () => import("@/views/search/comps/DetailSonglist.vue")
-      },
-      {
-        path: "detail/singers/:key",
-        component: () => import("@/views/search/comps/DetailSingers.vue")
-      },
-      {
-        path: "detail/album/:key",
-        component: () => import("@/views/search/comps/DetailAlbum.vue")
-      },
-      {
-        path: "detail/users/:key",
-        component: () => import("@/views/search/comps/DetailUsers.vue")
+        component: () => import("@/views/search/comps/SearchResult.vue")
       }
     ]
   }

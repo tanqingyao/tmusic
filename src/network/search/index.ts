@@ -100,6 +100,7 @@ export async function getSearchCloud(
 
     transformResponse: data => {
       const result = JSON.parse(data).result;
+      // console.log(keywords, offset, limit, type);
       // console.log(result);
 
       let dataTransfrom;
@@ -121,7 +122,7 @@ export async function getSearchCloud(
           break;
 
         case SearchType.USERS:
-          dataTransfrom = UsersTransfrom(result.users);
+          dataTransfrom = UsersTransfrom(result.userprofiles);
           break;
 
         default:

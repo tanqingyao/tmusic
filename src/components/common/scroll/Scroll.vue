@@ -25,7 +25,7 @@ export default {
     requestData: {
       type: Function,
       default() {
-        return console.log("pulling up...");
+        return console.log("pulling up, execuse props func...");
       }
     },
     /**

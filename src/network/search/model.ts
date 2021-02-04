@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { showSinger, parseDate, changeUnit } from "@/common/utils/show";
-import { ListSetting } from "@/common/constant";
+import { SearchType } from "@/common/constant";
 
 export const collectSearchDefault = (res: AxiosResponse) => {
   const { realkeyword: real, showKeyword: show } = res.data.data;
@@ -71,11 +71,11 @@ export const ComplexTransfrom = (res: Complex) => {
     simiQuery,
     moreTextArr,
     items: {
-      [ListSetting.SONGS]: songs,
-      [ListSetting.PLAYLISTS]: playLists,
-      [ListSetting.ARTISTS]: artists,
-      [ListSetting.ALBUMS]: albums,
-      [ListSetting.USERS]: users
+      [SearchType.SONGS]: songs,
+      [SearchType.PLAYLISTS]: playLists,
+      [SearchType.ARTISTS]: artists,
+      [SearchType.ALBUMS]: albums,
+      [SearchType.USERS]: users
     }
   };
 };
@@ -132,6 +132,8 @@ export const AlbumsTransfrom = (res: Array<Album>) => {
 export const UsersTransfrom = (res: Array<User>) => {
   const users = res.map((u: User) => {
     return {
+      id: u.userId,
+      followed: u.followed,
       imgUrl: u.avatarUrl,
       name: u.nickname,
       desc: `${u.signature}`

@@ -46,6 +46,8 @@ declare type Album = {
 };
 
 declare type User = {
+  userId: number;
+  followed: boolean;
   avatarUrl: string;
   nickname: string;
   signature: string;
