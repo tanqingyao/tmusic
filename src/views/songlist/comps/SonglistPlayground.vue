@@ -42,7 +42,7 @@ import PlaygroundPages from "./PlaygroundPages.vue";
 
 import { getSonglistRecommed } from "@/network/songlist";
 
-import { defineComponent, reactive, Ref, ref } from "vue";
+import { defineComponent, onMounted, reactive, Ref, ref } from "vue";
 import useTouchElement from "@/common/hooks/useTouchElement";
 export default defineComponent({
   name: "SonglistPlayground",
@@ -63,23 +63,13 @@ export default defineComponent({
     let storeData: { recommend: SonglistCover[] } = reactive({
       recommend: []
     });
-    // const fetchSearchData = async <T>(
-    //   keyword: string,
-    //   config: StoreConfig<T>
-    // ) => {
-    //   const res: Array<T> = await getSonglistRecommed(
-    //     30,
-    //   );
-
-    //   config.list.push(...res);
-    //   config.page += 1;
-    // };
-    const handleTabClick = async () => {
+    const handleTabClick = () => {
       console.log("handleTabClick");
-      const res = await getSonglistRecommed(30);
-      storeData.recommend.push(...res);
-      console.log(res);
     };
+    onMounted(async () => {
+      const res = await getSonglistRecommed(200);
+      storeData.recommend.push(...res);
+    });
     return {
       storeData,
       tabcontrol,

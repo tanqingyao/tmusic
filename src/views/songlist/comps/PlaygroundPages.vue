@@ -6,6 +6,7 @@
         v-for="songlist in songlists"
         :key="songlist.id"
         :item="songlist"
+        @click="handleDetail(songlist.id)"
       />
     </div>
   </Scroll>
@@ -13,7 +14,9 @@
 <script lang="ts">
 import Scroll from "@/components/common/scroll/Scroll.vue";
 import Cover from "@/components/content/cover/Cover.vue";
+
 import { defineComponent, PropType } from "vue";
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "PlaygroundPages",
   components: {
@@ -31,7 +34,13 @@ export default defineComponent({
     }
   },
   setup() {
-    return {};
+    const $router = useRouter();
+    const handleDetail = (id: number) => {
+      $router.push("/songlist/detail/" + id);
+    };
+    return {
+      handleDetail
+    };
   }
 });
 </script>

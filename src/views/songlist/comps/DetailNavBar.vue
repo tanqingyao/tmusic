@@ -58,7 +58,7 @@ export default {
 </script>
 <style scoped>
 .nav-bar {
-  background-color: var(--color-background-d);
+  background-color: var(--color-background-shadow);
 }
 .icon {
   vertical-align: middle;

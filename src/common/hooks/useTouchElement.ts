@@ -37,7 +37,7 @@ export default function useTouchElement(r: Ref) {
     setTimeout(() => {
       if (option.isTouch) {
         option.canRoll = false;
-        console.log("长按事件,禁止上下滚动...");
+        // console.log("长按事件,禁止上下滚动...");
       }
     }, 1000);
   };

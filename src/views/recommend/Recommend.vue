@@ -14,6 +14,7 @@
             v-for="songlist in songlists"
             :key="songlist.id"
             :item="songlist"
+            @click="handleDetail(songlist.id)"
           />
         </template>
       </RecommendSonglist>
@@ -24,20 +25,20 @@
     </Scroll>
   </div>
 </template>
-<script>
+<script lang="ts">
 import MainNavBar from "@/components/content/mainNavBar/MainNavBar.vue";
-import TabControl from "components/content/tabControl/TabControl";
-import Cover from "components/content/cover/Cover";
+import TabControl from "components/content/tabControl/TabControl.vue";
+import Cover from "components/content/cover/Cover.vue";
 
-import RecommendSwiper from "./childComps/RecommendSwiper";
-import RecommendSonglist from "./childComps/RecommendSonglist";
-import RecommendView from "./childComps/RecommendView";
+import RecommendSwiper from "./childComps/RecommendSwiper.vue";
+import RecommendSonglist from "./childComps/RecommendSonglist.vue";
+import RecommendView from "./childComps/RecommendView.vue";
 
-import Scroll from "components/common/scroll/Scroll";
+import Scroll from "components/common/scroll/Scroll.vue";
 
-import { ref, reactive, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { getBanner, getRecommendSonglist } from "network/recommend/index";
+import { getBanner, getRecommendSonglist } from "@/network/recommend/index";
 
 export default {
   name: "Recommend",
@@ -58,9 +59,15 @@ export default {
       banners.value = await getBanner();
       songlists.value = await getRecommendSonglist();
     });
+
+    const $router = useRouter();
+    const handleDetail = (id: number) => {
+      $router.push("/songlist/detail/" + id);
+    };
     return {
       banners,
-      songlists
+      songlists,
+      handleDetail
     };
   }
 };

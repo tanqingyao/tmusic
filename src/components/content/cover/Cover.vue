@@ -1,5 +1,5 @@
 <template>
-  <div class="cover" @click="handleDetail(item.id)">
+  <div class="cover">
     <div class="play-count right">
       <icon :icon="['fas', 'play']" size="sm" />
       {{ changeUnit(item.playCount, 10000, 0) }}
@@ -13,7 +13,6 @@
 <script lang="ts">
 import { changeUnit } from "@/common/utils/show";
 import { defineComponent } from "vue";
-import { useRouter } from "vue-router";
 export default defineComponent({
   name: "Cover",
   components: {},
@@ -30,13 +29,8 @@ export default defineComponent({
     }
   },
   setup() {
-    const $router = useRouter();
-    const handleDetail = (id: number) => {
-      $router.push("/songlist/detail/" + id);
-    };
     return {
-      changeUnit,
-      handleDetail
+      changeUnit
     };
   }
 });
