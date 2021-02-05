@@ -11,7 +11,7 @@
 
       <div
         class="lyric-line"
-        v-for="item in lyricsArr.lyric"
+        v-for="item in lrcInfo.lyrics"
         :ref="setLyricRefs"
       >
         <div class="lyric-text">
@@ -42,6 +42,7 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 import { ActionTypes } from "@/store/types";
+import { ILyricHandler, ILyricInfo } from "./index";
 export default defineComponent({
   name: "ContentLyric",
   components: {
@@ -58,78 +59,67 @@ export default defineComponent({
 
     const currentSongID = computed(() => $store.state.currentSong.id);
 
-    /* 歌词监听器 */
-    const watchHandler = reactive({
-      lyric: {
-        unwatcher: () => {},
-        watcher: () => {}
+    /* H 代表操作歌词相关的函数 */
+    const H: ILyricHandler = reactive({
+      watch: {
+        lyric: () => () => {},
+        style: () => () => {},
+        jump: () => () => {}
       },
-
-      styler: {
-        unwatcher: () => {},
-        watcher: () => {}
+      stop: {
+        lyric: () => {},
+        style: () => {},
+        jump: () => {}
       },
-
-      jumper: {
-        unwatcher: () => {},
-        watcher: () => {}
-      }
+      styler: () => {},
+      jumper: () => {}
     });
     /* 歌词解析 */
-    let lyricsArr = ref({
-      //{time: , lyric: , trans}
-      lyric: computed(() => $store.state.currentSong.lyrics),
-      el: [] as HTMLElement[]
+    const lrcInfo: ILyricInfo = reactive({
+      lyrics: computed(() => $store.state.currentSong.lyrics),
+      els: []
     });
     const setLyricRefs = (el: HTMLElement) => {
-      lyricsArr.value.el.push(el);
+      lrcInfo.els.push(el);
     };
 
     /* 滚动相关 */
     const verticalOffset = 255;
-    const {
-      scroll,
-      currentLyricRef,
-      styleWatcher,
-      jumpWatcher,
-      jumper,
-      styler
-    } = lyricScroll(currentTime, lyricsArr);
+    const { scroll, currentLyricRef } = lyricScroll(currentTime, lrcInfo, H);
 
     /* 歌词滑动相关 */
     const { handleTouchStart, handleTouchEnd, handleTouchMove } = lyricTouch(
       emit,
-      jumpWatcher,
-      styler,
-      lyricsArr,
       verticalOffset,
-      watchHandler
+      lrcInfo,
+      H
     );
 
     /* 执行与回调相关 */
     onActivated(() => {
+      // 进入时开始监听歌词
+      H.stop.style = H.watch.style();
+      H.stop.jump = H.watch.jump();
       // 获取当前歌曲的歌词,只监听当前歌曲id是否变化
-      watchHandler.lyric.unwatcher = watchEffect(() => {
+      H.stop.lyric = watchEffect(() => {
         const id = currentSongID.value;
         $store.dispatch(ActionTypes.GetCurrentLyric, id);
       });
+
       // 每次进入刷新滚动高度
       // scroll.value.refresh();
-      jumper(currentLyricRef, 0, undefined);
-      // 进入时开始监听歌词
-      watchHandler.styler.unwatcher = styleWatcher();
-      watchHandler.jumper.unwatcher = jumpWatcher();
+      H.jumper(currentLyricRef, 0, undefined);
     });
 
     onDeactivated(() => {
       // 离开时取消监听歌词
-      watchHandler.styler.unwatcher();
-      watchHandler.jumper.unwatcher();
-      watchHandler.lyric.unwatcher();
+      H.stop.style();
+      H.stop.jump();
+      H.stop.lyric();
     });
     return {
       scroll,
-      lyricsArr,
+      lrcInfo,
       setLyricRefs,
       verticalOffset,
       handleTouchStart,

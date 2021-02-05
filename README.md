@@ -55,6 +55,8 @@ if (targetElement.nodeName==='INPUT' && targetElement.type==='range') {
 
 ```
 
+4. `better-scroll`自动跳转BUG,不仅仅在歌词页面,有些其他页面也会自动跳转到默认位置的-20px高度
+
 ## 开发记录及功能介绍
 
 ### 已有功能

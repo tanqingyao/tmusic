@@ -5,3 +5,7 @@ export function saveSongs(songs: ISong[]) {
 export function readSongs(): ISong[] {
   return JSON.parse(localStorage.getItem("songs_key") || "[]");
 }
+
+export function clearAllSongs() {
+  localStorage.clear();
+}

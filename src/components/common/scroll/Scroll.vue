@@ -18,10 +18,6 @@ export default {
     /**
      * 监听的数据
      */
-    data: {
-      type: Number,
-      default: -1
-    },
     requestData: {
       type: Function,
       default() {
@@ -141,14 +137,15 @@ export default {
     },
     /* scroll相关方法 */
     scrollTo(x, y, time = 500) {
+      console.log(x, y);
       this.scroll && this.scroll.scrollTo(x, y, time);
     },
     scrollBy(x, y, time = 500) {
       this.scroll && this.scroll.scrollBy(x, y, time);
     },
-    // scrollToElement(el, time = 500, offsetX = true, offsetY = true) {
-    //   this.scroll && this.scroll.scrollToElement(el, time, offsetX, offsetY);
-    // },
+    scrollToElement(el, time = 500, offsetX = true, offsetY = true) {
+      this.scroll && this.scroll.scrollToElement(el, time, offsetX, offsetY);
+    },
     finishPullUp() {
       // 等请求完成后,数据更新展示后,不能再次刷新,设置两秒后再次刷新
       setTimeout(() => {
@@ -179,9 +176,9 @@ export default {
   },
   watch: {
     // 监听数据的变化，防抖处理刷新
-    data(newVal, oldVal) {
-      this.debouncedRefresh();
-    }
+    // data(newVal, oldVal) {
+    //   this.debouncedRefresh();
+    // }
   }
 };
 </script>

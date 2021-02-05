@@ -23,13 +23,11 @@ export const actions: ActionTree<State, State> & Actions = {
     // 过滤playlist已有歌曲
     const ids = songsID.filter((id: number) => !getters.getSongById(id));
     if (ids.length !== 0) {
-      console.log("AddPlayList", songsID);
       const songs: ISong[] = await _fetchSongData(ids);
       commit(MutationType.ADD_TO_PLAYLIST, songs);
     }
-    // 播放第一首歌
+
     commit(MutationType.SET_CURRENT_SONG, getters.getSongById(songsID[0]));
-    // TODO 若没有选择自动播放,直接添加至播放列表.否则改变当前歌曲
   },
 
   [ActionTypes.SwitchByOrder]({ state, getters, commit }, payload: string) {

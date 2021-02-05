@@ -1,7 +1,12 @@
 import { ComputedRef, ref, watchEffect, Ref } from "vue";
-export default function lyricScroll(currentTime: ComputedRef, lyricsArr: Ref) {
+import { ILyricHandler, ILyricInfo } from "../index";
+export default function lyricScroll(
+  currentTime: ComputedRef,
+  lrcInfo: ILyricInfo,
+  H: ILyricHandler
+) {
   //播放歌词位置
-  let currentLyricRef: HTMLElement = lyricsArr.value.el[0];
+  let currentLyricRef: HTMLElement = lrcInfo.els[0];
   let oldLyricRef: HTMLElement;
   const scroll: Ref = ref(null);
   const jumper = (currentEl: HTMLElement, time = 1000, offsetY = 255) => {
@@ -24,11 +29,11 @@ export default function lyricScroll(currentTime: ComputedRef, lyricsArr: Ref) {
     }
   };
   const findLyricRef = (time: number) => {
-    if (!lyricsArr.value.lyric) {
+    if (!lrcInfo.lyrics) {
       return;
     }
     // 该时间点所处的时间段的index
-    const index = lyricsArr.value.lyric.findIndex(
+    const index = lrcInfo.lyrics.findIndex(
       (el: ILyric, i: number, arr: ILyric[]) => {
         const cond1 = arr[i + 1] && arr[i + 1].time > time;
         const cond2 = el && el.time < time;
@@ -37,17 +42,17 @@ export default function lyricScroll(currentTime: ComputedRef, lyricsArr: Ref) {
     );
     if (index !== -1) {
       oldLyricRef = currentLyricRef;
-      currentLyricRef = lyricsArr.value.el[index];
+      currentLyricRef = lrcInfo.els[index];
     }
   };
-  const styleWatcher = () => {
+  H.watch.style = () => {
     return watchEffect(() => {
       findLyricRef(currentTime.value);
       styler(oldLyricRef, currentLyricRef);
     });
   };
 
-  const jumpWatcher = () => {
+  H.watch.jump = () => {
     return watchEffect(() => {
       const watch = currentTime.value;
       jumper(currentLyricRef, undefined, undefined);
@@ -56,8 +61,6 @@ export default function lyricScroll(currentTime: ComputedRef, lyricsArr: Ref) {
   return {
     scroll,
     currentLyricRef,
-    styleWatcher,
-    jumpWatcher,
     jumper,
     styler
   };
