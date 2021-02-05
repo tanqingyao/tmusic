@@ -24,6 +24,9 @@ export default function lyricScroll(currentTime: ComputedRef, lyricsArr: Ref) {
     }
   };
   const findLyricRef = (time: number) => {
+    if (!lyricsArr.value.lyric) {
+      return;
+    }
     // 该时间点所处的时间段的index
     const index = lyricsArr.value.lyric.findIndex(
       (el: ILyric, i: number, arr: ILyric[]) => {
@@ -37,7 +40,7 @@ export default function lyricScroll(currentTime: ComputedRef, lyricsArr: Ref) {
       currentLyricRef = lyricsArr.value.el[index];
     }
   };
-  const lyricWatcher = () => {
+  const styleWatcher = () => {
     return watchEffect(() => {
       findLyricRef(currentTime.value);
       styler(oldLyricRef, currentLyricRef);
@@ -53,7 +56,7 @@ export default function lyricScroll(currentTime: ComputedRef, lyricsArr: Ref) {
   return {
     scroll,
     currentLyricRef,
-    lyricWatcher,
+    styleWatcher,
     jumpWatcher,
     jumper,
     styler

@@ -30,15 +30,24 @@ const regexpLyric = (line: string): [number, string] => {
   }
   return [time, lyc];
 };
-export const Lyric_Transfrom = (origin: string, trans: string) => {
+export const Lyric_Transfrom = (originLrc: string, transLrc: string) => {
   const lyricsArr: ILyric[] = [];
 
-  const lrcArr = origin.split("\n");
-  const transArr = trans.split("\n");
-  for (let i = 0, j = 0; i < lrcArr.length, j < transArr.length; ) {
+  const lrcArr = originLrc.split("\n");
+  const transArr = transLrc.split("\n");
+  let i = 0,
+    j = 0;
+  // 合并原词和翻译
+  while (i < lrcArr.length || j < transArr.length) {
     /* 正则解析歌词 */
     let lrc: [number, string] = regexpLyric(lrcArr[i]);
-    let trans: [number, string] = regexpLyric(transArr[j]);
+    let trans: [number, string];
+    // 没有翻译歌词的情况
+    if (j < transArr.length) {
+      trans = regexpLyric(transArr[j]);
+    } else {
+      trans = [lrc[0], ""];
+    }
 
     let time = 0;
     if (lrc[0] === trans[0]) {
@@ -53,7 +62,7 @@ export const Lyric_Transfrom = (origin: string, trans: string) => {
       j += 1;
     }
     // 排除空行
-    if (lrc[1] && trans[1]) {
+    if (lrc[1] || trans[1]) {
       lyricsArr.push({ time, lyric: lrc[1], trans: trans[1] });
     }
   }

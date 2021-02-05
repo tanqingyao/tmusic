@@ -1,8 +1,9 @@
 import { computed, Ref, ref, WatchStopHandle } from "vue";
 import { debounce } from "@/common/utils/func";
 export default function lyricTouch(
-  emit: (event: string, ...args: unknown[]) => void,
-  jumpWatcher: WatchStopHandle,
+  emit: ((event: "touching", ...args: any[]) => void) &
+    ((event: "scrollTime", ...args: any[]) => void),
+  jumpWatcher: () => WatchStopHandle,
   styler: (prevEl: HTMLElement, currentEl: HTMLElement, color: string) => void,
   lyricsArr: Ref,
   verticalOffset: number
@@ -10,8 +11,8 @@ export default function lyricTouch(
   let isTouch = false;
   let currentTouchEl: HTMLElement;
   let oldTouchEl: HTMLElement;
-
-  let unwatchJump: Ref = ref(null);
+  // 控制监听歌词
+  let unwatcher = () => {};
 
   // 每行歌词滚动高度
   const scrollY = computed(() =>
@@ -21,7 +22,7 @@ export default function lyricTouch(
   );
 
   const debouncedTouchEnd = debounce(() => {
-    unwatchJump.value = jumpWatcher();
+    unwatcher = jumpWatcher();
     emit("touching", false);
     isTouch = false;
   }, 5000);
@@ -29,7 +30,7 @@ export default function lyricTouch(
   const handleTouchStart = () => {
     isTouch = true;
     emit("touching", true);
-    unwatchJump.value();
+    unwatcher();
     // 长按情况，取消歌词跳动
     if (debouncedTouchEnd) {
       debouncedTouchEnd.cancel();
@@ -62,7 +63,6 @@ export default function lyricTouch(
   };
 
   return {
-    unwatchJump,
     handleTouchStart,
     handleTouchEnd,
     handleTouchMove

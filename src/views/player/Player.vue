@@ -174,9 +174,9 @@ export default defineComponent({
     const handleSwitchSong = (order: string) => {
       // paylaod 为last或next
       if (mode.value === 0) {
-        $store.dispatch("switchByShuffle");
+        $store.dispatch(ActionTypes.SwitchByShuffle);
       } else {
-        $store.dispatch("switchByOrder", order);
+        $store.dispatch(ActionTypes.SwitchByOrder, order);
       }
     };
 

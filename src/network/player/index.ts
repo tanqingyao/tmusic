@@ -55,10 +55,6 @@ export const getSongsLyric = async (id: number) => {
       if (data.tlyric) {
         trans = data.tlyric.lyric;
       }
-      // const {
-      //   lrc: { lyric: lrc },
-      //   tlyric: { lyric: trans }
-      // } = data;
       const transform = Lyric_Transfrom(lrc, trans);
       return transform;
     }

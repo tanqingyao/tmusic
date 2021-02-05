@@ -4,7 +4,7 @@ declare interface ISong {
   singers: ISinger[];
   album: IAlbum;
   url: string;
-  lyrics: ILyrics;
+  lyrics?: ILyric;
   mv?: string;
 }
 

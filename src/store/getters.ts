@@ -3,9 +3,6 @@ import { State } from "./state";
 import { Getters } from "./types";
 
 export const getters: GetterTree<State, State> & Getters = {
-  LIST_LENGTH: (state: State) => {
-    return state.playList ? state.playList.length : 0;
-  },
   currentSongIndex: (state: State) => {
     if (state.playList) {
       return state.playList.findIndex(
@@ -14,6 +11,9 @@ export const getters: GetterTree<State, State> & Getters = {
     } else {
       return -1;
     }
+  },
+  LIST_LENGTH: (state: State) => {
+    return state.playList ? state.playList.length : 0;
   },
   // 返回函数进行传参,不会缓存
   getSongById: (state: State) => (id: number) => {

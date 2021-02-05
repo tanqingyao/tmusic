@@ -12,6 +12,12 @@ export const actions: ActionTree<State, State> & Actions = {
     commit(MutationType.SET_PLAYING, payload);
   },
 
+  async [ActionTypes.GetCurrentLyric]({ state, commit }, currentID: number) {
+    // 单个歌曲对应歌词
+    const lyrics = await getSongsLyric(currentID);
+    commit(MutationType.SET_CURRENT_LYRIC, lyrics);
+  },
+
   /* 播放列表相关 */
   async [ActionTypes.AddPlayList]({ getters, commit }, songsID: number[]) {
     // 过滤playlist已有歌曲
@@ -65,18 +71,16 @@ const _fetchSongData = async (ids: number[]) => {
   // 歌曲信息
   const infos = await getSongsInfo(ids);
   for (const i in ids) {
-    // 单个歌曲对应歌词
-    const lyrics = await getSongsLyric(ids[i]);
     try {
       if (infos[i]) {
-        songs.push(new Song(infos[i], urls[i], lyrics));
+        songs.push(new Song(infos[i], urls[i]));
       }
     } catch (error) {
       console.error(error);
 
       console.error(infos[i]);
       console.error(urls[i]);
-      console.error(lyrics);
+      // console.error(lyrics);
     }
   }
   return songs;

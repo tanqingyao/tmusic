@@ -3,8 +3,13 @@ import { State } from "./state";
 import { Mutations, MutationType } from "./types";
 
 export const mutations: MutationTree<State> & Mutations = {
+  /* 播放列表相关 */
   [MutationType.ADD_TO_PLAYLIST](state: State, payload: ISong[]) {
     state.playList.push(...payload);
+  },
+  /* 播放器相关 */
+  [MutationType.SET_CURRENT_LYRIC](state: State, payload: ILyric) {
+    (state.currentSong as ISong).lyrics = payload;
   },
   [MutationType.SET_CURRENT_SONG](state: State, payload: ISong) {
     state.currentSong = payload;

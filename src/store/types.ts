@@ -4,14 +4,15 @@ import { ActionContext } from "vuex";
 
 /* Getters */
 export type Getters = {
-  LIST_LENGTH(state: State): number;
   currentSongIndex(state: State): number;
+  LIST_LENGTH(state: State): number;
   getSongById(state: State): (id: number) => ISong | undefined;
 };
 
 /* Mutations */
 export enum MutationType {
   ADD_TO_PLAYLIST = "addToPlayList",
+  SET_CURRENT_LYRIC = "setCurrentSongLyric",
   SET_CURRENT_SONG = "setCurrentSong",
   SET_PLAYING = "setPlaying",
   SET_AUTOPLAY = "setAutoPlay",
@@ -22,6 +23,7 @@ export enum MutationType {
 }
 export type Mutations = {
   [MutationType.ADD_TO_PLAYLIST](state: State, songs: ISong[]): void;
+  [MutationType.SET_CURRENT_LYRIC](state: State, value: ILyric): void;
   [MutationType.SET_CURRENT_SONG](state: State, value: ISong): void;
   [MutationType.SET_PLAYING](state: State, value: boolean): void;
   [MutationType.SET_AUTOPLAY](state: State, value: boolean): void;
@@ -39,13 +41,17 @@ type ActionAugments = Omit<ActionContext<State, State>, "commit"> & {
   ): ReturnType<Mutations[K]>;
 };
 export enum ActionTypes {
+  /* 播放器相关 */
   SetPlaying = "SET_Player_Play",
+  GetCurrentLyric = "GET_Current_Song_Lyric",
+  /* 播放列表相关 */
   AddPlayList = "Add_Song_TO_PlayList",
   SwitchByOrder = "Order_Switch_Song",
   SwitchByShuffle = "Shuffle_Switch_Song"
 }
 export type Actions = {
   [ActionTypes.SetPlaying](context: ActionAugments, value: boolean): void;
+  [ActionTypes.GetCurrentLyric](context: ActionAugments, id: number): void;
   [ActionTypes.AddPlayList](context: ActionAugments, ids: number[]): void;
   [ActionTypes.SwitchByOrder](context: ActionAugments, mode: string): void;
   [ActionTypes.SwitchByShuffle](context: ActionAugments, mode: string): void;
