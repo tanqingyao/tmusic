@@ -31,6 +31,10 @@ export const getSongsInfo = async (idArr: number[]) => {
     },
 
     transformResponse: data => {
+      console.log(ids);
+
+      console.log(data);
+
       return JSON.parse(data).songs;
     }
   });

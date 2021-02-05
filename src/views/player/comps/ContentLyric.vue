@@ -102,7 +102,8 @@ export default defineComponent({
       jumpWatcher,
       styler,
       lyricsArr,
-      verticalOffset
+      verticalOffset,
+      watchHandler
     );
 
     /* 执行与回调相关 */
@@ -121,7 +122,7 @@ export default defineComponent({
     });
 
     onDeactivated(() => {
-      // // 离开时取消监听歌词
+      // 离开时取消监听歌词
       watchHandler.styler.unwatcher();
       watchHandler.jumper.unwatcher();
       watchHandler.lyric.unwatcher();
@@ -129,7 +130,6 @@ export default defineComponent({
     return {
       scroll,
       lyricsArr,
-      // currentSong,
       setLyricRefs,
       verticalOffset,
       handleTouchStart,

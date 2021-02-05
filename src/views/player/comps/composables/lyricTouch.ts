@@ -6,13 +6,12 @@ export default function lyricTouch(
   jumpWatcher: () => WatchStopHandle,
   styler: (prevEl: HTMLElement, currentEl: HTMLElement, color: string) => void,
   lyricsArr: Ref,
-  verticalOffset: number
+  verticalOffset: number,
+  watchHandler: { jumper: { unwatcher: WatchStopHandle } }
 ) {
   let isTouch = false;
   let currentTouchEl: HTMLElement;
   let oldTouchEl: HTMLElement;
-  // 控制监听歌词
-  let unwatcher = () => {};
 
   // 每行歌词滚动高度
   const scrollY = computed(() =>
@@ -22,7 +21,7 @@ export default function lyricTouch(
   );
 
   const debouncedTouchEnd = debounce(() => {
-    unwatcher = jumpWatcher();
+    watchHandler.jumper.unwatcher = jumpWatcher();
     emit("touching", false);
     isTouch = false;
   }, 5000);
@@ -30,7 +29,7 @@ export default function lyricTouch(
   const handleTouchStart = () => {
     isTouch = true;
     emit("touching", true);
-    unwatcher();
+    watchHandler.jumper.unwatcher();
     // 长按情况，取消歌词跳动
     if (debouncedTouchEnd) {
       debouncedTouchEnd.cancel();

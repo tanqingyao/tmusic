@@ -32,6 +32,7 @@
         else next()
         })
         ```
+
    - ~~设置cookie。开发过程中为了听杰伦的歌，其实也可以不设置。大概过程就是自己在网页登录了，获取自己的cookie，然后利用[API接口转发文档](https://jsososo.github.io/QQMusicApi)中的方法，用postman发送一个post请求既可~~
 
 2. 前端项目
@@ -40,6 +41,18 @@
 cd tmusic
 npm install
 npm run serve
+```
+
+3. fastclick报错
+
+在`fastclick.js中330行`取消判断元素
+
+```js
+// 不选择input中range类型
+if (targetElement.nodeName==='INPUT' && targetElement.type==='range') {
+   return
+}
+
 ```
 
 ## 开发记录及功能介绍
