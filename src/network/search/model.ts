@@ -21,17 +21,6 @@ export const collectSearchSuggest = (res: AxiosResponse) => {
   return suggests;
 };
 
-export const collectSearchHot = (res: AxiosResponse) => {
-  const hots = res.data.data.map((suggest: any) => {
-    return {
-      score: suggest.score,
-      key: suggest.searchWord,
-      iconL: suggest.iconUrl
-    };
-  });
-  return hots;
-};
-
 export const collectSearchCloud = (res: AxiosResponse) => {
   const songs = res.data.result.songs.map((song: any) => {
     return {
@@ -80,8 +69,8 @@ export const ComplexTransfrom = (res: Complex) => {
   };
 };
 
-export const SongsTransfrom = (res: Array<Song>) => {
-  const songs = res.map((s: Song) => {
+export const SongsTransfrom = (res: Array<SongInfo>) => {
+  const songs = res.map((s: SongInfo) => {
     return {
       name: s.name,
       desc: `${showSinger(s.ar)} - ${s.al.name}`,

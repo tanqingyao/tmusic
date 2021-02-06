@@ -7,7 +7,22 @@ declare interface ISong {
   lyrics?: ILyric;
   mv?: string;
 }
+declare interface ISonglist {
+  id: number;
+  creatorUrl: string;
+  creatorname: string;
+  cover: string;
+  name: string;
+  description: string;
+  subscribedCount: number;
+  trackCount: number;
+  playCount: number;
+  shareCount: number;
+  commentCount: number;
 
+  songIds: { id: number }[];
+  desc: string;
+}
 declare interface ISinger {
   id: number;
   name: string;

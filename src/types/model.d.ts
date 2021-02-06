@@ -4,14 +4,17 @@ declare type IBanner = {
   pic: string;
 };
 
-declare type Song = {
+declare type SongInfo = {
+  id: number;
   name: string;
   ar: Array<{
     id: number;
     name: string;
   }>;
   al: {
+    id: number;
     name: string;
+    picUrl: string;
   };
   alia: Array<string>;
   mv: number;
@@ -24,13 +27,18 @@ interface SonglistCover {
   playCount: number;
 }
 declare type Songlist = {
+  id: number;
   coverImgUrl: string;
   name: string;
+  creator: { avatarUrl: string; nickname: string };
+  description: string;
+  subscribedCount: number;
   trackCount: number;
-  creator: {
-    nickname: string;
-  };
   playCount: number;
+  shareCount: number;
+  commentCount: number;
+
+  trackIds: { id: number }[];
 };
 
 declare type Artist = {
@@ -62,7 +70,7 @@ declare type User = {
 declare type Complex = {
   song: {
     moreText: string;
-    songs: Array<Song>;
+    songs: Array<SongInfo>;
   };
   playList: {
     moreText: string;

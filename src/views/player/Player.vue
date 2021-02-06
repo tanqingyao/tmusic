@@ -183,25 +183,17 @@ export default defineComponent({
     const handleOrder = () => {
       mode.value = (mode.value + 1) % 3;
     };
-    const stop = watch(
-      playList,
-      (newVal, oldVal) => {
-        saveSongs(newVal);
-      },
-      { deep: true }
-    );
     onMounted(() => {
       /* 从浏览器缓存添加歌曲 */
       setTimeout(() => {
-        const ids = readSongs().map(s => s.id);
-        if (ids.length !== 0) {
-          $store.dispatch(ActionTypes.AddPlayList, ids);
-        }
-      }, 1000);
+        $store.state.playList = readSongs();
+      }, 200);
+      const stopCache = watchEffect(() => {
+        saveSongs(playList.value);
+      });
 
       if (currentSong.value) {
         /* 背景虚化 */
-
         const stop = watchEffect(() => {
           styleObject.value = {
             "background-image": "url(" + currentSong.value.albumImg + ")"

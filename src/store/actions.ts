@@ -12,22 +12,40 @@ export const actions: ActionTree<State, State> & Actions = {
     commit(MutationType.SET_PLAYING, payload);
   },
 
-  async [ActionTypes.GetCurrentLyric]({ state, commit }, currentID: number) {
+  async [ActionTypes.GetCurrentLyric]({ commit }, currentID: number) {
     // 单个歌曲对应歌词
     const lyrics = await getSongsLyric(currentID);
     commit(MutationType.SET_CURRENT_LYRIC, lyrics);
   },
 
   /* 播放列表相关 */
-  async [ActionTypes.AddPlayList]({ getters, commit }, songsID: number[]) {
+  async [ActionTypes.AddSongsToPlayList](
+    { getters, commit },
+    songsInfo: Array<SongInfo>
+  ) {
     // 过滤playlist已有歌曲
-    const ids = songsID.filter((id: number) => !getters.getSongById(id));
+    const songsInfoFilter = songsInfo.filter(
+      (songinfo: SongInfo) => !getters.getSongById(songinfo.id)
+    );
+    const ids = songsInfoFilter.map(songsInfo => songsInfo.id);
+
+    // 加入队列的歌曲
+    const songs: ISong[] = [];
+    // 全部都在playlist已有
     if (ids.length !== 0) {
-      const songs: ISong[] = await _fetchSongData(ids);
+      // 批量获取url
+      const urls = await getSongUrl(ids);
+      songsInfoFilter.forEach((songInfo, index, arr) => {
+        if (urls[index]) {
+          songs.push(new Song(songInfo, urls[index]));
+        } else {
+          console.log("不能获取歌曲播放信息：", songInfo.id);
+        }
+      });
       commit(MutationType.ADD_TO_PLAYLIST, songs);
     }
 
-    commit(MutationType.SET_CURRENT_SONG, getters.getSongById(songsID[0]));
+    commit(MutationType.SET_CURRENT_SONG, songs[0]);
   },
 
   [ActionTypes.SwitchByOrder]({ state, getters, commit }, payload: string) {
@@ -62,27 +80,4 @@ export const actions: ActionTree<State, State> & Actions = {
     }
     commit(MutationType.SET_CURRENT_SONG, (state.playList as ISong[])[index]);
   }
-};
-
-const _fetchSongData = async (ids: number[]) => {
-  let songs: ISong[] = [];
-
-  // 歌曲播放url
-  const urls = await getSongUrl(ids);
-  // 歌曲信息
-  const infos = await getSongsInfo(ids);
-  for (const i in ids) {
-    try {
-      if (infos[i]) {
-        songs.push(new Song(infos[i], urls[i]));
-      }
-    } catch (error) {
-      console.error(error);
-
-      console.error(infos[i]);
-      console.error(urls[i]);
-      // console.error(lyrics);
-    }
-  }
-  return songs;
 };

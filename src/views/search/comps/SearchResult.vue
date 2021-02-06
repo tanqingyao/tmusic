@@ -34,7 +34,7 @@ export interface StoreConfig<T> {
   list: Array<T>;
 }
 
-export type complex = Song | Songlist | Artist | Album | User;
+export type complex = SongInfo | Songlist | Artist | Album | User;
 
 export interface IStoreData {
   [key: number]: StoreConfig<complex>;

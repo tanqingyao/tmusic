@@ -12,6 +12,7 @@ export type Getters = {
 /* Mutations */
 export enum MutationType {
   ADD_TO_PLAYLIST = "addToPlayList",
+  DELETE_SONG = "deleteSong",
   SET_CURRENT_LYRIC = "setCurrentSongLyric",
   SET_CURRENT_SONG = "setCurrentSong",
   SET_PLAYING = "setPlaying",
@@ -45,14 +46,17 @@ export enum ActionTypes {
   SetPlaying = "SET_Player_Play",
   GetCurrentLyric = "GET_Current_Song_Lyric",
   /* 播放列表相关 */
-  AddPlayList = "Add_Song_TO_PlayList",
+  AddSongsToPlayList = "Add_Song_TO_PlayList",
   SwitchByOrder = "Order_Switch_Song",
   SwitchByShuffle = "Shuffle_Switch_Song"
 }
 export type Actions = {
   [ActionTypes.SetPlaying](context: ActionAugments, value: boolean): void;
   [ActionTypes.GetCurrentLyric](context: ActionAugments, id: number): void;
-  [ActionTypes.AddPlayList](context: ActionAugments, ids: number[]): void;
+  [ActionTypes.AddSongsToPlayList](
+    context: ActionAugments,
+    songsInfo: Array<SongInfo>
+  ): void;
   [ActionTypes.SwitchByOrder](context: ActionAugments, mode: string): void;
   [ActionTypes.SwitchByShuffle](context: ActionAugments, mode: string): void;
 };

@@ -49,10 +49,15 @@
         </template>
         <template #right>
           <div class="item-right">
-            <button>
+            <button @click="handleSongSource(item)">
               播放来源
             </button>
-            <icon class="icon-close" :icon="['fas', 'times']" size="lg" />
+            <icon
+              @click="handleSongDelete(item)"
+              class="icon-close"
+              :icon="['fas', 'times']"
+              size="lg"
+            />
           </div>
         </template>
       </PlayerListItem>
@@ -88,17 +93,13 @@ export default {
     const handlePlay = (item: ISong) => {
       $store.commit(MutationType.SET_CURRENT_SONG, item);
     };
-    // const stop = watchEffect(() => {
-    //   if (props.canRoll) {
-    //     if (scroll.value) {
-    //       scroll.value.enable();
-    //     }
-    //   } else {
-    //     if (scroll.value) {
-    //       scroll.value.disable();
-    //     }
-    //   }
-    // });
+    const handleSongSource = () => {
+      console.log("handleSongSource");
+    };
+    const handleSongDelete = (item: ISong) => {
+      $store.commit(MutationType.DELETE_SONG, item);
+      console.log("handleSongSource");
+    };
     onMounted(() => {
       // 刷新可滚动高度
       setTimeout(() => {
@@ -110,7 +111,9 @@ export default {
       playList,
       playListLength,
       showSinger,
-      handlePlay
+      handlePlay,
+      handleSongSource,
+      handleSongDelete
     };
   }
 };

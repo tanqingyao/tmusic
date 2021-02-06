@@ -8,7 +8,7 @@ const URL_songs = {
 };
 export const getSongUrl = async (ids: number[]) => {
   /* 批量获取:用数组接收多个id,最终以逗号连接 */
-  const id = Array.isArray(ids) ? ids.join(",") : ids;
+  const id = ids.join(",");
   const { data: urls } = await getNeteaseRequest({
     url: URL_songs.urls,
     params: {
@@ -31,6 +31,8 @@ export const getSongsInfo = async (idArr: number[]) => {
     },
 
     transformResponse: data => {
+      console.log(JSON.parse(data).songs);
+
       return JSON.parse(data).songs;
     }
   });

@@ -4,8 +4,10 @@ export class Song implements ISong {
   singers: ISinger[];
   album: IAlbum;
   url: string;
-  private _lyrics?: ILyric;
-  constructor(songInfo: any, songUrl: any) {
+  lyrics?: ILyric;
+  constructor(songInfo: SongInfo, songUrl: any) {
+    console.log(songInfo, songUrl);
+
     this.id = songInfo.id;
     this.name = songInfo.name;
     this.singers = songInfo.ar.map((singer: ISinger) => {
@@ -22,11 +24,4 @@ export class Song implements ISong {
 
     this.url = songUrl.url;
   }
-  // get lyrics(): ILyric {
-  //   console.log("getter: " + this.lyrics);
-  //   return this.lyrics;
-  // }
-  // set lyrics(value) {
-  //   console.log("setter: " + this.lyrics);
-  // }
 }

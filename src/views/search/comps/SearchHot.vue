@@ -55,7 +55,7 @@ import { ActionTypes } from "@/store/types";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
-import { getSearchID } from "@/network/search";
+import { getSearchSongInfo } from "@/network/search";
 import { getSearchHot } from "@/network/search";
 export default defineComponent({
   name: "SearchHot",
@@ -70,16 +70,16 @@ export default defineComponent({
     const $store = useStore();
     const handlePlayAll = async () => {
       if (hots.value) {
-        let ids: number[];
+        let songsInfo: SongInfo[];
 
         const promises = hots.value.map(async (item: { key: string }) => {
-          const id = await getSearchID(item.key);
-          return id;
+          const songInfo = await getSearchSongInfo(item.key);
+          return songInfo;
         });
 
-        ids = await Promise.all(promises);
+        songsInfo = await Promise.all(promises);
 
-        $store.dispatch(ActionTypes.AddPlayList, ids);
+        $store.dispatch(ActionTypes.AddSongsToPlayList, songsInfo);
       }
     };
 

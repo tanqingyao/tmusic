@@ -1,9 +1,9 @@
 import { getNeteaseRequest } from "../request";
+import { SongsTransfrom } from "../common";
 import {
   collectSearchDefault,
   collectSearchSuggest,
   ComplexTransfrom,
-  SongsTransfrom,
   SonglistsTransfrom,
   ArtistsTransfrom,
   AlbumsTransfrom,
@@ -54,14 +54,14 @@ export async function getSearchHot() {
   });
   return hots;
 }
-export async function getSearchID(
+export async function getSearchSongInfo(
   keywords: string,
   offset: number = 0,
   limit: number = 30,
   type: number = 1
 ) {
-  const { data: id } = await getNeteaseRequest({
-    url: URL_search.search,
+  const { data } = await getNeteaseRequest({
+    url: URL_search.cloudsearch,
     params: {
       keywords,
       // 分页
@@ -71,13 +71,15 @@ export async function getSearchID(
       //搜索类型；默认为 1 即单曲 , 取值意义 : 1: 单曲, 10: 专辑, 100: 歌手, 1000: 歌单, 1002: 用户, 1004: MV, 1006: 歌词, 1009: 电台, 1014: 视频, 1018:综合
       type
     },
-
     transformResponse: data => {
-      // 获取热搜关键词,得到的第一首歌曲
-      return JSON.parse(data).result.songs[0].id;
+      const result = JSON.parse(data).result;
+      // 只转化每个热搜关键词结果中第一首歌曲
+      const song = result.songs[0];
+      const dataTransfrom = SongsTransfrom([song]);
+      return dataTransfrom[0];
     }
   });
-  return id;
+  return data;
 }
 
 export async function getSearchCloud(
@@ -97,12 +99,8 @@ export async function getSearchCloud(
       //搜索类型；默认为 1 即单曲 , 取值意义 : 1: 单曲, 10: 专辑, 100: 歌手, 1000: 歌单, 1002: 用户, 1004: MV, 1006: 歌词, 1009: 电台, 1014: 视频, 1018:综合
       type
     },
-
     transformResponse: data => {
       const result = JSON.parse(data).result;
-      // console.log(keywords, offset, limit, type);
-      // console.log(result);
-
       let dataTransfrom;
       switch (type) {
         case SearchType.SONGS:

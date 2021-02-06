@@ -41,8 +41,6 @@ export default {
     /* 监听控制器 */
     watchEffect(() => {
       const state = playerState.isPlaying;
-      console.log(state);
-
       if (audio.value) {
         if (state) {
           audio.value.play();

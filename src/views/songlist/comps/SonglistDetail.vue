@@ -9,12 +9,12 @@
               <Cover :item="info" :showTitle="false" />
             </template>
             <template #top>
-              <span class="detail-title">{{ info.title }}</span>
+              <span class="detail-title">{{ info.name }}</span>
             </template>
             <template #mid>
               <div class="detail-creator">
-                <img :src="info.avatar" alt="" />
-                {{ info.name }}
+                <img :src="info.creatorUrl" alt="" />
+                {{ info.creatorname }}
                 <button @click="handleAddUser">
                   <icon :icon="['fas', 'plus']" :style="{ color: '#eee' }" />
                 </button>
@@ -22,7 +22,7 @@
             </template>
             <template #bottom>
               <span class="detail-desc">
-                {{ info.desc }}
+                {{ info.description }}
               </span>
               <icon :icon="['fas', 'chevron-right']" />
             </template>
@@ -80,7 +80,10 @@
               </div>
             </template>
           </ListTab>
-          <ListItem v-for="(item, index) in songs" @click="handlePlay(item)">
+          <ListItem
+            v-for="(item, index) in songsinfo"
+            @click="handlePlay(item)"
+          >
             <template #left>
               <span>{{ index + 1 }}</span>
             </template>
@@ -93,7 +96,7 @@
 
               <ListItemCenter>
                 <template #center-item>
-                  <span class="list-item-desc">{{ item.name }}</span>
+                  <span class="list-item-desc">{{ item.desc }}</span>
                 </template>
               </ListItemCenter>
             </template>
@@ -136,7 +139,7 @@ import {
 
 import { getSonglistDetail, getSongsDetail } from "@/network/detail";
 import { changeUnit } from "@/common/utils/show";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive, Ref } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { ActionTypes } from "@/store/types";
@@ -155,17 +158,14 @@ export default {
   },
   setup() {
     /* 数据加载相关 */
-    const info = ref({});
-    const songs = ref({});
+    const info: Ref = ref({});
+    const songsinfo: Ref = ref({});
     const $route = useRoute();
     const $store = useStore();
     onMounted(async () => {
       const id = parseInt($route.params.id as string);
       info.value = await getSonglistDetail(id);
-      // console.log(info.value);
-      songs.value = await getSongsDetail(
-        (info.value as { songIds: number[] }).songIds
-      );
+      songsinfo.value = await getSongsDetail(info.value.songIds);
     });
 
     /* 点击相关 */
@@ -184,6 +184,7 @@ export default {
 
     const handlePlayAll = () => {
       console.log("handlePlayAll");
+      $store.dispatch(ActionTypes.AddSongsToPlayList, songsinfo.value);
     };
     const handleDownLoad = () => {
       console.log("handleDownLoad");
@@ -198,13 +199,13 @@ export default {
     const handleSetting = () => {
       console.log("handleSetting");
     };
-    const handlePlay = (item: ISong) => {
-      $store.dispatch(ActionTypes.AddPlayList, [item.id]);
+    const handlePlay = (item: SongInfo) => {
+      $store.dispatch(ActionTypes.AddSongsToPlayList, [item]);
     };
 
     return {
       info,
-      songs,
+      songsinfo,
       changeUnit,
 
       handleAddUser,

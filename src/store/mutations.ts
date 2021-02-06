@@ -7,6 +7,12 @@ export const mutations: MutationTree<State> & Mutations = {
   [MutationType.ADD_TO_PLAYLIST](state: State, payload: ISong[]) {
     state.playList.push(...payload);
   },
+  [MutationType.DELETE_SONG](state: State, payload: ISong) {
+    const index = state.playList.findIndex(item => item.id === payload.id);
+    console.log(index, payload);
+
+    state.playList.splice(index, 1);
+  },
   /* 播放器相关 */
   [MutationType.SET_CURRENT_LYRIC](state: State, payload: ILyric) {
     (state.currentSong as ISong).lyrics = payload;

@@ -1,8 +1,11 @@
 <template>
   <div class="recommend-list">
-    <ListItem v-for="item in album" @click="songClick(item.id)">
+    <ListItem
+      v-for="item in album"
+      @click="$router.push('/detail/songlist/' + item.id)"
+    >
       <template #img>
-        <img :src="item.cover" @load="imgload" alt="" />
+        <img :src="item.cover" @load="$emit('RecommedImgLoad')" alt="" />
       </template>
 
       <template #title>
@@ -10,13 +13,15 @@
       </template>
 
       <template #btm-left>
-        <span>播放量:{{ unitChange(item.playNum) }}万</span>
+        <span>播放量:{{ changeUnit(item.playNum) }}</span>
       </template>
     </ListItem>
   </div>
 </template>
-<script>
-import ListItem from "components/content/customList/ListItem";
+<script lang="ts">
+import ListItem from "components/content/customList/ListItem.vue";
+
+import { changeUnit } from "@/common/utils/show";
 export default {
   name: "RecommendList",
   components: {
@@ -30,17 +35,10 @@ export default {
       }
     }
   },
-  methods: {
-    unitChange(value) {
-      return (value / 10000).toFixed(2);
-    },
-    imgload() {
-      this.$emit("RecommedImgLoad");
-    },
-    songClick(id) {
-      // console.log(id);
-      this.$router.push("/detail/songlist/" + id);
-    }
+  setup() {
+    return {
+      changeUnit
+    };
   }
 };
 </script>
