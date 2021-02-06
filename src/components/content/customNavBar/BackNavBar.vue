@@ -24,7 +24,7 @@ export default defineComponent({
   props: {
     title: {
       type: String,
-      default: "title"
+      default: ""
     }
   },
   setup() {
@@ -34,7 +34,7 @@ export default defineComponent({
 </script>
 <style scoped>
 .nav-bar {
-  background-color: var(--color-background);
+  background-color: var(--color-background-clear);
 }
 .icon {
   vertical-align: middle;

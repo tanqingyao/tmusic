@@ -137,9 +137,10 @@ import {
   ListItemCenter
 } from "@/components/content/customList";
 
-import { getSonglistDetail, getSongsDetail } from "@/network/detail";
+import { getSongsDetail } from "@/network/song";
+import { getSonglistDetail } from "@/network/songlist";
 import { changeUnit } from "@/common/utils/show";
-import { ref, onMounted, reactive, Ref } from "vue";
+import { ref, onMounted, Ref } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { ActionTypes } from "@/store/types";

@@ -30,8 +30,6 @@ export const getRankSingers = async (type: number) => {
     },
     transformResponse: data => {
       const list = JSON.parse(data).list;
-
-      console.log(list);
       return RankSingersTransfrom(list);
     }
   });

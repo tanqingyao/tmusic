@@ -1,12 +1,24 @@
 <template>
-  SingerDetail
+  <BackNavBar />
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import BackNavBar from "@/components/content/customNavBar/BackNavBar.vue";
+import { defineComponent, onMounted } from "vue";
+import { useRoute } from "vue-router";
+
+import { getSingerDetail } from "@/network/singer";
 export default defineComponent({
   name: "SingerDetail",
-  components: {},
+  components: {
+    BackNavBar
+  },
   setup() {
+    const $route = useRoute();
+    onMounted(async () => {
+      // 获取展示数据
+      const id = parseInt($route.params.id as string);
+      await getSingerDetail(id);
+    });
     return {};
   }
 });

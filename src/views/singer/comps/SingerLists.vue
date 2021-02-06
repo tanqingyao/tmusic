@@ -27,7 +27,7 @@
         class="list-item"
         v-for="(item, index) in singers[currentType].list"
         :key="item.id"
-        @click="handleSingerDetail(item)"
+        @click="$router.push('/singer/detail/' + item.id)"
       >
         <span class="list-item-index">{{ index + 1 }}</span>
 
@@ -83,6 +83,8 @@ export default defineComponent({
     ListItemCenter
   },
   setup() {
+    // const $router = useRouter();
+
     const currentType: Ref<SingersRankType> = ref(1);
     const singers = reactive({
       [SingersRankType.CN]: {
@@ -106,22 +108,16 @@ export default defineComponent({
       const res = await getRankSingers(type);
       singers[type].list = res.singers;
       singers[type].updateTime = res.updateTime;
-
-      console.log(singers[type]);
     };
     const handleTabClick = async (index: number) => {
       currentType.value = index + 1;
       await fetchSingerRankData(currentType.value);
-    };
-    const handleSingerDetail = () => {
-      console.log("handleSingerDetail");
     };
     onMounted(async () => {
       await fetchSingerRankData(currentType.value);
     });
     return {
       handleTabClick,
-      handleSingerDetail,
       singers,
       currentType,
       parseDate
@@ -133,7 +129,6 @@ export default defineComponent({
 .scroll-content {
   height: 100vh;
   overflow: hidden;
-  background-color: var(--color-background);
 }
 
 .list-tab {

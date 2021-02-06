@@ -16,6 +16,6 @@ export default defineComponent({
 <style scoped>
 .singer {
   height: 100vh;
-  background-color: var(--color-background-shadow);
+  background-color: var(--color-background);
 }
 </style>

@@ -1,6 +1,8 @@
 import { getNeteaseRequest } from "../request";
+import { SonglistsTransfrom } from "../common";
 import { RecommedTransfrom } from "./model";
 const URL_songlist = {
+  detail: "/playlist/detail",
   // 全部歌单,包括分类
   category: "/playlist/catlist",
   // 热门歌单分类
@@ -30,4 +32,19 @@ export const getSonglistRecommed = async (limit: number = 30) => {
   });
 
   return data;
+};
+
+export const getSonglistDetail = async (id: number) => {
+  const { data } = await getNeteaseRequest({
+    url: URL_songlist.detail,
+    params: {
+      id
+    },
+    transformResponse: data => {
+      const playlist = JSON.parse(data).playlist;
+      // 传入数组，传出后取第一个值
+      return SonglistsTransfrom([playlist]);
+    }
+  });
+  return data[0];
 };

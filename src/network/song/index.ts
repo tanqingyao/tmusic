@@ -1,10 +1,28 @@
 import { getNeteaseRequest } from "../request";
+import { SongsTransfrom } from "../common";
 import { Lyric_Transfrom } from "./model";
 
 const URL_songs = {
+  detail: "/song/detail",
   urls: "/song/url",
   lyric: "/lyric"
 };
+
+export const getSongsDetail = async (idArr: number[]) => {
+  let ids = idArr.join(",");
+  const { data } = await getNeteaseRequest({
+    url: URL_songs.detail,
+    params: {
+      ids
+    },
+    transformResponse: data => {
+      const songs = JSON.parse(data).songs;
+      return SongsTransfrom(songs);
+    }
+  });
+  return data;
+};
+
 export const getSongUrl = async (ids: number[]) => {
   /* 批量获取:用数组接收多个id,最终以逗号连接 */
   const id = ids.join(",");
@@ -18,9 +36,9 @@ export const getSongUrl = async (ids: number[]) => {
       return JSON.parse(data).data;
     }
   });
-
   return urls;
 };
+
 export const getSongsLyric = async (id: number) => {
   const { data: lyrics } = await getNeteaseRequest({
     url: URL_songs.lyric,
