@@ -3,7 +3,7 @@
     v-if="currentSong"
     ref="audio"
     class="audio-player"
-    :src="currentSong.url"
+    v-lazy="currentSong.url"
     @loadedmetadata="loadedmetadataListener"
     @play="playListener"
     @playing="playingListener"

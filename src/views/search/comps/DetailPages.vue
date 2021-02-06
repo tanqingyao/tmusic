@@ -37,7 +37,7 @@
             'list-item-cover-round': type === userType || type === artistType,
             'list-item-cover-square': type !== userType && type !== artistType
           }"
-          :src="item.imgUrl"
+          v-lazy="item.imgUrl"
           alt=""
         />
         <span v-if="type === songType">{{ index + 1 }}</span>

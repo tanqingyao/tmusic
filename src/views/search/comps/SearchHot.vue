@@ -28,7 +28,7 @@
             <img
               class="hot-icon"
               v-if="item.iconL"
-              :src="item.iconL"
+              v-lazy="item.iconL"
               alt="icon"
             />
           </template>

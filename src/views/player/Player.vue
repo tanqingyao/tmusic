@@ -84,7 +84,7 @@
           <template #item>
             <img
               v-if="currentSong.album"
-              :src="currentSong.album.url"
+              v-lazy="currentSong.album.url"
               alt="歌曲封面"
             />
           </template>

@@ -13,7 +13,7 @@
             </template>
             <template #mid>
               <div class="detail-creator">
-                <img :src="info.creatorUrl" alt="" />
+                <img v-lazy="info.creatorUrl" alt="" />
                 {{ info.creatorname }}
                 <button @click="handleAddUser">
                   <icon :icon="['fas', 'plus']" :style="{ color: '#eee' }" />

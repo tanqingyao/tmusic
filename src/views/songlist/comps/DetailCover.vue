@@ -1,6 +1,6 @@
 <template>
   <div class="cover">
-    <img :src="cover" alt="" />
+    <img v-lazy="cover" alt="" />
   </div>
 </template>
 <script>

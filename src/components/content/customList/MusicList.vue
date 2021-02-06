@@ -39,7 +39,7 @@
           'list-item-cover-round': coverType === 'round',
           'list-item-cover-square': coverType === 'square'
         }"
-        :src="item.imgUrl"
+        v-lazy="item.imgUrl"
         alt=""
       />
       <span v-if="showIndex">{{ index + 1 }}</span>

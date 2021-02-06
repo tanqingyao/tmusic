@@ -5,7 +5,7 @@
       @click="$router.push('/detail/songlist/' + item.id)"
     >
       <template #img>
-        <img :src="item.cover" @load="$emit('RecommedImgLoad')" alt="" />
+        <img v-lazy="item.cover" @load="$emit('RecommedImgLoad')" alt="" />
       </template>
 
       <template #title>
