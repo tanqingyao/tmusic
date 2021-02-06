@@ -1,7 +1,7 @@
 <template>
   <Swiper ref="swiper" :loaded="counter !== 0 && counter === banners.length">
     <SwiperItem v-for="item in banners">
-      <img v-lazy="item.img" @load="counter++" alt="轮播图片" />
+      <img :src="item.img" @load="counter++" alt="轮播图片" />
     </SwiperItem>
   </Swiper>
 </template>
