@@ -73,12 +73,12 @@ if (targetElement.nodeName==='INPUT' && targetElement.type==='range') {
 ### 正在进行
 
 - [ ] 歌单详情页功能
+- [ ] 排行页面
+- [ ] 歌手列表和歌手详情页
 
 ### 待完成
 
 - [ ] playlist显示历史播放列表
-- [ ] 排行页面
-- [ ] 歌手列表和歌手详情页
 - [ ] 播放器自动切换下一曲
 - [ ] 随机获取歌曲
 

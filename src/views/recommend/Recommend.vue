@@ -30,9 +30,9 @@ import MainNavBar from "@/components/content/mainNavBar/MainNavBar.vue";
 import TabControl from "components/content/tabControl/TabControl.vue";
 import Cover from "components/content/cover/Cover.vue";
 
-import RecommendSwiper from "./childComps/RecommendSwiper.vue";
-import RecommendSonglist from "./childComps/RecommendSonglist.vue";
-import RecommendView from "./childComps/RecommendView.vue";
+import RecommendSwiper from "./comps/RecommendSwiper.vue";
+import RecommendSonglist from "./comps/RecommendSonglist.vue";
+import RecommendView from "./comps/RecommendView.vue";
 
 import Scroll from "components/common/scroll/Scroll.vue";
 

@@ -11,7 +11,7 @@
   </div>
 </template>
 <script lang="ts">
-import ProfileNavBar from "./childComps/ProfileNavBar.vue";
+import ProfileNavBar from "./comps/ProfileNavBar.vue";
 
 import { MutationType } from "@/store/types";
 import { useStore } from "vuex";
