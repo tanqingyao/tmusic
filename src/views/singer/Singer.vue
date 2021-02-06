@@ -1,38 +1,21 @@
 <template>
-  <div class="singer"></div>
+  <div class="singer">
+    <router-view> </router-view>
+  </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from "vue";
+export default defineComponent({
   name: "Singer",
-  components: {}
-};
+  components: {},
+  setup() {
+    return {};
+  }
+});
 </script>
 <style scoped>
 .singer {
   height: 100vh;
   background-color: var(--color-background-shadow);
-}
-.scroll-line {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 50%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.line-left,
-.line-right {
-  width: 10%;
-}
-.line-left img {
-  width: 40%;
-  margin-left: 15px;
-  margin-top: 5px;
-}
-.line-center {
-  height: 1px;
-  width: 70%;
-  background-color: var(--color-text-l);
 }
 </style>

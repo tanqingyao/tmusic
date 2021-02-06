@@ -28,7 +28,11 @@ import {
   faVideo,
   faCheckCircle,
   faArrowAltCircleDown,
-  faTrashAlt
+  faTrashAlt,
+  // 火（热度）
+  faFireAlt,
+  // 感叹号
+  faExclamationCircle
 } from "@fortawesome/free-solid-svg-icons";
 library.add(
   // 播放控制相关
@@ -59,7 +63,9 @@ library.add(
   faVideo,
   faCheckCircle,
   faArrowAltCircleDown,
-  faTrashAlt
+  faTrashAlt,
+  faFireAlt,
+  faExclamationCircle
 );
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";

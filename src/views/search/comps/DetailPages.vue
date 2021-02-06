@@ -94,13 +94,13 @@
 </template>
 <script lang="ts">
 import Scroll from "@/components/common/scroll/Scroll.vue";
-import { SearchType } from "@/common/constant";
 import {
   ListTab,
   ListItem,
   ListItemCenter
 } from "@/components/content/customList";
 
+import { SearchType } from "@/common/constant";
 import {
   defineComponent,
   PropType,

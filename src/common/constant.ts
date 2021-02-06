@@ -6,3 +6,10 @@ export const enum SearchType {
   ALBUMS = 10,
   USERS = 1002
 }
+
+export const enum SingersRankType {
+  CN = 1,
+  EA,
+  KR,
+  JP
+}

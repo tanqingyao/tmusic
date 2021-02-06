@@ -20,7 +20,18 @@ const routes = [
   },
   {
     path: "/singer",
-    component: Singer
+    component: Singer,
+    redirect: "/singer/lists",
+    children: [
+      {
+        path: "lists",
+        component: () => import("@/views/singer/comps/SingerLists.vue")
+      },
+      {
+        path: "detail/:id",
+        component: () => import("@/views/singer/comps/SingerDetail.vue")
+      }
+    ]
   },
   {
     path: "/rank",

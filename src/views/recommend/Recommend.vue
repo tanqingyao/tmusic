@@ -3,7 +3,7 @@
     <MainNavBar />
     <TabControl
       :titles="['推荐', '歌手', '排行']"
-      :path="['/recommend', '/singer', '/rank']"
+      @tab-click="handleTabClick"
     />
     <Scroll ref="scroll" class="wrapper">
       <RecommendSwiper class="swiper" :banners="banners" />
@@ -26,7 +26,7 @@
   </div>
 </template>
 <script lang="ts">
-import MainNavBar from "@/components/content/mainNavBar/MainNavBar.vue";
+import MainNavBar from "@/components/content/customNavBar/MainNavBar.vue";
 import TabControl from "components/content/tabControl/TabControl.vue";
 import Cover from "components/content/cover/Cover.vue";
 
@@ -61,12 +61,18 @@ export default {
     });
 
     const $router = useRouter();
+
+    const handleTabClick = (index: number) => {
+      const path = ["/recommend", "/singer", "/rank"];
+      $router.push(path[index]);
+    };
     const handleDetail = (id: number) => {
       $router.push("/songlist/detail/" + id);
     };
     return {
       banners,
       songlists,
+      handleTabClick,
       handleDetail
     };
   }

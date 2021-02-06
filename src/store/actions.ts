@@ -3,7 +3,7 @@ import { ActionTree } from "vuex";
 import { State } from "./state";
 import { Actions, ActionTypes, MutationType } from "./types";
 
-import { getSongUrl, getSongsInfo, getSongsLyric } from "@/network/player";
+import { getSongUrl, getSongsLyric } from "@/network/player";
 import { Song } from "@/network/player/song";
 
 export const actions: ActionTree<State, State> & Actions = {

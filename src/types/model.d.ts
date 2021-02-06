@@ -38,12 +38,18 @@ declare interface Songlist {
   trackIds: { id: number }[];
 }
 
-declare type Artist = {
+declare interface Artist {
+  id: number;
+  score: number;
+  lastRank: number;
+  // 网易云账号id
   accountId: number;
+  // 头像图片
+  img1v1Url: string;
   picUrl: string;
   name: string;
   alias: Array<string>;
-};
+}
 
 declare type Album = {
   picUrl: string;

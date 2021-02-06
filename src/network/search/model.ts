@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { showSinger, parseDate, changeUnit } from "@/common/utils/show";
+import { showSinger, parseFullDate, changeUnit } from "@/common/utils/show";
 import { SearchType } from "@/common/constant";
 
 export const collectSearchDefault = (res: AxiosResponse) => {
@@ -112,7 +112,7 @@ export const AlbumsTransfrom = (res: Array<Album>) => {
     return {
       imgUrl: a.picUrl,
       name: `${a.name}${a.alias[0] ? "（" + a.alias[0] + "）" : ""}`,
-      desc: `${showSinger(a.artist)} ${parseDate(a.publishTime)}`
+      desc: `${showSinger(a.artist)} ${parseFullDate(a.publishTime)}`
     };
   });
   return albums;

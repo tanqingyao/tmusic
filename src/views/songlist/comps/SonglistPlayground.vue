@@ -1,18 +1,5 @@
 <template>
-  <NavBar class="nav-bar">
-    <template #left>
-      <icon
-        @click="$router.back"
-        class="icon"
-        :icon="['fas', 'chevron-left']"
-        :style="{ color: '#000' }"
-      />
-    </template>
-    <template #center>
-      <div class="title">歌单广场</div>
-    </template>
-  </NavBar>
-
+  <BackNavBar title="歌单广场" />
   <TabControl
     ref="tabcontrol"
     :titles="[
@@ -35,7 +22,7 @@
   <PlaygroundPages :songlists="storeData.recommend" />
 </template>
 <script lang="ts">
-import NavBar from "components/common/navbar/NavBar.vue";
+import BackNavBar from "@/components/content/customNavBar/BackNavBar.vue";
 import TabControl from "@/components/content/tabControl/TabControl.vue";
 import PlaygroundSwiper from "./PlaygroundSwiper.vue";
 import PlaygroundPages from "./PlaygroundPages.vue";
@@ -47,7 +34,7 @@ import useTouchElement from "@/common/hooks/useTouchElement";
 export default defineComponent({
   name: "SonglistPlayground",
   components: {
-    NavBar,
+    BackNavBar,
     TabControl,
     PlaygroundSwiper,
     PlaygroundPages
@@ -81,19 +68,4 @@ export default defineComponent({
   }
 });
 </script>
-<style scoped>
-.nav-bar {
-  background-color: var(--color-background);
-}
-.icon {
-  vertical-align: middle;
-  width: 50px;
-  height: 22px;
-}
-.title {
-  line-height: 44px;
-  font-size: 18px;
-  text-align: left;
-  color: var(--color-high-text);
-}
-</style>
+<style scoped></style>

@@ -3,7 +3,6 @@ import { Lyric_Transfrom } from "./model";
 
 const URL_songs = {
   urls: "/song/url",
-  info: "/song/detail",
   lyric: "/lyric"
 };
 export const getSongUrl = async (ids: number[]) => {
@@ -21,23 +20,6 @@ export const getSongUrl = async (ids: number[]) => {
   });
 
   return urls;
-};
-export const getSongsInfo = async (idArr: number[]) => {
-  let ids = Array.isArray(idArr) ? idArr.join(",") : idArr;
-  const { data: songsInfo } = await getNeteaseRequest({
-    url: URL_songs.info,
-    params: {
-      ids
-    },
-
-    transformResponse: data => {
-      console.log(JSON.parse(data).songs);
-
-      return JSON.parse(data).songs;
-    }
-  });
-
-  return songsInfo;
 };
 export const getSongsLyric = async (id: number) => {
   const { data: lyrics } = await getNeteaseRequest({
