@@ -25,7 +25,7 @@ export default defineComponent({
   },
   props: {
     songlists: {
-      type: Object as PropType<SonglistCover[]>,
+      type: Object as PropType<Songlist[]>,
       default: []
     },
     requestData: {

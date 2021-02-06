@@ -1,5 +1,5 @@
-export const RecommedTransfrom = (res: Array<SonglistCover>) => {
-  const songlists = res.map((s: SonglistCover) => {
+export const RecommedTransfrom = (res: Array<Songlist>) => {
+  const songlists = res.map((s: Songlist) => {
     return {
       id: s.id,
       cover: s.picUrl,

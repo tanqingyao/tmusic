@@ -20,15 +20,12 @@ declare type SongInfo = {
   mv: number;
 };
 
-interface SonglistCover {
+declare interface Songlist {
   id: number;
-  picUrl: string;
-  name: string;
-  playCount: number;
-}
-declare type Songlist = {
-  id: number;
+  // 封面
   coverImgUrl: string;
+  picUrl: string;
+
   name: string;
   creator: { avatarUrl: string; nickname: string };
   description: string;
@@ -39,7 +36,7 @@ declare type Songlist = {
   commentCount: number;
 
   trackIds: { id: number }[];
-};
+}
 
 declare type Artist = {
   accountId: number;

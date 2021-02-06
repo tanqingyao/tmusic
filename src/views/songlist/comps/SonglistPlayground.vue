@@ -60,7 +60,7 @@ export default defineComponent({
       tabcontrol
     );
     /* 数据获取 */
-    let storeData: { recommend: SonglistCover[] } = reactive({
+    let storeData: { recommend: Songlist[] } = reactive({
       recommend: []
     });
     const handleTabClick = () => {
