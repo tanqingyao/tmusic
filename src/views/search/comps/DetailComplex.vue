@@ -1,115 +1,106 @@
 <template>
-  <div class="complex-body">
-    <div v-for="(data, key, index) in complex" class="complex-content">
-      <ListCard>
-        <template #header>
-          <span class="left">{{ titles[index] }} </span>
-          <button
-            class="right list-item-btn"
-            @click="handlePlayAll"
-            v-if="data.type === type.SONGS"
-          >
-            <icon :icon="['fas', 'play']" size="sm" />
-            播放
-          </button>
-        </template>
+  <Card v-for="(data, key, index) in complex">
+    <template #header>
+      <span class="left">{{ titles[index] }} </span>
+      <button
+        class="right list-item-btn"
+        @click="handlePlayAll"
+        v-if="data.type === type.SONGS"
+      >
+        <icon :icon="['fas', 'play']" size="sm" />
+        播放
+      </button>
+    </template>
 
-        <template #content>
-          <ListItem
-            v-for="(item, index) in data.list"
-            @click="handlePlay(item)"
-          >
-            <template #left>
-              <img
-                v-if="data.type !== type.SONGS && item.imgUrl"
-                :class="{
-                  'list-item-cover-round':
-                    data.type === type.USERS || data.type === type.ARTISTS,
-                  'list-item-cover-square':
-                    data.type === type.ALBUMS || data.type === type.PLAYLISTS
-                }"
-                v-lazy="item.imgUrl"
-                alt=""
-              />
-              <span v-if="data.type === type.SONGS">{{ index + 1 }}</span>
+    <template #content>
+      <ListItem v-for="(item, index) in data.list" @click="handlePlay(item)">
+        <template #left>
+          <img
+            v-if="data.type !== type.SONGS && item.imgUrl"
+            :class="{
+              'list-item-cover-round':
+                data.type === type.USERS || data.type === type.ARTISTS,
+              'list-item-cover-square':
+                data.type === type.ALBUMS || data.type === type.PLAYLISTS
+            }"
+            v-lazy="item.imgUrl"
+            alt=""
+          />
+          <span v-if="data.type === type.SONGS">{{ index + 1 }}</span>
+        </template>
+        <template #center>
+          <ListItemCenter>
+            <template #center-item>
+              <span class="list-item-title">{{ item.name }}</span>
             </template>
-            <template #center>
-              <ListItemCenter>
-                <template #center-item>
-                  <span class="list-item-title">{{ item.name }}</span>
-                </template>
-              </ListItemCenter>
+          </ListItemCenter>
 
-              <ListItemCenter>
-                <template #center-item>
-                  <span class="list-item-desc">{{ item.desc }}</span>
-                </template>
-              </ListItemCenter>
+          <ListItemCenter>
+            <template #center-item>
+              <span class="list-item-desc">{{ item.desc }}</span>
             </template>
-
-            <template #right>
-              <div class="list-item-icon" v-if="data.type === type.SONGS">
-                <icon
-                  v-if="item.mv"
-                  :icon="['fas', 'video']"
-                  :style="{ color: '#999' }"
-                  @click="handleVideo"
-                />
-              </div>
-              <div class="list-item-icon" v-if="data.type === type.SONGS">
-                <icon
-                  :icon="['fas', 'ellipsis-v']"
-                  :style="{ color: '#999' }"
-                  @click="handleSetting"
-                />
-              </div>
-
-              <div class="list-item-icon" v-if="data.type === type.ARTISTS">
-                <icon
-                  :icon="['fas', 'user']"
-                  :style="{ color: '#999' }"
-                  @click="handleSetting"
-                />
-                已入驻
-              </div>
-
-              <div class="list-item-icon" v-if="data.type === type.USERS">
-                <button class="right list-item-btn" @click="handleAddUser">
-                  <icon :icon="['fas', 'plus']" size="sm" />
-                  关注
-                </button>
-              </div>
-            </template>
-          </ListItem>
+          </ListItemCenter>
         </template>
 
-        <template #footer>
-          <span>{{ moreText[index] }}</span>
+        <template #right>
+          <div class="list-item-icon" v-if="data.type === type.SONGS">
+            <icon
+              v-if="item.mv"
+              :icon="['fas', 'video']"
+              :style="{ color: '#999' }"
+              @click="handleVideo"
+            />
+          </div>
+          <div class="list-item-icon" v-if="data.type === type.SONGS">
+            <icon
+              :icon="['fas', 'ellipsis-v']"
+              :style="{ color: '#999' }"
+              @click="handleSetting"
+            />
+          </div>
 
-          <icon class="down-icon" :icon="['fas', 'chevron-right']" size="sm" />
-        </template>
-      </ListCard>
-    </div>
-    <div class="complex-content">
-      <ListCard>
-        <template #header>
-          <span class="left">相关搜索</span>
-        </template>
-        <template #content>
-          <div class="simi-query">
-            <div class="simi-item" v-for="item in simiQuery">
-              {{ item.keyword }}
-            </div>
+          <div class="list-item-icon" v-if="data.type === type.ARTISTS">
+            <icon
+              :icon="['fas', 'user']"
+              :style="{ color: '#999' }"
+              @click="handleSetting"
+            />
+            已入驻
+          </div>
+
+          <div class="list-item-icon" v-if="data.type === type.USERS">
+            <button class="right list-item-btn" @click="handleAddUser">
+              <icon :icon="['fas', 'plus']" size="sm" />
+              关注
+            </button>
           </div>
         </template>
-      </ListCard>
-    </div>
-  </div>
+      </ListItem>
+    </template>
+
+    <template #footer>
+      <span>{{ moreText[index] }}</span>
+
+      <icon class="down-icon" :icon="['fas', 'chevron-right']" size="sm" />
+    </template>
+  </Card>
+  <Card>
+    <template #header>
+      <span class="left">相关搜索</span>
+    </template>
+    <template #content>
+      <div class="simi-query">
+        <div class="simi-item" v-for="item in simiQuery">
+          {{ item.keyword }}
+        </div>
+      </div>
+    </template>
+  </Card>
 </template>
 <script lang="ts">
 import { SearchType } from "@/common/constant";
 import {
-  ListCard,
+  Card,
   ListItem,
   ListItemCenter
 } from "@/components/content/customList";
@@ -121,7 +112,7 @@ import { getSearchComplex } from "@/network/search";
 export default defineComponent({
   name: "DetailComplex",
   components: {
-    ListCard,
+    Card,
     ListItem,
     ListItemCenter
   },
@@ -222,27 +213,6 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-.complex-body {
-  padding: 20px;
-  border-radius: 5%;
-}
-.complex-body .complex-content {
-  padding: 10px 0;
-  margin: 10px 0;
-  border-radius: 5%;
-  background-color: var(--color-highlight-background);
-}
-.list-item-btn {
-  font-size: 13px;
-  line-height: 22px;
-  height: 22px;
-  width: 60px;
-
-  border-radius: 10px;
-  border: solid 1px #bbb;
-  background-color: var(--color-background);
-  outline: none;
-}
 .playlist-cover {
   width: 100%;
   border-radius: 5px;

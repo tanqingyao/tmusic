@@ -1,21 +1,35 @@
 <template>
-  <div class="list-header">
-    <slot name="header" />
-  </div>
-  <div class="list-content">
-    <slot name="content" />
-  </div>
-  <div class="list-footer">
-    <slot name="footer" />
+  <div class="card-body">
+    <div class="card-item">
+      <div class="list-header">
+        <slot name="header" />
+      </div>
+      <div class="list-content">
+        <slot name="content" />
+      </div>
+      <div class="list-footer">
+        <slot name="footer" />
+      </div>
+    </div>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
 export default defineComponent({
-  name: "ListCard"
+  name: "Card"
 });
 </script>
 <style scoped>
+.card-body {
+  padding: 20px;
+  border-radius: 5%;
+}
+.card-item {
+  padding: 10px 0;
+  margin: 10px 0;
+  border-radius: 5%;
+  background-color: var(--color-highlight-background);
+}
 /* header */
 .list-header {
   line-height: 22px;
