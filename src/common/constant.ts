@@ -4,7 +4,8 @@ export const enum SearchType {
   PLAYLISTS = 1000,
   ARTISTS = 100,
   ALBUMS = 10,
-  USERS = 1002
+  USERS = 1002,
+  COMPLEX = 1018
 }
 
 export const enum SingersRankType {

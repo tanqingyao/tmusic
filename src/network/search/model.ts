@@ -1,6 +1,12 @@
 import { AxiosResponse } from "axios";
-import { showSinger, parseFullDate, changeUnit } from "@/common/utils/show";
 import { SearchType } from "@/common/constant";
+import {
+  SongsTransfrom,
+  SonglistsTransfrom,
+  ArtistsTransfrom,
+  AlbumsTransfrom,
+  UsersTransfrom
+} from "../common";
 
 export const collectSearchDefault = (res: AxiosResponse) => {
   const { realkeyword: real, showKeyword: show } = res.data.data;
@@ -32,9 +38,37 @@ export const collectSearchCloud = (res: AxiosResponse) => {
   return songs;
 };
 
-export const ComplexTransfrom = (res: Complex) => {
-  // 转化信息
+export const SearchCloudTransfrom = (result: any, type: number) => {
+  let dataTransfrom;
+  switch (type) {
+    case SearchType.SONGS:
+      dataTransfrom = SongsTransfrom(result.songs);
+      break;
 
+    case SearchType.PLAYLISTS:
+      dataTransfrom = SonglistsTransfrom(result.playlists);
+      break;
+
+    case SearchType.ARTISTS:
+      dataTransfrom = ArtistsTransfrom(result.artists);
+      break;
+
+    case SearchType.ALBUMS:
+      dataTransfrom = AlbumsTransfrom(result.albums);
+      break;
+
+    case SearchType.USERS:
+      dataTransfrom = UsersTransfrom(result.userprofiles);
+      break;
+
+    default:
+      break;
+  }
+  return dataTransfrom;
+};
+
+export const ComplexTransfrom = (res: any) => {
+  // 转化信息
   let moreTextArr: Array<string> = [];
   moreTextArr.push(
     res.song.moreText,
@@ -67,66 +101,4 @@ export const ComplexTransfrom = (res: Complex) => {
       [SearchType.USERS]: users
     }
   };
-};
-
-export const SongsTransfrom = (res: Array<SongInfo>) => {
-  const songs = res.map((s: SongInfo) => {
-    return {
-      name: s.name,
-      desc: `${showSinger(s.ar)} - ${s.al.name}`,
-      alia: s.alia ? s.alia[0] : "",
-      mv: s.mv
-    };
-  });
-  return songs;
-};
-
-export const SonglistsTransfrom = (res: Array<Songlist>) => {
-  const songlists = res.map((p: Songlist) => {
-    return {
-      imgUrl: p.coverImgUrl,
-      name: p.name,
-      desc: `${p.trackCount}首，by ${
-        p.creator ? p.creator.nickname : ""
-      }，播放${changeUnit(p.playCount)}次`
-    };
-  });
-  return songlists;
-};
-
-export const ArtistsTransfrom = (res: Array<Artist>) => {
-  const artists = res.map((a: Artist) => {
-    return {
-      id: a.accountId,
-      imgUrl: a.picUrl,
-      // 判断是否显示别名
-      name: `${a.name}${a.alias[0] ? "（" + a.alias[0] + "）" : ""}`,
-      desc: ``
-    };
-  });
-  return artists;
-};
-
-export const AlbumsTransfrom = (res: Array<Album>) => {
-  const albums = res.map((a: Album) => {
-    return {
-      imgUrl: a.picUrl,
-      name: `${a.name}${a.alias[0] ? "（" + a.alias[0] + "）" : ""}`,
-      desc: `${showSinger(a.artist)} ${parseFullDate(a.publishTime)}`
-    };
-  });
-  return albums;
-};
-
-export const UsersTransfrom = (res: Array<User>) => {
-  const users = res.map((u: User) => {
-    return {
-      id: u.userId,
-      followed: u.followed,
-      imgUrl: u.avatarUrl,
-      name: u.nickname,
-      desc: `${u.signature}`
-    };
-  });
-  return users;
 };

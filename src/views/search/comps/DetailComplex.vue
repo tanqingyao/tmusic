@@ -1,13 +1,13 @@
 <template>
   <div class="complex-body">
-    <div v-for="(item, key, index) in complex" class="complex-content">
+    <div v-for="(data, key, index) in complex" class="complex-content">
       <ListCard>
         <template #header>
-          <span class="left">{{ titles[index] }}</span>
+          <span class="left">{{ titles[index] }} </span>
           <button
             class="right list-item-btn"
             @click="handlePlayAll"
-            v-if="key === '单曲'"
+            v-if="data.type === type.SONGS"
           >
             <icon :icon="['fas', 'play']" size="sm" />
             播放
@@ -15,13 +15,72 @@
         </template>
 
         <template #content>
-          <MusicList
-            :data="item"
-            :showTab="option.showTab"
-            :showIndex="option.showIndex"
-            :listType="key"
-            coverType="round"
-          />
+          <ListItem
+            v-for="(item, index) in data.list"
+            @click="handlePlay(item)"
+          >
+            <template #left>
+              <img
+                v-if="data.type !== type.SONGS && item.imgUrl"
+                :class="{
+                  'list-item-cover-round':
+                    data.type === type.USERS || data.type === type.ARTISTS,
+                  'list-item-cover-square':
+                    data.type === type.ALBUMS || data.type === type.PLAYLISTS
+                }"
+                v-lazy="item.imgUrl"
+                alt=""
+              />
+              <span v-if="data.type === type.SONGS">{{ index + 1 }}</span>
+            </template>
+            <template #center>
+              <ListItemCenter>
+                <template #center-item>
+                  <span class="list-item-title">{{ item.name }}</span>
+                </template>
+              </ListItemCenter>
+
+              <ListItemCenter>
+                <template #center-item>
+                  <span class="list-item-desc">{{ item.desc }}</span>
+                </template>
+              </ListItemCenter>
+            </template>
+
+            <template #right>
+              <div class="list-item-icon" v-if="data.type === type.SONGS">
+                <icon
+                  v-if="item.mv"
+                  :icon="['fas', 'video']"
+                  :style="{ color: '#999' }"
+                  @click="handleVideo"
+                />
+              </div>
+              <div class="list-item-icon" v-if="data.type === type.SONGS">
+                <icon
+                  :icon="['fas', 'ellipsis-v']"
+                  :style="{ color: '#999' }"
+                  @click="handleSetting"
+                />
+              </div>
+
+              <div class="list-item-icon" v-if="data.type === type.ARTISTS">
+                <icon
+                  :icon="['fas', 'user']"
+                  :style="{ color: '#999' }"
+                  @click="handleSetting"
+                />
+                已入驻
+              </div>
+
+              <div class="list-item-icon" v-if="data.type === type.USERS">
+                <button class="right list-item-btn" @click="handleAddUser">
+                  <icon :icon="['fas', 'plus']" size="sm" />
+                  关注
+                </button>
+              </div>
+            </template>
+          </ListItem>
         </template>
 
         <template #footer>
@@ -52,8 +111,7 @@ import { SearchType } from "@/common/constant";
 import {
   ListCard,
   ListItem,
-  ListItemCenter,
-  MusicList
+  ListItemCenter
 } from "@/components/content/customList";
 
 import { defineComponent, onMounted, reactive, Ref, ref } from "vue";
@@ -65,15 +123,12 @@ export default defineComponent({
   components: {
     ListCard,
     ListItem,
-    ListItemCenter,
-    MusicList
+    ListItemCenter
   },
   props: {
     titles: {
       type: Array,
-      default() {
-        return [];
-      }
+      default: []
     }
   },
   setup() {
@@ -86,15 +141,23 @@ export default defineComponent({
     });
 
     // 展示数据
-    let simiQuery = ref([]);
-    let moreText = ref([]);
-    let complex = reactive({
-      [SearchType.SONGS]: [],
-      [SearchType.PLAYLISTS]: [],
-      [SearchType.ARTISTS]: [],
-      [SearchType.ALBUMS]: [],
-      [SearchType.USERS]: []
+    const simiQuery = ref([]);
+    const moreText = ref([]);
+    const complex = reactive({
+      [SearchType.SONGS]: { list: [], type: SearchType.SONGS },
+      [SearchType.PLAYLISTS]: { list: [], type: SearchType.PLAYLISTS },
+      [SearchType.ARTISTS]: { list: [], type: SearchType.ARTISTS },
+      [SearchType.ALBUMS]: { list: [], type: SearchType.ALBUMS },
+      [SearchType.USERS]: { list: [], type: SearchType.USERS }
     });
+    /* 搜索类型映射 */
+    const type = {
+      SONGS: SearchType.SONGS,
+      PLAYLISTS: SearchType.PLAYLISTS,
+      ARTISTS: SearchType.ARTISTS,
+      ALBUMS: SearchType.ALBUMS,
+      USERS: SearchType.USERS
+    };
 
     // 操作回调
     const handleClickItem = (item: any) => {
@@ -110,6 +173,12 @@ export default defineComponent({
       console.log(item);
     };
 
+    const handlePlayAll = () => {
+      console.log("handlePlayAll");
+    };
+    const handlePlay = (item: ISong) => {
+      // $store.dispatch(ActionTypes.AddPlayList, [item.id]);
+    };
     onMounted(async () => {
       // 获取展示数据
       const key = $route.params.key;
@@ -119,19 +188,31 @@ export default defineComponent({
 
       moreText.value = res.moreTextArr;
 
-      complex[SearchType.SONGS] = res.items[SearchType.SONGS];
-      complex[SearchType.PLAYLISTS] = res.items[SearchType.PLAYLISTS];
-      complex[SearchType.ARTISTS] = res.items[SearchType.ARTISTS];
-      complex[SearchType.ALBUMS] = res.items[SearchType.ALBUMS];
-      complex[SearchType.USERS] = res.items[SearchType.USERS];
+      complex[SearchType.SONGS].list = res.items[SearchType.SONGS];
+      complex[SearchType.PLAYLISTS].list = res.items[SearchType.PLAYLISTS];
+
+      // 判断artist是否显示别名
+      complex[SearchType.ARTISTS].list = res.items[SearchType.ARTISTS].map(
+        (a: IArtist) => {
+          if (a.alias) {
+            a.name = `${a.name}${a.alias[0] ? "（" + a.alias[0] + "）" : ""}`;
+          }
+          return a;
+        }
+      );
+
+      complex[SearchType.ALBUMS].list = res.items[SearchType.ALBUMS];
+      complex[SearchType.USERS].list = res.items[SearchType.USERS];
     });
     return {
       scroll,
       simiQuery,
       moreText,
       complex,
+      type,
       option,
-
+      handlePlayAll,
+      handlePlay,
       handleClickItem,
       handleVideo,
       handleSetting,
@@ -173,6 +254,64 @@ export default defineComponent({
   border-radius: 50%;
 }
 
+/* musicList */
+
+.list-tab {
+  margin: 20px 0;
+}
+.list-tab-left {
+  text-align: left;
+
+  font-size: var(--font-size-large);
+  color: var(--color-text);
+}
+.list-tab-right {
+  text-align: right;
+  margin-right: 10px;
+}
+.list-tab-icon {
+  margin: 0 12px;
+}
+/* 歌曲列表 */
+
+.list-item-cover-round {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.list-item-cover-square {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+}
+
+.list-item-title {
+  font-size: var(--font-size-medium-x);
+  color: var(--color-high-text);
+}
+.list-item-desc {
+  font-size: var(--font-size-small);
+  color: var(--color-text);
+}
+/* icon */
+.list-item-icon {
+  flex: 1;
+  text-align: center;
+}
+
+.list-item-btn {
+  font-size: 13px;
+  line-height: 22px;
+  height: 22px;
+  width: 60px;
+
+  border-radius: 10px;
+  border: solid 1px #bbb;
+  background-color: var(--color-background);
+  outline: none;
+}
+
+/* musicList */
 .simi-item {
   /* flex: 1 0; */
   display: inline-block;

@@ -27,7 +27,7 @@ declare interface Songlist {
   picUrl: string;
 
   name: string;
-  creator: { avatarUrl: string; nickname: string };
+  creator?: IUser;
   description: string;
   subscribedCount: number;
   trackCount: number;
@@ -38,19 +38,27 @@ declare interface Songlist {
   trackIds: { id: number }[];
 }
 
-declare interface Artist {
+declare interface IArtist {
   id: number;
-  score: number;
-  lastRank: number;
-  // 网易云账号id
-  accountId: number;
-  // 头像图片
-  img1v1Url: string;
-  picUrl: string;
   name: string;
-  alias: Array<string>;
+  // 头像图片
+  imgUrl: string;
+  account: IUser;
+
+  score?: number;
+  lastRank?: number;
+  alias?: Array<string>;
 }
 
+declare interface IUser {
+  id: number;
+  nickname?: string;
+  followed?: boolean;
+  avatarUrl?: string;
+  signature?: string;
+  description?: string;
+  detailDescription?: string;
+}
 declare type Album = {
   picUrl: string;
   name: string;
@@ -60,14 +68,6 @@ declare type Album = {
     name: string;
   }>;
   publishTime: number;
-};
-
-declare type User = {
-  userId: number;
-  followed: boolean;
-  avatarUrl: string;
-  nickname: string;
-  signature: string;
 };
 
 declare type Complex = {

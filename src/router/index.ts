@@ -30,6 +30,29 @@ const routes = [
       {
         path: "detail/:id",
         component: () => import("@/views/singer/comps/SingerDetail.vue")
+        // redirect: "/singer/detail/:id/home",
+        // children: [
+        //   {
+        //     path: "home",
+        //     component: () => import("@/views/singer/comps/DetailHome.vue")
+        //   },
+        //   {
+        //     path: "song",
+        //     component: () => import("@/views/singer/comps/DetailSong.vue")
+        //   },
+        //   {
+        //     path: "album",
+        //     component: () => import("@/views/singer/comps/DetailAlbum.vue")
+        //   },
+        //   {
+        //     path: "video",
+        //     component: () => import("@/views/singer/comps/DetailVideo.vue")
+        //   },
+        //   {
+        //     path: "avtivity",
+        //     component: () => import("@/views/singer/comps/DetailActivity.vue")
+        //   }
+        // ]
       }
     ]
   },

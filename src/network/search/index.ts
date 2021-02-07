@@ -3,13 +3,9 @@ import { SongsTransfrom } from "../common";
 import {
   collectSearchDefault,
   collectSearchSuggest,
-  ComplexTransfrom,
-  SonglistsTransfrom,
-  ArtistsTransfrom,
-  AlbumsTransfrom,
-  UsersTransfrom
+  SearchCloudTransfrom,
+  ComplexTransfrom
 } from "./model";
-import { SearchType } from "@/common/constant";
 
 const URL_search = {
   default: "/search/default",
@@ -100,32 +96,7 @@ export async function getSearchCloud(
       type
     },
     transformResponse: data => {
-      const result = JSON.parse(data).result;
-      let dataTransfrom;
-      switch (type) {
-        case SearchType.SONGS:
-          dataTransfrom = SongsTransfrom(result.songs);
-          break;
-
-        case SearchType.PLAYLISTS:
-          dataTransfrom = SonglistsTransfrom(result.playlists);
-          break;
-
-        case SearchType.ARTISTS:
-          dataTransfrom = ArtistsTransfrom(result.artists);
-          break;
-
-        case SearchType.ALBUMS:
-          dataTransfrom = AlbumsTransfrom(result.albums);
-          break;
-
-        case SearchType.USERS:
-          dataTransfrom = UsersTransfrom(result.userprofiles);
-          break;
-
-        default:
-          break;
-      }
+      const dataTransfrom = SearchCloudTransfrom(JSON.parse(data).result, type);
       return dataTransfrom;
     }
   });

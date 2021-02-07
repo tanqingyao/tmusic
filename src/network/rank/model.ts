@@ -2,7 +2,7 @@ export const RankSingersTransfrom = (res: {
   artists: Array<Artist>;
   updateTime: number;
 }) => {
-  const singers = res.artists.map((s: Artist) => {
+  const singers = res.artists.map((s: any) => {
     return {
       score: s.score,
       lastRank: s.lastRank,
