@@ -14,9 +14,6 @@
       '轻音乐'
     ]"
     @tab-click="handleTabClick"
-    @touchstart="useTouchStart"
-    @touchmove="useTouchMove"
-    @touchend="useTouchEnd"
   />
   <PlaygroundSwiper />
   <PlaygroundPages :songlists="storeData.recommend" />
@@ -29,8 +26,7 @@ import PlaygroundPages from "./PlaygroundPages.vue";
 
 import { getSonglistRecommed } from "@/network/songlist";
 
-import { defineComponent, onMounted, reactive, Ref, ref } from "vue";
-import useTouchElement from "@/common/hooks/useTouchElement";
+import { defineComponent, onMounted, reactive } from "vue";
 export default defineComponent({
   name: "SonglistPlayground",
   components: {
@@ -41,11 +37,6 @@ export default defineComponent({
   },
   props: {},
   setup() {
-    /* tabcontrol滑动 */
-    const tabcontrol: Ref = ref(null);
-    const { useTouchStart, useTouchMove, useTouchEnd } = useTouchElement(
-      tabcontrol
-    );
     /* 数据获取 */
     let storeData: { recommend: Songlist[] } = reactive({
       recommend: []
@@ -59,11 +50,7 @@ export default defineComponent({
     });
     return {
       storeData,
-      tabcontrol,
-      handleTabClick,
-      useTouchStart,
-      useTouchMove,
-      useTouchEnd
+      handleTabClick
     };
   }
 });

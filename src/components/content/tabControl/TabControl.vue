@@ -1,18 +1,27 @@
 <template>
-  <div class="tab-control">
+  <div class="wrapper">
     <div
-      class="tab-control-item"
-      v-for="(item, index) in titles"
-      @click="handleClick(index)"
-      :class="{ active: index === currentIndex }"
+      ref="tabcontrol"
+      class="tab-control"
+      @touchstart="useTouchStart"
+      @touchmove="useTouchMove"
+      @touchend="useTouchEnd"
     >
-      <span> {{ item }} </span>
+      <div
+        class="tab-control-item"
+        v-for="(item, index) in titles"
+        @click="handleClick(index)"
+        :class="{ active: index === currentIndex }"
+      >
+        <span> {{ item }} </span>
+      </div>
     </div>
   </div>
 </template>
 
-<script>
-import { ref } from "vue";
+<script lang="ts">
+import { Ref, ref } from "vue";
+import useTouchElement from "@/common/hooks/useTouchElement";
 export default {
   name: "TabControl",
   props: {
@@ -28,27 +37,40 @@ export default {
   },
   setup(props, { emit }) {
     let currentIndex = ref(0);
-    const handleClick = index => {
+    const handleClick = (index: number) => {
       currentIndex.value = index;
       emit("tab-click", index);
     };
+
+    /* control滑动相关 */
+    const tabcontrol: Ref = ref(null);
+    const { useTouchStart, useTouchMove, useTouchEnd } = useTouchElement(
+      tabcontrol
+    );
     return {
+      tabcontrol,
       currentIndex,
-      handleClick
+      handleClick,
+      useTouchStart,
+      useTouchMove,
+      useTouchEnd
     };
   }
 };
 </script>
 
 <style scoped>
-.tab-control {
-  display: flex;
-  text-align: center;
-  font-size: 13px;
+.wrapper {
+  height: 100vh;
   height: 40px;
   line-height: 40px;
+  font-size: 13px;
   background-color: var(--color-background);
-  /* overflow: hidden; */
+  text-align: center;
+  overflow: hidden;
+}
+.tab-control {
+  display: flex;
   flex-wrap: nowrap;
 }
 

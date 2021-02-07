@@ -21,10 +21,4 @@ export default defineComponent({
   }
 });
 </script>
-<style scoped>
-.songlist {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-}
-</style>
+<style scoped></style>
